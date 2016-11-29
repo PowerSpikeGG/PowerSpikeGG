@@ -1,0 +1,61 @@
+// Riot API constants.
+//
+// Extracted from: https://developer.riotgames.com/docs/game-constants
+//
+// The Riot API has many constants and the intent of this file is to register
+// most of them.
+
+syntax = "proto3";
+
+package game.leagueoflegends;
+
+// Map names.
+enum Map {
+    SUMMONER_RIFT = 0;
+}
+
+// Match queue type.
+// Note we intentionnaly reduced the queue types in order to match our needs.
+// You may want to extends this enumerator for supporting more queues.
+enum QueueType {
+    CUSTOM = 0;
+    NORMAL_5x5_BLIND = 1;
+    NORMAL_5x5_DRAFT = 2;
+    RANKED_SOLO_5x5 = 3;
+    RANKED_PREMADE_5x5 = 4;
+    RANKED_FLEX_SR = 5;
+    RANKED_TEAM_5x5 = 6;
+}
+
+// Ranked seasons.
+// Note we intentionnaly reduced the seasons in order to match our needs.
+// You may want to extends this enumerator for supporting more queues.
+enum Season {
+    SEASON2017 = 0;
+    PRESEASON2017 = 1;
+    SEASON2016 = 2;
+}
+
+// Summoner information.
+message Summoner {
+    int32 id = 1;
+    int32 name = 2;
+}
+
+// Summoner spells. Conversion to named entities is provided by the Riot API.
+message SummonerSpell {
+    int32 id = 1;  // Summoner spell ID.
+    string name = 2;  // Summoner spell name.
+}
+
+// Item. Conversion to named entities is provided by the Riot API.
+message Item {
+    int32 id = 1;
+    string name = 2;
+}
+
+// Champion. Conversion to named entities is provided by the Riot API.
+message Champion {
+    int32 id = 1;
+    string name = 2;
+}
