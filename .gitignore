@@ -1,3 +1,9 @@
-# Miscellaneous
-__pycache__/
+# Python compilation files
+__pycache__
+*.pyc
+
+# Bazel generated files
+/bazel-*
+
+# Misc
 *.swp
