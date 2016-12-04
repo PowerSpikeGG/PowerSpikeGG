@@ -57,6 +57,7 @@ message TeamDetail {
     bool winner = 2;
 
     // List of bans done by the team.
+    // TODO(funkysayu) this should not be IDs, but Champion message.
     repeated int32 banned_champion_ids = 3;
 
     // Statistics related to the team
@@ -126,6 +127,8 @@ message PlayerStatistics {
     int32 neutral_minions_killed_team_jungle = 16;
 
     // Vision
+    // TODO(funkysayu) since it is not anymore available in the game shop, we
+    //                 might remove this statistics soon.
     int32 sight_wards_bought = 17;
     int32 vision_wards_bought = 18;
     int32 wards_placed = 19;
