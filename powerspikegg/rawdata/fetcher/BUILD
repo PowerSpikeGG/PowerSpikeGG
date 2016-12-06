@@ -2,6 +2,32 @@
 
 load("@org_pubref_rules_protobuf//python:rules.bzl", "py_proto_compile")
 
+py_binary(
+    name="server",
+    srcs=[
+        "server.py",
+        ":service_py",
+        "//powerspikegg/rawdata/public:leagueoflegends_py",
+    ],
+    deps=[
+        ":converter",
+        ":handler",
+    ],
+)
+
+py_test(
+    name="server_test",
+    srcs=[
+        "server_test.py",
+    ],
+    deps=[
+        ":server",
+    ],
+    data=[
+        "//powerspikegg/rawdata/fetcher/samples",
+    ],
+)
+
 py_library(
     name="handler",
     srcs=[
