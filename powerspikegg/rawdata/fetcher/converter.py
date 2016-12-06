@@ -238,7 +238,7 @@ class JSONConverter():
             timestamp=json_entry["matchCreation"],
             version=json_entry["matchVersion"],
             plateform_id=json_entry["platformId"],
-            region=json_entry["region"],
+            region=constants_pb2.Region.Value(json_entry["region"]),
             queue_type=constants_pb2.QueueType.Value(json_entry["queueType"]),
             season=constants_pb2.Season.Value(json_entry["season"]),
             detail=self._get_detail(json_entry),
