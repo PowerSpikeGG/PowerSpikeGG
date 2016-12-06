@@ -1,0 +1,23 @@
+// Raw data service definition.
+// Defines endpoints of the service fetching data from the Riot API.
+
+syntax = "proto3";
+
+package fetcher.rds;
+
+import "powerspikegg/rawdata/public/constants.proto";
+import "powerspikegg/rawdata/public/match.proto";
+
+service MatchFetcher {
+    // Get details about a specific match.
+    rpc Match (MatchRequest) returns (game.leagueoflegends.MatchReference);
+}
+
+// Message used to request a match to the gRPC endpoint.
+message MatchRequest {
+    // Id of the requested match. Required.
+    int64 id = 1;
+
+    // Region where the match was observed. Required.
+    game.leagueoflegends.Region region = 2;
+}
