@@ -1,0 +1,6 @@
+# Install this by executing the following command:
+#    pip install -r python_dependencies.txt --user
+git+git://github.com/pseudonym117/Riot-Watcher.git
+python-gflags
+google-apputils
+grpcio
