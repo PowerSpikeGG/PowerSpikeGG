@@ -158,6 +158,8 @@ class ConverterEndToEndTest(unittest.TestCase):
         self.assertEqual(reference.timestamp, self.data["matchCreation"])
         self.assertEqual(reference.version, self.data["matchVersion"])
         self.assertEqual(reference.plateform_id, self.data["platformId"])
+        self.assertEqual(reference.region,
+            constants_pb2.Region.Value(self.data["region"]))
         self.assertEqual(reference.queue_type,
             constants_pb2.QueueType.Value(self.data["queueType"]))
         self.assertEqual(reference.season,

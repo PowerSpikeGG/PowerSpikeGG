@@ -23,7 +23,7 @@ message MatchReference {
 
     string version = 3;  // Game version
     string plateform_id = 4;  // Plateform ID on which the game was played.
-    string region = 5;  // Region where the game was played (NA, EUW...)
+    Region region = 5;  // Region where the game was played (NA, EUW...)
 
     QueueType queue_type = 6;
     Season season = 7;

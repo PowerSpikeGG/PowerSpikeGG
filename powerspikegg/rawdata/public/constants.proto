@@ -9,6 +9,22 @@ syntax = "proto3";
 
 package game.leagueoflegends;
 
+// Enumerator of region tags.
+// Each region has a tag (such as North America - na) and we often use more the
+// tags than the name of the region itself.
+enum Region {
+    BR = 0; // Brazil
+    EUNE = 1; // Europe Nordic East
+    EUW = 2; // Europe West
+    KR = 3; // Korea
+    LAN = 4; // Latin America North
+    LAS = 5; // Latin America South
+    NA = 6; // North America
+    OCE = 7; // Oceania
+    RU = 8; // Russia
+    TR = 9; // Turkey
+}
+
 // Map names.
 enum Map {
     SUMMONER_RIFT = 0;
