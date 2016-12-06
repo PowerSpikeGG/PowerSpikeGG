@@ -2,6 +2,23 @@
 
 load("@org_pubref_rules_protobuf//python:rules.bzl", "py_proto_compile")
 
+py_library(
+    name="handler",
+    srcs=[
+        "handler.py",
+    ],
+)
+
+py_test(
+    name="handler_test",
+    srcs=[
+        "handler_test.py",
+    ],
+    deps=[
+        ":handler",
+    ],
+)
+
 filegroup(
     name="protos",
     srcs=glob(["*.proto"])
