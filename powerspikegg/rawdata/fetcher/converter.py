@@ -243,14 +243,3 @@ class JSONConverter():
             season=constants_pb2.Season.Value(json_entry["season"]),
             detail=self._get_detail(json_entry),
         )
-
-
-# TODO(funkysayu) remove this
-if __name__ == "__main__":
-    import os
-    this_dir = os.path.dirname(os.path.abspath(__file__))
-    data = open(this_dir + "/samples/match.json").read()
-    import json
-    d = json.loads(data)
-    converter = JSONConverter(None)
-    print(converter.json_match_to_match_pb(d))
