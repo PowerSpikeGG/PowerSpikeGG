@@ -4,3 +4,5 @@ git+git://github.com/pseudonym117/Riot-Watcher.git
 python-gflags
 google-apputils
 grpcio
+pymongo
+mockupdb

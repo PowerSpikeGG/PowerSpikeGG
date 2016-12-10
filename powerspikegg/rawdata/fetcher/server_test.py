@@ -23,10 +23,14 @@ class MatchFetcherTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Instantiate a server for tests"""
-        cls.server, cls.service = start_server("123", 50001, 10)
+        # Avoid setting up a Riot API handler and a cache system
+        MatchFetcher.riot_api_handler = mock.MagicMock()
+        MatchFetcher.cache_manager = mock.MagicMock()
+
+        cls.server, cls.service = start_server("123", 50002, 10)
 
         # Only initialize once the stub
-        cls.channel = grpc.insecure_channel("localhost:50001")
+        cls.channel = grpc.insecure_channel("localhost:50002")
         cls.stub = service_pb2.MatchFetcherStub(cls.channel)
 
     @classmethod
@@ -37,13 +41,17 @@ class MatchFetcherTest(unittest.TestCase):
     def setUp(self):
         """Generates a new magic mock in the handler for each tests."""
         self.service.riot_api_handler = mock.MagicMock()
+        self.service.cache_manager = mock.MagicMock()
 
-    def test_server_standard_request(self):
+    def test_match_fetching(self):
         """Check if the server handle correctly a normal request."""
         # Forward sample data fetched from the Riot API directly as result
         this_dir = os.path.dirname(os.path.abspath(__file__))
         with open(os.sep.join([this_dir, "samples", self.MATCH_DATA])) as f:
             self.match_data = json.load(f)
+
+        # Setup mocks
+        self.service.cache_manager.find_match.return_value = None
         self.service.riot_api_handler.get_match.return_value = self.match_data
 
         response = self.stub.Match(service_pb2.MatchRequest(id=4242,
@@ -53,9 +61,29 @@ class MatchFetcherTest(unittest.TestCase):
         converter = JSONConverter(None)
         expected = converter.json_match_to_match_pb(self.match_data)
         self.assertEqual(response, expected)
+        self.assertTrue(self.service.cache_manager.save_match.called)
+
+    def test_match_from_cache(self):
+        """Check if the server returns a match from the cache."""
+        # Forward sample data fetched from the Riot API directly as result
+        this_dir = os.path.dirname(os.path.abspath(__file__))
+        with open(os.sep.join([this_dir, "samples", self.MATCH_DATA])) as f:
+            self.match_data = json.load(f)
+
+        # Setup mocks
+        self.service.cache_manager.find_match.return_value = self.match_data
+
+        response = self.stub.Match(service_pb2.MatchRequest(id=4242,
+            region=constants_pb2.EUW))
+
+        # Check the conversion of the sample is matching the response
+        self.assertTrue(self.service.cache_manager.find_match.called)
+        self.assertFalse(self.service.riot_api_handler.get_match.called)
+        self.assertFalse(self.service.cache_manager.save_match.called)
 
     def test_match_not_found(self):
         """Check if the server send an empty match if not found."""
+        self.service.cache_manager.find_match.return_value = None
         self.service.riot_api_handler.get_match.side_effect = LoLException(
             "404", requests.Response())
 
