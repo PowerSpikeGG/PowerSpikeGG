@@ -12,6 +12,7 @@ py_binary(
     deps=[
         ":converter",
         ":handler",
+        ":cache",
     ],
 )
 
@@ -25,6 +26,25 @@ py_test(
     ],
     data=[
         "//powerspikegg/rawdata/fetcher/samples",
+    ],
+)
+
+py_library(
+    name="cache",
+    srcs=[
+        "cache.py",
+        ":service_py",
+        "//powerspikegg/rawdata/public:leagueoflegends_py",
+    ],
+)
+
+py_test(
+    name="cache_test",
+    srcs=[
+        "cache_test.py",
+    ],
+    deps=[
+        ":cache",
     ],
 )
 

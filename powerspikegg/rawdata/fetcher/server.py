@@ -10,6 +10,7 @@ from concurrent import futures
 
 from powerspikegg.rawdata.public import match_pb2
 from powerspikegg.rawdata.public import constants_pb2
+from powerspikegg.rawdata.fetcher import cache
 from powerspikegg.rawdata.fetcher import converter
 from powerspikegg.rawdata.fetcher import handler
 from powerspikegg.rawdata.fetcher import service_pb2
@@ -42,13 +43,19 @@ class MatchFetcher(service_pb2.MatchFetcherServicer):
     invalidation due to rate-limitation.
     """
 
+    riot_api_handler = None
+    cache_manager = None
+
     def __init__(self, riot_api_token):
         """Constructor. Instantiate a Riot API handler.
 
         Parameters:
             riot_api_token: Argparser arguments.
         """
-        self.riot_api_handler = handler.RiotAPIHandler(riot_api_token)
+        if self.riot_api_handler is None:
+            self.riot_api_handler = handler.RiotAPIHandler(riot_api_token)
+        if self.cache_manager is None:
+            self.cache_manager = cache.CacheManager()
         self.converter = converter.JSONConverter(self.riot_api_handler)
 
     def Match(self, request, context):
@@ -66,11 +73,17 @@ class MatchFetcher(service_pb2.MatchFetcherServicer):
         if not request.region:
             raise ValueError("Missing required field Region in the request.")
 
-        try:
-            match_data = self.riot_api_handler.get_match(request.id,
-                constants_pb2.Region.Name(request.region))
-        except riotwatcher.LoLException as e:
-            return match_pb2.MatchReference()
+        match_data = self.cache_manager.find_match(request)
+
+        if match_data is None:
+            try:
+                match_data = self.riot_api_handler.get_match(request.id,
+                    constants_pb2.Region.Name(request.region))
+            except riotwatcher.LoLException as e:
+                logging.error("Riot API handler raised an exception: %s", e)
+                return match_pb2.MatchReference()
+
+            self.cache_manager.save_match(match_data)
 
         return self.converter.json_match_to_match_pb(match_data)
 
