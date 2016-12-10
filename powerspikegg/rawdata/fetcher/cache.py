@@ -16,6 +16,10 @@ gflags.DEFINE_string("rawdata_cache_database_name", "rawdata",
     "database name containing Riot API data.")
 gflags.DEFINE_integer("mongodb_connection_timeout", 1,
     "seconds before assuming the mongodb connection timeouts.")
+gflags.DEFINE_boolean("disable_mongodb_exception", False,
+    "disable MongoDB exception propagation.")
+gflags.DEFINE_integer("mongodb_connection_retry", 10,
+    "maximum connection attempts to the mongo database.")
 
 
 def _silent_connection_failure(func):
@@ -28,6 +32,9 @@ def _silent_connection_failure(func):
     def wrapper(*args, **kwargs):
         """Wraps the function to catch timeout exception.
         """
+        if not FLAGS.disable_mongodb_exception:
+            return func(*args, **kwargs)
+
         try:
             result = func(*args, **kwargs)
         except pymongo.errors.ServerSelectionTimeoutError as e:
@@ -44,7 +51,6 @@ class CacheManager:
     Uses a Mongo DB instance to store matches.
     """
 
-    MAX_CONNECTION_ATTEMPTS = 1
     address = None
 
     def __init__(self, lazy_connection=False):
@@ -57,7 +63,7 @@ class CacheManager:
         if self.address is None:
             self.address = "mongodb://%s/" % FLAGS.rawdata_cache_server_address
 
-        for _ in range(self.MAX_CONNECTION_ATTEMPTS):
+        for _ in range(FLAGS.mongodb_connection_retry):
             self.client = self._connect(self.address, lazy_connection)
             if self.client is not None:
                 break
