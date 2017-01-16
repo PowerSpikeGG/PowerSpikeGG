@@ -1,5 +1,5 @@
 #!/bin/bash
-ROOT=$(PWD)
+ROOT=$(pwd)
 OUT_DIR="$ROOT/$1"
 GENDIR="$ROOT/$2"
 
@@ -9,4 +9,5 @@ cd "powerspikegg/frontend"
 # Compile client
 export USERPROFILE="$ROOT/$GENDIR/.appdata"
 export HOME=$USERPROFILE
-(./node_modules/.bin/ng build --output-path "$OUT_DIR") || true
+
+./node_modules/.bin/ng build --output-path "$OUT_DIR"
