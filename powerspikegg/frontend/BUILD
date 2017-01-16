@@ -12,12 +12,7 @@ genrule(
 genrule(
     name = "frontend",
     srcs = ["scripts/build.sh"],
-    outs = [
-        "index.html",
-        "inline.bundle.js",
-        "main.bundle.js",
-        "styles.bundle.css",
-    ],
+    outs = ["dist.tar"],
     cmd = "bash $(location scripts/build.sh) $(@D) $(GENDIR)",
     local = 1,
     tools = ["install"],
