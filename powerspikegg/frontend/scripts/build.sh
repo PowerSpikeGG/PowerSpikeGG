@@ -10,4 +10,5 @@ cd "powerspikegg/frontend"
 export USERPROFILE="$ROOT/$GENDIR/.appdata"
 export HOME=$USERPROFILE
 
-./node_modules/.bin/ng build --output-path "$OUT_DIR"
+./node_modules/.bin/ng build --output-path "$OUT_DIR/dist"
+tar -cf "$OUT_DIR/dist.tar" "$OUT_DIR/dist"
