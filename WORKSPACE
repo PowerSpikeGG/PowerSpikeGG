@@ -49,3 +49,12 @@ load("@org_pubref_rules_protobuf//java:rules.bzl", "java_proto_repositories")
 py_proto_repositories()  # Also bootstrap the cpp repository
 go_proto_repositories()
 java_proto_repositories()
+
+# Load docker image
+load("//thirdparty/bazel-docker:docker-pull.bzl", "docker_pull")
+
+docker_pull(
+    name = "ubuntu-wily-amd64",
+    dockerfile = "//thirdparty/bazel-docker:Dockerfile.node",
+    tag = "local:ubuntu-wily-amd64",
+)
