@@ -1,0 +1,90 @@
+.video-background {
+  position: relative;
+  height: 750px;
+  overflow: hidden;
+}
+
+.video-background video,
+.video-background img {
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.video-background:before {
+  background: #132f63;
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: .8;
+  z-index: 1;
+}
+
+.video-header {
+  position: absolute;
+  margin: auto;
+  top:0; left:0; right:0; bottom:0;
+  text-align: center;
+  z-index: 10;
+}
+
+.video-header h1 {
+  margin-top: 150px;
+  font-size: 35px;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+app-searchbar .search-input {
+  position: relative;
+  width: 540px;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+
+app-searchbar .search-input > md-icon {
+  position: absolute;
+  top: 20px;
+  right: -2px;
+  color: #7b7b7b;
+  cursor: pointer;
+}
+
+app-searchbar input {
+  background: #fff!important;
+  padding: 20px!important;
+  margin-left: -20px;
+  font-size: 18px;
+  border-radius: 5px;
+  border-width: 0;
+  width: 100%;
+  box-shadow: 0px 0px 200px 13px rgba(126, 174, 255, 0.68);
+  -webkit-transition: all 0.35s ease-out;
+  -moz-transition: all 0.35s ease-out;
+  -ms-transition: all 0.35s ease-out;
+  -o-transition: all 0.35s ease-out;
+  transition: all 0.35s ease-out;
+}
+
+app-searchbar input:focus {
+    box-shadow: 0px 0px 40px 5px #7eaeff;
+  -webkit-transition: all 0.20s ease-in-out;
+  -moz-transition: all 0.20s ease-in-out;
+  -ms-transition: all 0.20s ease-in-out;
+  -o-transition: all 0.20s ease-in-out;
+  transition: all 0.20s ease-in-out;
+}
+
+app-location-picker .location-button {
+  position: absolute;
+  top: 12px;
+  right: 40px;
+  font-size: 15px;
+  padding: 10px;
+  background: #6284c5;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
