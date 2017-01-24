@@ -8,23 +8,19 @@ import { MaterialModule } from '@angular/material';
 import {AppComponent} from './app.component';
 
 import {routing, appRoutingProviders} from './app.routing';
-import {HomeComponent} from "./home/home.component";
 import {PageNotFoundComponent} from "./page-not-found/page-not-found.component";
-import {SearchBarComponent} from "./searchbar/searchbar.component";
-import {LocationPickerComponent} from "./location-picker/location-picker.component";
+import {HomeModule} from "./home/home.module";
 
 @NgModule({
     declarations: [
         AppComponent,
-        HomeComponent,
-        SearchBarComponent,
-        PageNotFoundComponent,
-        LocationPickerComponent
+        PageNotFoundComponent
     ],
     imports: [
         BrowserModule,
         FormsModule,
         HttpModule,
+        HomeModule,
         routing,
         MaterialModule.forRoot()
     ],
