@@ -1,7 +1,6 @@
 import gflags
 import grpc
 import logging
-import riotwatcher
 import sys
 import time
 import threading
@@ -14,6 +13,7 @@ from powerspikegg.rawdata.fetcher import cache
 from powerspikegg.rawdata.fetcher import converter
 from powerspikegg.rawdata.fetcher import handler
 from powerspikegg.rawdata.fetcher import service_pb2
+from third_party.python.riotwatcher import riotwatcher
 
 
 """

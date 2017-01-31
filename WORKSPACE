@@ -33,6 +33,13 @@ git_repository(
     tag="v0.7.1",
 )
 
+# Python dependencies management
+git_repository(
+    name="com_github_gengo_rules_pypi",
+    remote="https://github.com/gengo/rules_pypi",
+    commit="c5eb70d7c31adf18bdca1813f69cde51f17c8c62",
+)
+
 
 #
 # Repository / library bootstraping
@@ -49,3 +56,60 @@ load("@org_pubref_rules_protobuf//java:rules.bzl", "java_proto_repositories")
 py_proto_repositories()  # Also bootstrap the cpp repository
 go_proto_repositories()
 java_proto_repositories()
+
+
+#
+# Python Dependencies
+#
+
+load("@com_github_gengo_rules_pypi//pypi:def.bzl", "pypi_repositories")
+load("@com_github_gengo_rules_pypi//pypi:def.bzl", "pypi_repository")
+pypi_repositories()
+
+pypi_repository(
+    name="pydep_gflags",
+    pkg="python-gflags",
+    pure=1,
+    srcs_version="PY2AND3",
+    version="3.1.0",
+)
+
+pypi_repository(
+    name="pydep_appdirs",
+    pkg="appdirs",
+    pure=1,
+    srcs_version="PY2AND3",
+    version="1.4.0",
+)
+
+pypi_repository(
+    name="pydep_mock",
+    pkg="mock",
+    pure=1,
+    srcs_version="PY2AND3",
+    version="1.0.1",
+)
+
+pypi_repository(
+    name="pydep_mockupdb",
+    pkg="mockupdb",
+    pure=1,
+    srcs_version="PY2AND3",
+    version="1.1.1",
+)
+
+pypi_repository(
+    name="pydep_requests",
+    pkg="requests",
+    pure=1,
+    srcs_version="PY2AND3",
+    version="2.13.0",
+)
+
+pypi_repository(
+    name="pydep_pymongo",
+    pkg="pymongo",
+    pure=1,
+    srcs_version="PY2AND3",
+    version="3.4.0",
+)

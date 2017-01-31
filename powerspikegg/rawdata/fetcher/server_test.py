@@ -5,14 +5,13 @@ import os
 import requests
 import unittest
 
-from riotwatcher import LoLException
-
 from powerspikegg.rawdata.fetcher import service_pb2
 from powerspikegg.rawdata.fetcher.converter import JSONConverter
 from powerspikegg.rawdata.fetcher.server import MatchFetcher
 from powerspikegg.rawdata.fetcher.server import start_server
 from powerspikegg.rawdata.public import constants_pb2
 from powerspikegg.rawdata.public import match_pb2
+from third_party.python.riotwatcher import riotwatcher
 
 
 class MatchFetcherTest(unittest.TestCase):
@@ -84,8 +83,8 @@ class MatchFetcherTest(unittest.TestCase):
     def test_match_not_found(self):
         """Check if the server send an empty match if not found."""
         self.service.cache_manager.find_match.return_value = None
-        self.service.riot_api_handler.get_match.side_effect = LoLException(
-            "404", requests.Response())
+        self.service.riot_api_handler.get_match.side_effect = (
+            riotwatcher.LoLException("404", requests.Response()))
 
         response = self.stub.Match(service_pb2.MatchRequest(id=4242,
             region=constants_pb2.EUW))
