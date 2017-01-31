@@ -1,6 +1,23 @@
 # Raw data fetcher
 
-load("@org_pubref_rules_protobuf//python:rules.bzl", "py_proto_compile")
+load("//powerspikegg:powerspikegg.bzl", "psgg_proto_library")
+
+filegroup(
+    name="protos",
+    srcs=glob(["*.proto"]),
+)
+
+psgg_proto_library(
+    name="service",
+    srcs=[
+        ":protos",
+    ],
+    deps=[
+        "//powerspikegg/rawdata/public:leagueoflegends",
+    ],
+    #with_grpc=True,
+    visibility=["//visibility:public"],
+)
 
 py_binary(
     name="server",
@@ -75,19 +92,6 @@ py_test(
     ],
 )
 
-filegroup(
-    name="protos",
-    srcs=glob(["*.proto"])
-)
-
-py_proto_compile(
-    name="service_py",
-    protos=[":protos"],
-    deps=["//powerspikegg/rawdata/public:leagueoflegends_py"],
-    with_grpc=True,
-    visibility=["//visibility:public"],
-)
-
 py_library(
     name="converter",
     srcs=[
@@ -96,7 +100,7 @@ py_library(
     ],
     deps=[
         "//powerspikegg/rawdata/lib/python:static",
-    ]
+    ],
 )
 
 py_test(
@@ -112,5 +116,5 @@ py_test(
     ],
     data=[
         "//powerspikegg/rawdata/fetcher/samples",
-    ]
+    ],
 )

@@ -17,13 +17,6 @@ git_repository(
     tag="0.3.0",
 )
 
-# Protobuf compiler
-git_repository(
-    name="protobuf",
-    remote="https://github.com/google/protobuf",
-    tag="v3.1.0",
-)
-
 # Protobuf compilation rules
 # TODO(funkysayu) Rewrite those rules to be more generic while generating
 #                 protobufs APIs.
