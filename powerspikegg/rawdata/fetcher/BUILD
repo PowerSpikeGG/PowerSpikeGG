@@ -15,7 +15,6 @@ psgg_proto_library(
     deps=[
         "//powerspikegg/rawdata/public:leagueoflegends",
     ],
-    #with_grpc=True,
     visibility=["//visibility:public"],
 )
 
