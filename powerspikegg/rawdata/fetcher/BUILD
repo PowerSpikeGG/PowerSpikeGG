@@ -13,6 +13,8 @@ py_binary(
         ":converter",
         ":handler",
         ":cache",
+        "//third_party/python/riotwatcher",
+        "@pydep_gflags//:library",
     ],
 )
 
@@ -23,6 +25,7 @@ py_test(
     ],
     deps=[
         ":server",
+        "@pydep_mock//:library",
     ],
     data=[
         "//powerspikegg/rawdata/fetcher/samples",
@@ -36,6 +39,9 @@ py_library(
         ":service_py",
         "//powerspikegg/rawdata/public:leagueoflegends_py",
     ],
+    deps=[
+        "@pydep_pymongo//:library",
+    ],
 )
 
 py_test(
@@ -45,6 +51,7 @@ py_test(
     ],
     deps=[
         ":cache",
+        "@pydep_mockupdb//:library",
     ],
 )
 
@@ -52,6 +59,9 @@ py_library(
     name="handler",
     srcs=[
         "handler.py",
+    ],
+    deps=[
+        "//third_party/python/riotwatcher",
     ],
 )
 
@@ -98,6 +108,7 @@ py_test(
     deps=[
         ":converter",
         "//powerspikegg/rawdata/lib/python:static",
+        "@pydep_mockupdb//:library",
     ],
     data=[
         "//powerspikegg/rawdata/fetcher/samples",
