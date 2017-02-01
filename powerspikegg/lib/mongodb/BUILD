@@ -1,0 +1,19 @@
+py_library(
+    name="wrapper",
+    srcs=[
+        "wrapper.py",
+    ],
+    data=[
+        "@com_mongodb_binary//:all",
+    ],
+)
+
+py_test(
+    name="wrapper_test",
+    srcs=[
+        "wrapper_test.py",
+    ],
+    deps=[
+        ":wrapper",
+    ],
+)
