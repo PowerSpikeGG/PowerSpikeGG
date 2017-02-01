@@ -53,35 +53,26 @@ class CacheManager:
 
     address = None
 
-    def __init__(self, lazy_connection=False):
-        """Constructor. Initialize the client.
-
-        Parameters:
-            lazy_connection: avoid testing if the connection is working while
-                initializing it.
-        """
+    def __init__(self):
+        """Constructor. Initialize the client to the Mongo server."""
         if self.address is None:
             self.address = "mongodb://%s/" % FLAGS.rawdata_cache_server_address
 
         for _ in range(FLAGS.mongodb_connection_retry):
-            self.client = self._connect(self.address, lazy_connection)
+            self.client = self._connect(self.address)
             if self.client is not None:
                 break
         else:
             logging.critical("Unable to reach the MongoDB server.")
 
-    def _connect(self, address, lazy_connection=False):
+    def _connect(self, address):
         """Set up a connection to the MongoDB server.
 
         Parameters:
             address: MongoDB server address.
-            lazy_connection: avoid testing if the connection is working while
-                initializing it.
         """
         client = pymongo.MongoClient(address,
             serverSelectionTimeoutMS=FLAGS.mongodb_connection_timeout)
-        if lazy_connection:
-            return client
 
         # Send a query to the server to see if the connection is working.
         try:

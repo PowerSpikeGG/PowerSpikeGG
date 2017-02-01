@@ -67,7 +67,6 @@ py_test(
     ],
     deps=[
         ":cache",
-        "@pydep_mockupdb//:library",
     ],
 )
 
@@ -111,7 +110,6 @@ py_test(
     deps=[
         ":converter",
         "//powerspikegg/rawdata/lib/python:static",
-        "@pydep_mockupdb//:library",
     ],
     data=[
         "//powerspikegg/rawdata/fetcher/samples",

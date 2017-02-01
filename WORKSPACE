@@ -97,14 +97,6 @@ pypi_repository(
 )
 
 pypi_repository(
-    name="pydep_mockupdb",
-    pkg="mockupdb",
-    pure=1,
-    srcs_version="PY2AND3",
-    version="1.1.1",
-)
-
-pypi_repository(
     name="pydep_requests",
     pkg="requests",
     pure=1,
