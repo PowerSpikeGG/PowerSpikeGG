@@ -6,6 +6,7 @@ py_library(
     data=[
         "@com_mongodb_binary//:all",
     ],
+    testonly=1,
 )
 
 py_test(
