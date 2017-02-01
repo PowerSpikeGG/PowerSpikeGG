@@ -35,6 +35,19 @@ git_repository(
 
 
 #
+# Development dependencies
+#
+
+# MongoDB dependency, used for test purpose (not used in production)
+new_http_archive(
+    name="com_mongodb_binary",
+    build_file="third_party/mongodb.BUILD",
+    url="https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-3.4.1.tgz",
+    sha256="7d8aa843c83ed1cbcd05b5ad8b9c9d6d46de12506c77d3c29c303fba7f19eebc",
+)
+
+
+#
 # Repository / library bootstraping
 #
 
