@@ -6,6 +6,9 @@ py_library(
     data=[
         "@com_mongodb_binary//:all",
     ],
+    visibility=[
+        "//visibility:public",
+    ],
     testonly=1,
 )
 

@@ -3,6 +3,7 @@ import logging
 import pymongo
 
 from functools import wraps
+from bson.objectid import ObjectId
 
 from powerspikegg.rawdata.public import constants_pb2
 
@@ -52,11 +53,14 @@ class CacheManager:
     """
 
     address = None
+    database_name = None
 
     def __init__(self):
         """Constructor. Initialize the client to the Mongo server."""
         if self.address is None:
             self.address = "mongodb://%s/" % FLAGS.rawdata_cache_server_address
+        if self.database_name is None:
+            self.database_name = FLAGS.rawdata_cache_database_name
 
         for _ in range(FLAGS.mongodb_connection_retry):
             self.client = self._connect(self.address)
@@ -92,11 +96,12 @@ class CacheManager:
         Returns:
             The corresponding match or None if not found.
         """
-        matches = self.client[FLAGS.rawdata_cache_database_name].matches
-        return matches.find_one({
+        matches = self.client[self.database_name].matches
+        selector = {
             "matchId": match_request.id,
             "region": constants_pb2.Region.Name(match_request.region),
-        })
+        }
+        return matches.find_one(selector)
 
     @_silent_connection_failure
     def save_match(self, match_data):
@@ -105,5 +110,8 @@ class CacheManager:
         Parameters:
             match_data: data to store.
         """
-        matches = self.client[FLAGS.rawdata_cache_database_name].matches
+        matches = self.client[self.database_name].matches
+
+        # Ensures key _id is dynamically managed
+        match_data["_id"] = ObjectId()
         matches.insert_one(match_data)
