@@ -94,6 +94,11 @@ class MongoDBServer():
         """Returns the server port."""
         return self.process_context.port
 
+    @property
+    def address(self):
+        """Returns the server address."""
+        return "127.0.0.1:%s" % self.process_context.port
+
     def shutdown(self):
         """Shutdown the process and clean the context."""
         self.process.terminate()

@@ -67,6 +67,7 @@ py_test(
     ],
     deps=[
         ":cache",
+        "//powerspikegg/lib/mongodb:wrapper",
     ],
 )
 
