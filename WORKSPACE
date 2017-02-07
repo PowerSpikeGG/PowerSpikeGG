@@ -14,8 +14,12 @@ workspace(name = "org_powerspikegg")
 git_repository(
     name = "io_bazel_rules_go",
     remote = "https://github.com/bazelbuild/rules_go.git",
-    tag = "0.3.0",
+    tag = "0.4.0",
 )
+
+load("@io_bazel_rules_go//proto:go_proto_library.bzl", "go_proto_repositories")
+
+go_proto_repositories()
 
 # Protobuf compilation rules
 # TODO(funkysayu) Rewrite those rules to be more generic while generating
@@ -56,12 +60,9 @@ go_repositories()
 
 # Load proto compiler per languages
 load("@org_pubref_rules_protobuf//python:rules.bzl", "py_proto_repositories")
-load("@org_pubref_rules_protobuf//go:rules.bzl", "go_proto_repositories")
 load("@org_pubref_rules_protobuf//java:rules.bzl", "java_proto_repositories")
 
 py_proto_repositories()  # Also bootstrap the cpp repository
-
-go_proto_repositories()
 
 java_proto_repositories()
 
