@@ -4,6 +4,7 @@ import logging
 import sys
 import time
 import threading
+import traceback
 
 from concurrent import futures
 
@@ -80,6 +81,7 @@ class MatchFetcher(service_pb2.MatchFetcherServicer):
                 match_data = self.riot_api_handler.get_match(request.id,
                     constants_pb2.Region.Name(request.region))
             except riotwatcher.LoLException as e:
+                logging.debug(traceback.format_exc())
                 logging.error("Riot API handler raised an exception: %s", e)
                 return match_pb2.MatchReference()
 
