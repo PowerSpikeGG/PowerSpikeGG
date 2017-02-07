@@ -5,7 +5,7 @@ py_library(
         "wrapper.py",
     ],
     data = [
-        "@com_mongodb_binary//:all",
+        "@com_mongodb_binary//:server_files",
     ],
     visibility = [
         "//visibility:public",
@@ -19,5 +19,6 @@ py_test(
     ],
     deps = [
         ":wrapper",
+        "@pydep_pymongo//:library",
     ],
 )
