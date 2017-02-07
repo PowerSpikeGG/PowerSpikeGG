@@ -100,20 +100,23 @@ pypi_repository(
 )
 
 pypi_repository(
-    name = "pydep_requests",
-    pkg = "requests",
-    pure = 1,
-    srcs_version = "PY2AND3",
-    version = "2.13.0",
-)
-
-pypi_repository(
     name = "pydep_pymongo",
     pkg = "pymongo",
     pure = 1,
     srcs_version = "PY2AND3",
     version = "3.4.0",
 )
+
+# Since requests uses some specific files into its repository but is a pure
+# Python package, we manage its dependency through github instead of Pypi
+# with a custom BUILD file.
+new_git_repository(
+    name="pydep_requests",
+    build_file="third_party/python/requests.BUILD",
+    remote="https://github.com/kennethreitz/requests.git",
+    tag="v2.13.0",
+)
+
 
 #
 # Go dependencies
