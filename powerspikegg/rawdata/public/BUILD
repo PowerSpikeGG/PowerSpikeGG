@@ -1,13 +1,10 @@
 package(default_visibility=["//visibility:public"])
 
 load("//powerspikegg:powerspikegg.bzl", "psgg_proto_library")
+load("@io_bazel_rules_go//proto:go_proto_library.bzl", "go_proto_library")
 
-filegroup(
-    name = "protos",
-    srcs = glob(["*.proto"]),
-)
 
 psgg_proto_library(
     name = "leagueoflegends",
-    srcs = [":protos"],
+    srcs = glob(["*.proto"]),
 )

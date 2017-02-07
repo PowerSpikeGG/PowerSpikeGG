@@ -5,6 +5,7 @@
 # included in BUILD files.
 
 load("@org_pubref_rules_protobuf//python:rules.bzl", "py_proto_compile")
+load("@io_bazel_rules_go//proto:go_proto_library.bzl", "go_proto_library")
 
 DEFAULT_PROTO_VISIBILITY = ["//visibility:public"]
 
@@ -21,10 +22,28 @@ def _psgg_proto_library_py(name, srcs=[], protodeps=[], deps=[], visibility=[],
         testonly=testonly,
     )
 
-def psgg_proto_library(name, srcs=[], deps=[], visibility=[], testonly=0):
+def _psgg_proto_library_go(name, srcs=[], deps=[], has_services=0, visibility=[], testonly=0):
+    """Generates a Go proto library"""
+    godeps = [dep + "_gopb" for dep in deps]
+
+    go_proto_library(
+        name=name + "_gopb",
+        srcs=srcs,
+        deps=godeps,
+        has_services=has_services,
+        testonly=testonly,
+        visibility=visibility,
+    )
+
+def psgg_proto_library(name, srcs=[], deps=[], has_services=0, visibility=[], testonly=0):
     """PowerSpikeGG proto library generic compilation rule."""
     if visibility == []:
         visibility = DEFAULT_PROTO_VISIBILITY
+
+    native.filegroup(
+        name=name + "_protos",
+        srcs=srcs,
+    )
 
     _psgg_proto_library_py(
         name=name,
@@ -33,3 +52,13 @@ def psgg_proto_library(name, srcs=[], deps=[], visibility=[], testonly=0):
         testonly=testonly,
         visibility=visibility,
     )
+
+    _psgg_proto_library_go(
+        name=name,
+        srcs=srcs,
+        deps=deps,
+        has_services=has_services,
+        testonly=testonly,
+        visibility=visibility,
+    )
+

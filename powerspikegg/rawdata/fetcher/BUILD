@@ -2,19 +2,14 @@
 
 load("//powerspikegg:powerspikegg.bzl", "psgg_proto_library")
 
-filegroup(
-    name="protos",
-    srcs=glob(["*.proto"]),
-)
 
 psgg_proto_library(
     name="service",
-    srcs=[
-        ":protos",
-    ],
+    srcs=glob(["*.proto"]),
     deps=[
         "//powerspikegg/rawdata/public:leagueoflegends",
     ],
+    has_services=1,
     visibility=["//visibility:public"],
 )
 
