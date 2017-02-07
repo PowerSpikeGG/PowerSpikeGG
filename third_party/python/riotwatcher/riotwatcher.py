@@ -244,6 +244,10 @@ class RateLimit:
 
 
 class RiotWatcher:
+
+    # Used for testing purpose, disabling https make all routes testable.
+    enable_https = True
+
     def __init__(self, key, default_region=NORTH_AMERICA, limits=(RateLimit(10, 10), RateLimit(500, 600), )):
         self.key = key  #If you have a production key, use limits=(RateLimit(3000,10), RateLimit(180000,600),)
         self.default_region = default_region
@@ -266,7 +270,7 @@ class RiotWatcher:
             static: boolean indicating if the route is for getting static data.
         """
         return '{proxy}.api.pvp.net/api/lol'.format(
-            proxy='global' if static else region,
+            proxy='global' if static else region.lower(),
         )
 
     def base_request(self, url, region, static=False, **kwargs):
@@ -276,10 +280,11 @@ class RiotWatcher:
         for k in kwargs:
             if kwargs[k] is not None:
                 args[k] = kwargs[k]
-        r = requests.get('http://{base_url}/{static}{region}/{url}'.format(
+        r = requests.get('{protocol}://{base_url}/{static}{region}/{url}'.format(
+                protocol='https' if self.enable_https else 'http',
                 base_url=self.format_base_url(region, static),
                 static='static-data/' if static else '',
-                region=region,
+                region=region.lower(),
                 url=url
             ), params=args)
         if not static:

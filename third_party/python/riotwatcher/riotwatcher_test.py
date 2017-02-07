@@ -67,6 +67,7 @@ class LocalRiotWatcher(riotwatcher.RiotWatcher):
     """Override the url formater to target the local http server."""
 
     server_address = None
+    enable_https = False
 
     def format_base_url(self, region, static):
         """Format the URL to reach the local server"""
