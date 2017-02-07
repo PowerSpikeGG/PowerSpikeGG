@@ -14,7 +14,6 @@ try:
 except ImportError:
     from urllib import quote_plus  # Python 2.x
 
-MONGO_SERVER_VERSION = "3.4.1"
 MONGO_SERVER_REPOSITORY_NAME = "com_mongodb_binary"
 FOLDER_LEVEL_TO_WORKSPACE = 3
 MAX_INSTANTATION_ATTEMPT = 3
@@ -124,7 +123,6 @@ def _get_binary_path():
         workspace,
         "external",
         MONGO_SERVER_REPOSITORY_NAME,
-        "mongodb-linux-x86_64-%s" % MONGO_SERVER_VERSION,
         "bin",
         "mongod",
     ])
