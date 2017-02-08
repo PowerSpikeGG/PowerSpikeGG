@@ -16,6 +16,8 @@ import (
 	lolpb "powerspike.gg/powerspikegg/rawdata/public/leagueoflegends_gopb"
 )
 
+const defaultRegion = lolpb.Region_EUW
+
 type matchCommand struct {
 	base
 
@@ -51,7 +53,7 @@ func registerMatchCommand() {
 func (c *matchCommand) SetFlags(f *flag.FlagSet) {
 	c.base.SetFlags(f)
 
-	f.StringVar(&c.regionFlag, "region", "euw",
+	f.StringVar(&c.regionFlag, "region", defaultRegion.String(),
 		"region on which the matches was played")
 }
 
