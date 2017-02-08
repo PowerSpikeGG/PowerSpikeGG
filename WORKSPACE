@@ -114,3 +114,39 @@ pypi_repository(
     srcs_version = "PY2AND3",
     version = "3.4.0",
 )
+
+#
+# Go dependencies
+#
+
+load("@io_bazel_rules_go//go:def.bzl", "new_go_repository")
+
+new_go_repository(
+    name = "com_github_google_subcommands",
+    commit = "43f65adde14103c0e32a37df5a4abfe7b19c7251",
+    importpath = "github.com/google/subcommands",
+)
+
+new_go_repository(
+    name = "com_github_golang_protobuf",
+    commit = "8ee79997227bf9b34611aee7946ae64735e6fd93",
+    importpath = "github.com/golang/protobuf",
+)
+
+new_go_repository(
+    name = "org_golang_google_grpc",
+    commit = "f7011571680d9e541df1e0221b8d865bf34f4248",
+    importpath = "google.golang.org/grpc",
+)
+
+new_go_repository(
+    name = "org_golang_google_grpc",
+    commit = "f7011571680d9e541df1e0221b8d865bf34f4248",
+    importpath = "google.golang.org/grpc",
+)
+
+new_go_repository(
+    name = "org_golang_x_net",
+    commit = "236b8f043b920452504e263bc21d354427127473",
+    importpath = "golang.org/x/net",
+)
