@@ -34,13 +34,8 @@ enum Map {
 // Note we intentionnaly reduced the queue types in order to match our needs.
 // You may want to extends this enumerator for supporting more queues.
 enum QueueType {
-    CUSTOM = 0;
-    NORMAL_5x5_BLIND = 1;
-    NORMAL_5x5_DRAFT = 2;
-    RANKED_SOLO_5x5 = 3;
-    RANKED_PREMADE_5x5 = 4;
-    RANKED_FLEX_SR = 5;
-    RANKED_TEAM_5x5 = 6;
+    // Season 2017 ranked games
+    TEAM_BUILDER_RANKED_SOLO = 0;
 }
 
 // Ranked seasons.
