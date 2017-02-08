@@ -1,23 +1,23 @@
 py_library(
-    name="wrapper",
-    srcs=[
+    name = "wrapper",
+    testonly = 1,
+    srcs = [
         "wrapper.py",
     ],
-    data=[
+    data = [
         "@com_mongodb_binary//:all",
     ],
-    visibility=[
+    visibility = [
         "//visibility:public",
     ],
-    testonly=1,
 )
 
 py_test(
-    name="wrapper_test",
-    srcs=[
+    name = "wrapper_test",
+    srcs = [
         "wrapper_test.py",
     ],
-    deps=[
+    deps = [
         ":wrapper",
     ],
 )
