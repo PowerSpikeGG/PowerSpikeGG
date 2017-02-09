@@ -137,6 +137,7 @@ class RiotAPIHandlerTest(unittest.TestCase):
     def setUpClass(cls):
         """Create and serve a fake HTTP server."""
         cls.httpd = HTTPServer(cls.server_address, cls.handler)
+        cls.httpd.allow_reuse_address = True
         cls.running_thread = threading.Thread(target=cls.httpd.serve_forever)
         cls.running_thread.start()
 
