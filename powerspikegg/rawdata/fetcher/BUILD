@@ -5,11 +5,11 @@ load("//powerspikegg:powerspikegg.bzl", "psgg_proto_library")
 psgg_proto_library(
     name = "service",
     srcs = glob(["*.proto"]),
+    has_services = 1,
+    visibility = ["//visibility:public"],
     deps = [
         "//powerspikegg/rawdata/public:leagueoflegends",
     ],
-    has_services = 1,
-    visibility = ["//visibility:public"],
 )
 
 py_binary(

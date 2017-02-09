@@ -1,21 +1,21 @@
 licenses(["notice"])  # Apache v2
 
 filegroup(
-    name="certificates",
-    srcs=glob(["requests/*.pem"]),
+    name = "certificates",
+    srcs = glob(["requests/*.pem"]),
 )
 
 py_library(
-    name="library",
-    srcs=glob([
+    name = "library",
+    srcs = glob([
         "requests/*.py",
-        "requests/**/*.py"
+        "requests/**/*.py",
     ]),
-    imports=["."],
-    data=[
-        ":certificates"
+    data = [
+        ":certificates",
     ],
-    visibility=[
-        "//visibility:public"
+    imports = ["."],
+    visibility = [
+        "//visibility:public",
     ],
 )
