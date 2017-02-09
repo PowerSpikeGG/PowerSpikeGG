@@ -7,7 +7,6 @@
 load("@org_pubref_rules_protobuf//python:rules.bzl", "py_proto_compile")
 load("@io_bazel_rules_go//proto:go_proto_library.bzl", "go_proto_library")
 load("@org_pubref_rules_protobuf//java:rules.bzl",   "java_proto_library")
-load("@org_pubref_rules_protobuf//java:rules.bzl",   "java_proto_compile")
 
 DEFAULT_PROTO_VISIBILITY = ["//visibility:public"]
 
