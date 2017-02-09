@@ -6,17 +6,17 @@ filegroup(
         "project/*.properties",
         "app/**/*",
         "public/**/*",
-	"build.sbt"
-    ])
+        "build.sbt",
+    ]),
 )
 
 genrule(
     name = "dist",
     srcs = [
-        "src"
+        "src",
     ],
     outs = ["dist.zip"],
     cmd = """cd powerspikegg/gateway && 
              sbt -Dsbt.global.base=./.sbt/ -Dsbt.ivy.home=./.ivy2/ -Divy.home=./.ivy2/ dist && 
-             mv target/universal/gateway-1.0-SNAPSHOT.zip ../../$(@)"""
+             mv target/universal/gateway-1.0-SNAPSHOT.zip ../../$(@)""",
 )
