@@ -245,7 +245,7 @@ class RateLimit:
 
 class RiotWatcher:
 
-    # Used for testing purpose, disabling https make all routes testable.
+    # Used for testing purpose (do NOT modify this for production code)
     enable_https = True
 
     def __init__(self, key, default_region=NORTH_AMERICA, limits=(RateLimit(10, 10), RateLimit(500, 600), )):
