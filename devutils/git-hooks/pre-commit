@@ -6,9 +6,9 @@
 # brief: Ensures commit respect PowerSpikeGG policy
 #
 
-source "$(dirname $0)/../lib/bash/bazel.bash"
-source "$(dirname $0)/../lib/bash/logging.bash"
-source "$(dirname $0)/../lib/bash/prompt.bash"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/bash/bazel.bash"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/bash/logging.bash"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/bash/prompt.bash"
 
 # Rules checking Go code validity
 PreCommit::GoChecks () {
