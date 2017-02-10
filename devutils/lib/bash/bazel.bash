@@ -6,11 +6,6 @@
 # brief: Bazel utilities for bash
 #
 
-readonly BAZEL_TESTS_FAILURE=3
-readonly BAZEL_NO_TESTS_FOUND=4
-readonly BAZEL_RUN_FAILURE=6
-readonly BAZEL_ANALYSIS_FAILURE=7
-
 
 # Get Bazel rules using files given in stdin as source file
 Bazel::GetAssociatedTests () {
