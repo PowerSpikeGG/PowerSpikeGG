@@ -13,7 +13,7 @@ workspace(name = "org_powerspikegg")
 # Golang Bazel rules
 git_repository(
     name = "io_bazel_rules_go",
-    remote = "https://github.com/bazelbuild/rules_go.git",
+    remote = "https://github.com/bazelbuild/rules_go",
     tag = "0.4.0",
 )
 
