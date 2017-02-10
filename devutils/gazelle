@@ -1,0 +1,60 @@
+#!/bin/bash
+
+##
+# name: gazelle
+# author: Axel Martin (for PowerSpikeGG)
+# brief: Customization of Gazelle for this project
+#
+
+source "$(dirname "${BASH_SOURCE[0]}")/lib/bash/logging.bash"
+source "$(dirname "${BASH_SOURCE[0]}")/lib/bash/prompt.bash"
+
+PROTO_RULE_REPLACEMENT_REGEX='s/\/\([[:alnum:]_]*\)_gopb:.*"/:\1_gopb"/g'
+
+# Sanitiaze the workspace, so every BUILD files using Go are correctly formated.
+Gazelle::SanitizeWorkspace () {
+    cd $(bazel info workspace)
+    gazelle
+
+    # Gazelle generates also dependencies to the proto paths. However, those
+    # dependencies does not have the appropriate name. Replace all of them by
+    # their appropriate names.
+    find . -name "BUILD" -exec sed -e $PROTO_RULE_REPLACEMENT_REGEX -i {} \;
+}
+
+# Validate the format of a file.
+Gazelle::CheckFile () {
+    local filepath=$1
+
+    local testpath=$(mktemp)
+    cat $filepath | md5sum > $testpath
+
+    gazelle -mode print -repo_root=$(bazel info workspace) $(dirname $filepath) \
+        | sed -e $PROTO_RULE_REPLACEMENT_REGEX \
+        | tail -n +4 \
+        | md5sum --status -c $testpath
+    echo $?
+}
+
+
+# Simply call the workspace sanitizing.
+main () {
+    if [ ! -x "$GOPATH/bin/gazelle" ]; then
+        Prompt::YesNoPrompt "would you like to install Gazelle?" || Log::Failure "Aborting..."
+
+        go get github.com/bazelbuild/rules_go/go/tools/gazelle/gazelle
+    fi
+
+    if [ ! -x "$GOPATH/bin/wtool" ]; then
+        Prompt::YesNoPrompt "would you like to install Gazelle?" || Log::Failure "Aborting..."
+
+        go get github.com/bazelbuild/rules_go/go/tools/wtool
+    fi
+
+    Log::Notice "starting workspace sanitization..."
+    Gazelle::SanitizeWorkspace
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main "$@"
+fi
