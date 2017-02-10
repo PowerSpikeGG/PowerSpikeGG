@@ -6,6 +6,7 @@
 # brief: Bazel utilities for bash
 #
 
+source "$(dirname $0)/logging.bash"
 
 # Get Bazel rules using files given in stdin as source file
 Bazel::GetAssociatedTests () {
