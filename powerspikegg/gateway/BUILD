@@ -1,45 +1,33 @@
+load("@io_bazel_rules_scala//scala:scala.bzl", "scala_library", "scala_binary", "scala_test")
+
 filegroup(
     name = "src",
     srcs = glob([
-        "conf/**/*",
-        "project/*.sbt",
-        "project/*.properties",
-        "app/**/*",
-        "public/**/*",
-        "build.sbt",
-    ]),
+        "src/*"
+    ])
 )
 
-filegroup(
-    name = "config",
-    srcs = glob([
-        "built.sbt",
-        "project/*.sbt",
-        "project/*.properties",
-    ]),
+scala_binary(
+    name = "server",
+    srcs = ["src"],
+    main_class = "Main",
+    deps = ["akka-http_2.11"]
 )
 
-genrule(
-    name = "install",
-    srcs = [
-        "config",
-    ],
-    outs = [
-        "sbt.zip",
-    ],
-    cmd = """cd powerspikegg/gateway &&
-             sbt -Dsbt.global.base=./.sbt/ -Dsbt.ivy.home=./.ivy2/ -Divy.home=./.ivy2/ update &&
-             zip -r ../../$(@) .ivy2 .sbt""",
-)
-
-genrule(
-    name = "dist",
-    srcs = [
-        "src",
-        "sbt.zip",
-    ],
-    outs = ["dist.zip"],
-    cmd = """cd powerspikegg/gateway && 
-             sbt -Dsbt.global.base=./.sbt/ -Dsbt.ivy.home=./.ivy2/ -Divy.home=./.ivy2/ dist && 
-             mv target/universal/gateway-1.0-SNAPSHOT.zip ../../$(@)""",
+java_library(
+  name="akka-http_2.11",
+  visibility = ["//visibility:public"],
+  exports = [
+    "@com_typesafe_akka_akka_actor_2_11_2_4_16//jar",
+    "@com_typesafe_akka_akka_http_2_11_10_0_3//jar",
+    "@com_typesafe_akka_akka_http_core_2_11_10_0_3//jar",
+    "@com_typesafe_akka_akka_parsing_2_11_10_0_3//jar",
+    "@com_typesafe_akka_akka_stream_2_11_2_4_16//jar",
+    "@com_typesafe_config_1_3_0//jar",
+    "@com_typesafe_ssl_config_core_2_11_0_2_1//jar",
+    "@org_reactivestreams_reactive_streams_1_0_0//jar",
+    "@org_scala_lang_modules_scala_java8_compat_2_11_0_7_0//jar",
+    "@org_scala_lang_modules_scala_parser_combinators_2_11_1_0_4//jar",
+    "@org_scala_lang_scala_library_2_11_8//jar",
+  ],
 )
