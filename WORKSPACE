@@ -154,3 +154,34 @@ new_go_repository(
     commit = "236b8f043b920452504e263bc21d354427127473",
     importpath = "golang.org/x/net",
 )
+
+#
+# Java dependencies
+# Generated with https://github.com/pgr0ss/bazel-deps
+# 
+
+# Akka Http 
+maven_jar(name = "com_typesafe_akka_akka_actor_2_11_2_4_16", artifact = "com.typesafe.akka:akka-actor_2.11:jar:2.4.16")
+maven_jar(name = "com_typesafe_akka_akka_http_core_2_11_10_0_3", artifact = "com.typesafe.akka:akka-http-core_2.11:jar:10.0.3")
+maven_jar(name = "com_typesafe_akka_akka_http_2_11_10_0_3", artifact = "com.typesafe.akka:akka-http_2.11:jar:10.0.3")
+maven_jar(name = "com_typesafe_akka_akka_parsing_2_11_10_0_3", artifact = "com.typesafe.akka:akka-parsing_2.11:jar:10.0.3")
+maven_jar(name = "com_typesafe_akka_akka_stream_2_11_2_4_16", artifact = "com.typesafe.akka:akka-stream_2.11:jar:2.4.16")
+maven_jar(name = "com_typesafe_config_1_3_0", artifact = "com.typesafe:config:jar:1.3.0")
+maven_jar(name = "org_reactivestreams_reactive_streams_1_0_0", artifact = "org.reactivestreams:reactive-streams:jar:1.0.0")
+maven_jar(name = "org_scala_lang_modules_scala_java8_compat_2_11_0_7_0", artifact = "org.scala-lang.modules:scala-java8-compat_2.11:jar:0.7.0")
+maven_jar(name = "org_scala_lang_scala_library_2_11_8", artifact = "org.scala-lang:scala-library:jar:2.11.8")
+maven_jar(name = "org_scala_lang_modules_scala_parser_combinators_2_11_1_0_4", artifact = "org.scala-lang.modules:scala-parser-combinators_2.11:jar:1.0.4")
+maven_jar(name = "com_typesafe_ssl_config_core_2_11_0_2_1", artifact = "com.typesafe:ssl-config-core_2.11:jar:0.2.1")
+
+#
+# Scala rules
+#
+
+git_repository(
+    name = "io_bazel_rules_scala",
+    remote = "https://github.com/bazelbuild/rules_scala.git",
+    commit = "73743b830ae98d13a946b25ad60cad5fee58e6d3", # update this as needed
+)
+
+load("@io_bazel_rules_scala//scala:scala.bzl", "scala_repositories")
+scala_repositories()
