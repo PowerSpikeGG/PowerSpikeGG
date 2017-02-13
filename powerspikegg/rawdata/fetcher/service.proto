@@ -9,6 +9,9 @@ import "powerspikegg/rawdata/public/constants.proto";
 import "powerspikegg/rawdata/public/match.proto";
 
 service MatchFetcher {
+    // Update a summoner and returns the list of updated matches
+    rpc UpdateSummoner (game.leagueoflegends.Summoner) returns (stream game.leagueoflegends.MatchReference);
+
     // Get details about a specific match.
     rpc Match (MatchRequest) returns (game.leagueoflegends.MatchReference);
 }

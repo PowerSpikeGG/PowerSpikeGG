@@ -17,8 +17,6 @@ from third_party.python.riotwatcher import riotwatcher
 class MatchFetcherTest(unittest.TestCase):
     """Test the behavior of the MatchFetcher gRPC server."""
 
-    MATCH_DATA = "match.json"
-
     @classmethod
     def setUpClass(cls):
         """Instantiate a server for tests"""
@@ -32,6 +30,15 @@ class MatchFetcherTest(unittest.TestCase):
         cls.channel = grpc.insecure_channel("localhost:50002")
         cls.stub = service_pb2.MatchFetcherStub(cls.channel)
 
+        # Forward sample data fetched from the Riot API directly as result
+        this_dir = os.path.dirname(os.path.abspath(__file__))
+        with open(os.sep.join([this_dir, "samples", "match.json"])) as f:
+            cls.match_data = json.load(f)
+        with open(os.sep.join([this_dir, "samples", "match_list.json"])) as f:
+            cls.match_list_data = json.load(f)
+        with open(os.sep.join([this_dir, "samples", "summoner.json"])) as f:
+            cls.summoner_data = json.load(f)
+
     @classmethod
     def tearDownClass(cls):
         """Stop the server."""
@@ -44,11 +51,6 @@ class MatchFetcherTest(unittest.TestCase):
 
     def test_match_fetching(self):
         """Check if the server handle correctly a normal request."""
-        # Forward sample data fetched from the Riot API directly as result
-        this_dir = os.path.dirname(os.path.abspath(__file__))
-        with open(os.sep.join([this_dir, "samples", self.MATCH_DATA])) as f:
-            self.match_data = json.load(f)
-
         # Setup mocks
         self.service.cache_manager.find_match.return_value = None
         self.service.riot_api_handler.get_match.return_value = self.match_data
@@ -64,11 +66,6 @@ class MatchFetcherTest(unittest.TestCase):
 
     def test_match_from_cache(self):
         """Check if the server returns a match from the cache."""
-        # Forward sample data fetched from the Riot API directly as result
-        this_dir = os.path.dirname(os.path.abspath(__file__))
-        with open(os.sep.join([this_dir, "samples", self.MATCH_DATA])) as f:
-            self.match_data = json.load(f)
-
         # Setup mocks
         self.service.cache_manager.find_match.return_value = self.match_data
 
@@ -90,14 +87,62 @@ class MatchFetcherTest(unittest.TestCase):
             region=constants_pb2.EUW))
         self.assertEqual(response, match_pb2.MatchReference())
 
-    def test_bad_request(self):
+    def test_bad_requests(self):
         """Check if the server correctly raise error on bad request."""
+        # Match endpoint
         with self.assertRaises(grpc.RpcError):
             self.stub.Match(service_pb2.MatchRequest(id=4242))
         with self.assertRaises(grpc.RpcError):
             self.stub.Match(service_pb2.MatchRequest())
         with self.assertRaises(grpc.RpcError):
             self.stub.Match(service_pb2.MatchRequest(region=constants_pb2.EUW))
+
+        # UpdateSummoner endpoint
+        # Note we need to iterate to raise the grpc error.
+        with self.assertRaises(grpc.RpcError):
+            next(self.stub.UpdateSummoner(constants_pb2.Summoner(id=123)))
+        with self.assertRaises(grpc.RpcError):
+            next(self.stub.UpdateSummoner(constants_pb2.Summoner(name="foo")))
+        with self.assertRaises(grpc.RpcError):
+            next(self.stub.UpdateSummoner(constants_pb2.Summoner(
+                region=constants_pb2.EUW)))
+
+    def test_update_summoner_from_id(self):
+        """Test the summoner update query correctly the summoners."""
+        self.service.cache_manager.find_match.return_value = None
+        self.service.riot_api_handler.get_match_list.return_value = (
+            self.match_list_data)
+        self.service.riot_api_handler.get_match.return_value = (
+            self.match_data)
+
+        responses = self.stub.UpdateSummoner(constants_pb2.Summoner(id=4242,
+            region=constants_pb2.EUW))
+
+        converter = JSONConverter(None)
+        expected = converter.json_match_to_match_pb(self.match_data)
+        for response in responses:
+            self.assertEqual(response, expected)
+        self.assertTrue(self.service.cache_manager.save_match.called)
+
+    def test_update_summoner_by_name(self):
+        """Ensures we can fetch last matches from a summoner name"""
+        self.service.cache_manager.find_match.return_value = None
+        self.service.riot_api_handler.get_match_list.return_value = (
+            self.match_list_data)
+        self.service.riot_api_handler.get_match.return_value = (
+            self.match_data)
+        self.service.riot_api_handler.get_summoner.return_value = (
+            self.summoner_data)
+
+        responses = self.stub.UpdateSummoner(constants_pb2.Summoner(
+            name="Foo Bar", region=constants_pb2.EUW))
+
+        converter = JSONConverter(None)
+        expected = converter.json_match_to_match_pb(self.match_data)
+        for response in responses:
+            self.assertEqual(response, expected)
+        self.assertTrue(self.service.cache_manager.save_match.called)
+        self.assertTrue(self.service.riot_api_handler.get_summoner.called)
 
 
 if __name__ == "__main__":
