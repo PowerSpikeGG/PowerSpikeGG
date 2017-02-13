@@ -59,6 +59,34 @@ class MatchFetcher(service_pb2.MatchFetcherServicer):
             self.cache_manager = cache.CacheManager()
         self.converter = converter.JSONConverter(self.riot_api_handler)
 
+    def UpdateSummoner(self, request, context):
+        """Update the match list of a summoner.
+
+        Parameters:
+            request: The summoner to update. Must contains summoner's region
+                and either his ID or his name.
+            context: Context of the request, injected by grpc.
+        Returns:
+            A set of matches
+        """
+        if not request.region:
+            raise ValueError("Missing summoner's region.")
+        if not request.id and not request.name:
+            raise ValueError("Summoner's ID or name must be specified.")
+
+        if not request.id:
+            request = self._GetSummonerFromName(request.name, request.region)
+
+        # Fetch match references from the summoner ID
+        raw_match_references = self.riot_api_handler.get_match_list(
+            request.id, constants_pb2.Region.Name(request.region))
+
+        # Fetch match details from the summoner ID
+        for raw_match_reference in raw_match_references["matches"]:
+            match_id = raw_match_reference["matchId"]
+            yield self.Match(service_pb2.MatchRequest(id=match_id,
+                region=request.region), context)
+
     def Match(self, request, context):
         """Get a match based on its identifier.
 
@@ -88,6 +116,20 @@ class MatchFetcher(service_pb2.MatchFetcherServicer):
             self.cache_manager.save_match(match_data)
 
         return self.converter.json_match_to_match_pb(match_data)
+
+    def _GetSummonerFromName(self, summoner_name, region):
+        """Query the Riot API to retrive a summoner ID from its name.
+
+        Parameters:
+            summoner_name: Name of the summoner.
+            region: Region where the summoner plays.
+        Returns:
+            A summoner entity containing all informations about the summoner.
+        """
+        summoner_data = self.riot_api_handler.get_summoner(summoner_name,
+            region)
+        return self.converter.json_summoner_to_summoner_pb(summoner_data,
+            region)
 
 
 def start_server(riot_api_token, listening_port, max_workers):
