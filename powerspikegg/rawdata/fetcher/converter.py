@@ -133,6 +133,7 @@ class JSONConverter():
             summoner = constants_pb2.Summoner(
                 id=identity["player"]["summonerId"],
                 name=identity["player"]["summonerName"],
+                region=constants_pb2.Region.Value(json_entry["region"]),
             )
             identities[identity["participantId"]] = summoner
 
@@ -239,4 +240,31 @@ class JSONConverter():
             queue_type=constants_pb2.QueueType.Value(json_entry["queueType"]),
             season=constants_pb2.Season.Value(json_entry["season"]),
             detail=self._get_detail(json_entry),
+        )
+
+    def json_summoner_to_summoner_pb(self, json_entry, region):
+        """Build a Summoner protobuf from a JSON entry representing a summoner.
+
+        Parameters:
+            json_entry: a JSON formated as the Riot API's SummonerDto DTO [1].
+            region: Region of the summoner (required, because not provided).
+        Returns:
+            A Summoner message filled with the JSON data.
+        Raises:
+            ValueError: If multiple or none summoners are provided
+            KeyError: if a data is missing in the JSON entry.
+
+          [1] https://developer.riotgames.com/api/methods#!/1221/4746
+        """
+        if len(json_entry) != 1:
+            raise ValueError("Unexpected ammount of summoner provided: %s" %
+                len(json_entry))
+
+        for value in json_entry.values():
+            summoner_entry = value
+
+        return constants_pb2.Summoner(
+            id=summoner_entry["id"],
+            name=summoner_entry["name"],
+            region=region,
         )
