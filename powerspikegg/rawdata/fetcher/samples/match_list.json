@@ -1,0 +1,26 @@
+{
+    "matches": [
+        {
+            "timestamp": 1486337153599,
+            "champion": 43,
+            "region": "EUW",
+            "queue": "TEAM_BUILDER_RANKED_SOLO",
+            "season": "PRESEASON2017",
+            "matchId": 12345,
+            "role": "DUO_SUPPORT",
+            "platformId": "EUW1",
+            "lane": "BOTTOM"
+        },
+        {
+            "timestamp": 1486334860623,
+            "champion": 43,
+            "region": "EUW",
+            "queue": "TEAM_BUILDER_RANKED_SOLO",
+            "season": "PRESEASON2017",
+            "matchId": 12345,
+            "role": "DUO_SUPPORT",
+            "platformId": "EUW1",
+            "lane": "BOTTOM"
+        }
+    ]
+}
