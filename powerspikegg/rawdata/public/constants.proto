@@ -51,6 +51,7 @@ enum Season {
 message Summoner {
     int32 id = 1;
     string name = 2;
+    Region region = 3;
 }
 
 // Summoner spells. Conversion to named entities is provided by the Riot API.

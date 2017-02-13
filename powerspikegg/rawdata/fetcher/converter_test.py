@@ -14,17 +14,18 @@ class ConverterEndToEndTest(unittest.TestCase):
 
     MATCH_SAMPLE = "match.json"
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         """Read the file in memory and load a fake converter.
         """
         this_dir = os.path.dirname(os.path.abspath(__file__))
-        sample_path = os.sep.join([this_dir, "samples", self.MATCH_SAMPLE])
-
-        with open(sample_path) as f:
-            self.data = json.load(f)
+        with open(os.sep.join([this_dir, "samples", "match.json"])) as f:
+            cls.match_data = json.load(f)
+        with open(os.sep.join([this_dir, "samples", "summoner.json"])) as f:
+            cls.summoner_data = json.load(f)
 
         # TODO(funkysayu) for future work, this should use a MagicMock.
-        self.converter = converter.JSONConverter(None)
+        cls.converter = converter.JSONConverter(None)
 
     def _check_damage_data(self, damage, json_stats, prefix):
         """Test if a damage is correctly generated.
@@ -45,11 +46,11 @@ class ConverterEndToEndTest(unittest.TestCase):
         Parameters:
             participant: A participant generated from the converter
         """
-        json_participant = next((p for p in self.data["participants"]
+        json_participant = next((p for p in self.match_data["participants"]
             if p["participantId"] == participant.id), None)
         self.assertIsNotNone(json_participant)
 
-        json_identity = next((i for i in self.data["participantIdentities"]
+        json_identity = next((i for i in self.match_data["participantIdentities"]
             if i["participantId"] == participant.id), None)
         self.assertIsNotNone(json_identity)
 
@@ -58,6 +59,8 @@ class ConverterEndToEndTest(unittest.TestCase):
             json_identity["player"]["summonerId"])
         self.assertEqual(participant.summoner.name,
             json_identity["player"]["summonerName"])
+        self.assertEqual(participant.summoner.region,
+            constants_pb2.Region.Value(self.match_data["region"]))
         # TODO(funkysayu) test the summoner spells once it is supported.
         # TODO(funkysayu) test items once it is supported.
 
@@ -126,7 +129,7 @@ class ConverterEndToEndTest(unittest.TestCase):
         self.assertIsNotNone(team.id)
 
         # Get the corresponding json
-        json_team = next((t for t in self.data["teams"]
+        json_team = next((t for t in self.match_data["teams"]
             if t["teamId"] == team.id), None)
         self.assertIsNotNone(json_team)
 
@@ -153,26 +156,38 @@ class ConverterEndToEndTest(unittest.TestCase):
         """Test the conversion on the sample, and check all fields.
         """
         # MatchReference
-        reference = self.converter.json_match_to_match_pb(self.data)
-        self.assertEqual(reference.id, self.data["matchId"])
-        self.assertEqual(reference.timestamp, self.data["matchCreation"])
-        self.assertEqual(reference.version, self.data["matchVersion"])
-        self.assertEqual(reference.plateform_id, self.data["platformId"])
+        reference = self.converter.json_match_to_match_pb(self.match_data)
+        self.assertEqual(reference.id, self.match_data["matchId"])
+        self.assertEqual(reference.timestamp, self.match_data["matchCreation"])
+        self.assertEqual(reference.version, self.match_data["matchVersion"])
+        self.assertEqual(reference.plateform_id, self.match_data["platformId"])
         self.assertEqual(reference.region,
-            constants_pb2.Region.Value(self.data["region"]))
+            constants_pb2.Region.Value(self.match_data["region"]))
         self.assertEqual(reference.queue_type,
-            constants_pb2.QueueType.Value(self.data["queueType"]))
+            constants_pb2.QueueType.Value(self.match_data["queueType"]))
         self.assertEqual(reference.season,
-            constants_pb2.Season.Value(self.data["season"]))
+            constants_pb2.Season.Value(self.match_data["season"]))
 
         # MatchDetail
         detail = reference.detail
-        self.assertEqual(detail.map, static.get_map_from_id(self.data["mapId"]))
-        self.assertEqual(detail.duration, self.data["matchDuration"])
+        self.assertEqual(detail.map, static.get_map_from_id(self.match_data["mapId"]))
+        self.assertEqual(detail.duration, self.match_data["matchDuration"])
         self.assertEqual(len(detail.teams), 2)
 
         self._check_team(detail.teams[0])
         self._check_team(detail.teams[1])
+
+    def test_summoner_conversion(self):
+        """Tests a summoner is correctly converted"""
+        region = constants_pb2.EUW
+        summoner = self.converter.json_summoner_to_summoner_pb(
+            self.summoner_data, region)
+
+        for value in self.summoner_data.values():
+            data = value
+        self.assertEquals(summoner.id, data["id"])
+        self.assertEquals(summoner.name, data["name"])
+        self.assertEquals(summoner.region, region)
 
 
 if __name__ == "__main__":
