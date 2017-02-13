@@ -1,5 +1,3 @@
-from functools import lru_cache
-
 from powerspikegg.rawdata.public import match_pb2
 from powerspikegg.rawdata.public import constants_pb2
 from powerspikegg.rawdata.lib.python import static
@@ -24,7 +22,6 @@ class ConstantSolver():
         """
         self.api_handler = api_handler
 
-    @lru_cache()
     def get_summoner_spell_by_id(self, spell_id):
         """Get a summoner spell from its ID.
 
