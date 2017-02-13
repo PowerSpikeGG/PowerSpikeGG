@@ -12,8 +12,6 @@ class ConverterEndToEndTest(unittest.TestCase):
     Sample data are extracted from the Riot API.
     """
 
-    MATCH_SAMPLE = "match.json"
-
     @classmethod
     def setUpClass(cls):
         """Read the file in memory and load a fake converter.
