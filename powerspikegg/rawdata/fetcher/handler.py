@@ -1,8 +1,6 @@
 import threading
 import time
 
-from functools import lru_cache
-
 from third_party.python.riotwatcher import riotwatcher
 
 """
