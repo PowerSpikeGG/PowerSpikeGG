@@ -79,7 +79,9 @@ class MatchFetcher(service_pb2.MatchFetcherServicer):
 
         # Fetch match references from the summoner ID
         raw_match_references = self.riot_api_handler.get_match_list(
-            request.id, constants_pb2.Region.Name(request.region))
+            request.id, constants_pb2.Region.Name(request.region),
+            ranked_queues=constants_pb2.QueueType.keys(),
+            season=constants_pb2.Season.keys())
 
         # Fetch match details from the summoner ID
         for raw_match_reference in raw_match_references["matches"]:
