@@ -175,16 +175,27 @@ class ConverterEndToEndTest(unittest.TestCase):
         self._check_team(detail.teams[0])
         self._check_team(detail.teams[1])
 
-    def test_summoner_conversion(self):
+    def test_summoner_conversion_with_region_provided(self):
         """Tests a summoner is correctly converted"""
         region = constants_pb2.EUW
         summoner = self.converter.json_summoner_to_summoner_pb(
             self.summoner_data["foobar"], region)
 
-        for value in self.summoner_data.values():
-            data = value
-        self.assertEquals(summoner.id, data["id"])
-        self.assertEquals(summoner.name, data["name"])
+        self.assertEquals(summoner.id, self.summoner_data["foobar"]["id"])
+        self.assertEquals(summoner.name, self.summoner_data["foobar"]["name"])
+        self.assertEquals(summoner.region, region)
+
+    def test_summoner_conversion_with_region_embed(self):
+        """Tests a summoner is correctly converted when region is embed."""
+        region = constants_pb2.EUW
+        summoner_with_region = dict(self.summoner_data["foobar"],
+            region=constants_pb2.Region.Name(region))
+
+        summoner = self.converter.json_summoner_to_summoner_pb(
+            summoner_with_region)
+
+        self.assertEquals(summoner.id, self.summoner_data["foobar"]["id"])
+        self.assertEquals(summoner.name, self.summoner_data["foobar"]["name"])
         self.assertEquals(summoner.region, region)
 
 

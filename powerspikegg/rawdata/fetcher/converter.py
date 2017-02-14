@@ -242,12 +242,14 @@ class JSONConverter():
             detail=self._get_detail(json_entry),
         )
 
-    def json_summoner_to_summoner_pb(self, json_entry, region):
+    def json_summoner_to_summoner_pb(self, json_entry, region=None):
         """Build a Summoner protobuf from a JSON entry representing a summoner.
 
         Parameters:
             json_entry: a JSON formated as the Riot API's SummonerDto DTO [1].
-            region: Region of the summoner (required, because not provided).
+            region: Region of the summoner. The caching system stores this
+                variable in the JSON, but not the Riot API. This parameter is
+                required if data are provided directly from the Riot API.
         Returns:
             A Summoner message filled with the JSON data.
         Raises:
@@ -255,6 +257,12 @@ class JSONConverter():
 
           [1] https://developer.riotgames.com/api/methods#!/1221/4746
         """
+        if region is None:
+            if "region" not in json_entry:
+                raise KeyError("'region' parameter not specified, "
+                               "and no region found in the JSON.")
+            region = constants_pb2.Region.Value(json_entry["region"])
+
         return constants_pb2.Summoner(
             id=json_entry["id"],
             name=json_entry["name"],
