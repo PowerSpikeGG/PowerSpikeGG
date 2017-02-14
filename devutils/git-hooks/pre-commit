@@ -18,6 +18,28 @@ PreCommit::GoChecks () {
 }
 
 
+# Rules checking BUILD files validity
+PreCommit::BuildChecks () {
+    local filepath=$1
+
+    [ -z "$GOPATH" ] && Log::Failure "please install golang on workstation (\$GOPATH missing)"
+
+    if [ ! -x "$GOPATH/bin/buildifier" ]; then
+        Log::Notice "buildifier executable not found at '$GOPATH/bin/buildifier'."
+
+        Prompt::YesNoPrompt "Install it?" || Log::Failure "aborting..."
+
+        go install github.com/bazelbuild/buildifier/buildifier
+    fi
+
+    output=$("$GOPATH/bin/buildifier" -mode=check $filepath)
+    if [ -n "$output" ]; then
+        Log::Warning "$output"
+        Log::Failure "formatting error in a BUILD file. Aborting..."
+    fi
+}
+
+
 main () {
     cd $(bazel info workspace)
 
@@ -30,7 +52,8 @@ main () {
     git diff --name-only --staged HEAD | while read filepath
     do
         case "$filepath" in
-            *.go) PreCommit::GoChecks $filepath ;;
+            *.go) PreCommit::GoChecks $filepath  || exit 1 ;;
+            *BUILD) PreCommit::BuildChecks $filepath || exit 1 ;;
         esac
     done
 }
