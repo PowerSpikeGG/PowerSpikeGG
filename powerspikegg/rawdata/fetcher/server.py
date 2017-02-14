@@ -75,7 +75,7 @@ class MatchFetcher(service_pb2.MatchFetcherServicer):
             raise ValueError("Summoner's ID or name must be specified.")
 
         if not request.id:
-            request = self._GetSummonerFromName(request.name, request.region)
+            request = self._GetSummonerFromName(request)
 
         # Fetch match references from the summoner ID
         raw_match_references = self.riot_api_handler.get_match_list(
@@ -119,19 +119,26 @@ class MatchFetcher(service_pb2.MatchFetcherServicer):
 
         return self.converter.json_match_to_match_pb(match_data)
 
-    def _GetSummonerFromName(self, summoner_name, region):
+    def _GetSummonerFromName(self, partial_summoner):
         """Query the Riot API to retrive a summoner ID from its name.
 
         Parameters:
-            summoner_name: Name of the summoner.
-            region: Region where the summoner plays.
+            partial_summoner: constants_pb2.Summoner message with missing id
         Returns:
             A summoner entity containing all informations about the summoner.
         """
-        summoner_data = self.riot_api_handler.get_summoner(name=summoner_name,
-            region=constants_pb2.Region.Name(region))
-        return self.converter.json_summoner_to_summoner_pb(summoner_data,
-            region)
+        summoner_data = self.cache_manager.find_summoner(partial_summoner)
+        if summoner_data is not None:
+            return self.converter.json_summoner_to_summoner_pb(summoner_data)
+
+        summoner_data = self.riot_api_handler.get_summoner(
+            name=partial_summoner.name,
+            region=constants_pb2.Region.Name(partial_summoner.region))
+        summoner = self.converter.json_summoner_to_summoner_pb(summoner_data,
+            partial_summoner.region)
+
+        self.cache_manager.save_summoner(summoner)
+        return summoner
 
 
 def start_server(riot_api_token, listening_port, max_workers):
