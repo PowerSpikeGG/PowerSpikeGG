@@ -127,6 +127,7 @@ class MatchFetcherTest(unittest.TestCase):
     def test_update_summoner_by_name(self):
         """Ensures we can fetch last matches from a summoner name"""
         self.service.cache_manager.find_match.return_value = None
+        self.service.cache_manager.find_summoner.return_value = None
         self.service.riot_api_handler.get_match_list.return_value = (
             self.match_list_data)
         self.service.riot_api_handler.get_match.return_value = (
@@ -143,6 +144,29 @@ class MatchFetcherTest(unittest.TestCase):
             self.assertEqual(response, expected)
         self.assertTrue(self.service.cache_manager.save_match.called)
         self.assertTrue(self.service.riot_api_handler.get_summoner.called)
+        self.assertTrue(self.service.cache_manager.save_summoner.called)
+
+    def test_update_summoner_by_name_with_cache(self):
+        """Ensures summoners are stored correctly"""
+        self.service.cache_manager.find_match.return_value = None
+        self.service.riot_api_handler.get_match_list.return_value = (
+            self.match_list_data)
+        self.service.riot_api_handler.get_match.return_value = (
+            self.match_data)
+        region = constants_pb2.EUW
+
+        self.service.cache_manager.find_summoner.return_value = dict(
+            self.summoner_data, region=constants_pb2.Region.Name(region))
+        responses = self.stub.UpdateSummoner(constants_pb2.Summoner(
+            name="Foo Bar", region=region))
+
+        converter = JSONConverter(None)
+        expected = converter.json_match_to_match_pb(self.match_data)
+        for response in responses:
+            self.assertEqual(response, expected)
+        self.assertTrue(self.service.cache_manager.save_match.called)
+        self.assertFalse(self.service.riot_api_handler.get_summoner.called)
+        self.assertFalse(self.service.cache_manager.save_summoner.called)
 
 
 if __name__ == "__main__":
