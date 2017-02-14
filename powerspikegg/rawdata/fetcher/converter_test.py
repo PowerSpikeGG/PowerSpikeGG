@@ -179,7 +179,7 @@ class ConverterEndToEndTest(unittest.TestCase):
         """Tests a summoner is correctly converted"""
         region = constants_pb2.EUW
         summoner = self.converter.json_summoner_to_summoner_pb(
-            self.summoner_data, region)
+            self.summoner_data["foobar"], region)
 
         for value in self.summoner_data.values():
             data = value

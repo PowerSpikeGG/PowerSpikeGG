@@ -128,8 +128,8 @@ class MatchFetcher(service_pb2.MatchFetcherServicer):
         Returns:
             A summoner entity containing all informations about the summoner.
         """
-        summoner_data = self.riot_api_handler.get_summoner(summoner_name,
-            region)
+        summoner_data = self.riot_api_handler.get_summoner(name=summoner_name,
+            region=constants_pb2.Region.Name(region))
         return self.converter.json_summoner_to_summoner_pb(summoner_data,
             region)
 

@@ -251,20 +251,12 @@ class JSONConverter():
         Returns:
             A Summoner message filled with the JSON data.
         Raises:
-            ValueError: If multiple or none summoners are provided
             KeyError: if a data is missing in the JSON entry.
 
           [1] https://developer.riotgames.com/api/methods#!/1221/4746
         """
-        if len(json_entry) != 1:
-            raise ValueError("Unexpected ammount of summoner provided: %s" %
-                len(json_entry))
-
-        for value in json_entry.values():
-            summoner_entry = value
-
         return constants_pb2.Summoner(
-            id=summoner_entry["id"],
-            name=summoner_entry["name"],
+            id=json_entry["id"],
+            name=json_entry["name"],
             region=region,
         )

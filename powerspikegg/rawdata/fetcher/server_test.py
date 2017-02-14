@@ -37,7 +37,7 @@ class MatchFetcherTest(unittest.TestCase):
         with open(os.sep.join([this_dir, "samples", "match_list.json"])) as f:
             cls.match_list_data = json.load(f)
         with open(os.sep.join([this_dir, "samples", "summoner.json"])) as f:
-            cls.summoner_data = json.load(f)
+            cls.summoner_data = json.load(f)["foobar"]
 
     @classmethod
     def tearDownClass(cls):
