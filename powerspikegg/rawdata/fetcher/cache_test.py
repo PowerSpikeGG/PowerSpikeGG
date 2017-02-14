@@ -34,7 +34,7 @@ class CacheManagerTest(unittest.TestCase):
         database_name = traceback.extract_stack(None, 2)[0][2]
         cache.CacheManager.database_name = database_name
 
-        return self.client[database_name].matches
+        return self.client[database_name]
 
     @classmethod
     def setUpClass(cls):
@@ -45,9 +45,10 @@ class CacheManagerTest(unittest.TestCase):
 
         # Read a match sample
         this_path = os.path.dirname(os.path.realpath(__file__))
-        sample_path = os.sep.join([this_path, "samples", "match.json"])
-        with open(sample_path) as f:
+        with open(os.sep.join([this_path, "samples", "match.json"])) as f:
             cls.sample_match = json.load(f)
+        with open(os.sep.join([this_path, "samples", "summoner.json"])) as f:
+            cls.sample_summoner = json.load(f)["foobar"]
 
         FLAGS([])
 
@@ -58,7 +59,7 @@ class CacheManagerTest(unittest.TestCase):
 
     def test_match_insertion(self):
         """Test if insertion is correctly handled."""
-        collection = self.setup_test_collection()
+        collection = self.setup_test_collection().matches
 
         manager = cache.CacheManager()
         manager.save_match(self.sample_match)
@@ -73,7 +74,7 @@ class CacheManagerTest(unittest.TestCase):
 
     def test_find_match(self):
         """Tests if a match can be find from its ID from the database."""
-        collection = self.setup_test_collection()
+        collection = self.setup_test_collection().matches
 
         # Insert a match into the database
         collection.insert_one(self.sample_match)
@@ -85,6 +86,51 @@ class CacheManagerTest(unittest.TestCase):
             region=constants_pb2.Region.Value(self.sample_match["region"])))
 
         self.assertEquals(match, self.sample_match)
+
+    def test_summoner_insertion(self):
+        """Test if insertion of a summoner is correctly handled."""
+        collection = self.setup_test_collection().summoners
+
+        manager = cache.CacheManager()
+        manager.save_summoner(self.sample_summoner, constants_pb2.EUW)
+
+        # Check if the summoner is saved into the database.
+        cursor = collection.find({
+            "name": self.sample_summoner["name"],
+            "id": self.sample_summoner["id"],
+            "region": constants_pb2.Region.Name(constants_pb2.EUW),
+        })
+        self.assertEquals(cursor.count(), 1,
+            "Unexpected amount of summoners matching the request.")
+
+    def test_find_summoner(self):
+        """Tests if a summoner can be find in several ways."""
+        collection = self.setup_test_collection().summoners
+        region = constants_pb2.EUW
+        sample_with_region = dict(self.sample_summoner,
+            region=constants_pb2.Region.Name(region))
+        collection.insert_one(sample_with_region)
+
+        manager = cache.CacheManager()
+
+        summoner = manager.find_summoner(constants_pb2.Summoner(
+            id=self.sample_summoner["id"],
+            region=region,
+        ))
+        self.assertEquals(summoner, sample_with_region)
+
+        summoner = manager.find_summoner(constants_pb2.Summoner(
+            name=self.sample_summoner["name"],
+            region=region,
+        ))
+        self.assertEquals(summoner, sample_with_region)
+
+        summoner = manager.find_summoner(constants_pb2.Summoner(
+            name=self.sample_summoner["name"],
+            id=self.sample_summoner["id"],
+            region=region,
+        ))
+        self.assertEquals(summoner, sample_with_region)
 
 
 if __name__ == "__main__":

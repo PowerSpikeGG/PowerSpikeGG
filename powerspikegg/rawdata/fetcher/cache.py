@@ -115,3 +115,47 @@ class CacheManager:
         # Ensures key _id is dynamically managed
         match_data["_id"] = ObjectId()
         matches.insert_one(match_data)
+
+    @_silent_connection_failure
+    def find_summoner(self, summoner):
+        """Find a summoner in the cache.
+
+        Note this function can also be used as a test to know if a user is
+        registered in the cache.
+
+        Parameters:
+            summoner: A constants_pb2.Summoner message containing partial
+                information about the summoner.
+        Returns:
+            The corresponding summoner or None if not found.
+        Raises:
+            ValueError: If none of the summoner name or id is specified.
+        """
+        if not summoner.name and not summoner.id:
+            raise ValueError("Either summoner's name or id is required.")
+
+        selector = {"region": constants_pb2.Region.Name(summoner.region)}
+        if summoner.name:
+            selector["name"] = summoner.name
+        if summoner.id:
+            selector["id"] = summoner.id
+
+        summoners = self.client[self.database_name].summoners
+        return summoners.find_one(selector)
+
+    @_silent_connection_failure
+    def save_summoner(self, summoner_data, region):
+        """Save a summoner in the cache.
+
+        Parameters:
+            summoner_data: A JSON containing summoner DTO as specified by the
+                Riot API documentation [1].
+            region: Region in which the summoner leaves. Not contained in the
+                DTO, so must be specified.
+        """
+        # Ensures key _id is dynamically managed
+        summoner_data["_id"] = ObjectId()
+        summoner_data["region"] = constants_pb2.Region.Name(region)
+
+        summoners = self.client[self.database_name].summoners
+        summoners.insert_one(summoner_data)
