@@ -46,7 +46,7 @@ main () {
     fi
 
     if [ ! -x "$GOPATH/bin/wtool" ]; then
-        Prompt::YesNoPrompt "would you like to install Gazelle?" || Log::Failure "Aborting..."
+        Prompt::YesNoPrompt "would you like to install Wtool?" || Log::Failure "Aborting..."
 
         go get github.com/bazelbuild/rules_go/go/tools/wtool
     fi
