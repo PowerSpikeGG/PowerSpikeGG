@@ -5,6 +5,8 @@ version := "1.0"
 scalaVersion := "2.11.8"
 
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-http" % "10.0.3"
+  "com.typesafe.akka" %% "akka-http" % "10.0.3",
+  "io.grpc" % "grpc-all" % "1.1.2"
 )
-    
+
+unmanagedBase := baseDirectory.value / "../../bazel-bin/powerspikegg/rawdata/fetcher/libservice_java.jar"
