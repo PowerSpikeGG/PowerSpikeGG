@@ -6,10 +6,6 @@ import game.leagueoflegends.Constants.{Region, Summoner}
 import game.leagueoflegends.Match.MatchReference
 import collection.JavaConverters._
 
-/**
-  * Created by cassan on 17/02/17.
-  * 3065640922
-  */
 class MatchFetcher(context: GrpcContext) {
 
   private val matchFetcher = MatchFetcherGrpc.newBlockingStub(context.channel)
