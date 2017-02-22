@@ -16,8 +16,8 @@ py_test(
 
 py_library(
     name = "mock",
-    srcs = ["mock.py"],
-    deps = ["@pydep_mock//:library"],
-    data = glob(["samples/*.json"]),
     testonly = 1,
+    srcs = ["mock.py"],
+    data = glob(["samples/*.json"]),
+    deps = ["@pydep_mock//:library"],
 )
