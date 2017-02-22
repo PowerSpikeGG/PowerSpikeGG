@@ -12,6 +12,8 @@ from powerspikegg.rawdata.fetcher.server import start_server
 from powerspikegg.rawdata.public import constants_pb2
 from powerspikegg.rawdata.public import match_pb2
 from third_party.python.riotwatcher import riotwatcher
+from third_party.python.riotwatcher.mock import RiotWatcherMock
+from third_party.python.riotwatcher.mock import SAMPLES
 
 
 class MatchFetcherTest(unittest.TestCase):
@@ -21,7 +23,7 @@ class MatchFetcherTest(unittest.TestCase):
     def setUpClass(cls):
         """Instantiate a server for tests"""
         # Avoid setting up a Riot API handler and a cache system
-        MatchFetcher.riot_api_handler = mock.MagicMock()
+        MatchFetcher.riot_api_handler = RiotWatcherMock()
         MatchFetcher.cache_manager = mock.MagicMock()
 
         cls.server, cls.service = start_server("123", 50002, 10)
@@ -30,15 +32,6 @@ class MatchFetcherTest(unittest.TestCase):
         cls.channel = grpc.insecure_channel("localhost:50002")
         cls.stub = service_pb2.MatchFetcherStub(cls.channel)
 
-        # Forward sample data fetched from the Riot API directly as result
-        this_dir = os.path.dirname(os.path.abspath(__file__))
-        with open(os.sep.join([this_dir, "samples", "match.json"])) as f:
-            cls.match_data = json.load(f)
-        with open(os.sep.join([this_dir, "samples", "match_list.json"])) as f:
-            cls.match_list_data = json.load(f)
-        with open(os.sep.join([this_dir, "samples", "summoner.json"])) as f:
-            cls.summoner_data = json.load(f)["foobar"]
-
     @classmethod
     def tearDownClass(cls):
         """Stop the server."""
@@ -46,28 +39,27 @@ class MatchFetcherTest(unittest.TestCase):
 
     def setUp(self):
         """Generates a new magic mock in the handler for each tests."""
-        self.service.riot_api_handler = mock.MagicMock()
+        self.service.riot_api_handler = RiotWatcherMock()
         self.service.cache_manager = mock.MagicMock()
 
     def test_match_fetching(self):
         """Check if the server handle correctly a normal request."""
         # Setup mocks
         self.service.cache_manager.find_match.return_value = None
-        self.service.riot_api_handler.get_match.return_value = self.match_data
 
         response = self.stub.Match(service_pb2.MatchRequest(id=4242,
             region=constants_pb2.EUW))
 
         # Check the conversion of the sample is matching the response
         converter = JSONConverter(None)
-        expected = converter.json_match_to_match_pb(self.match_data)
+        expected = converter.json_match_to_match_pb(SAMPLES["match"])
         self.assertEqual(response, expected)
         self.assertTrue(self.service.cache_manager.save_match.called)
 
     def test_match_from_cache(self):
         """Check if the server returns a match from the cache."""
         # Setup mocks
-        self.service.cache_manager.find_match.return_value = self.match_data
+        self.service.cache_manager.find_match.return_value = SAMPLES["match"]
 
         response = self.stub.Match(service_pb2.MatchRequest(id=4242,
             region=constants_pb2.EUW))
@@ -110,16 +102,12 @@ class MatchFetcherTest(unittest.TestCase):
     def test_update_summoner_from_id(self):
         """Test the summoner update query correctly the summoners."""
         self.service.cache_manager.find_match.return_value = None
-        self.service.riot_api_handler.get_match_list.return_value = (
-            self.match_list_data)
-        self.service.riot_api_handler.get_match.return_value = (
-            self.match_data)
 
         responses = self.stub.UpdateSummoner(constants_pb2.Summoner(id=4242,
             region=constants_pb2.EUW))
 
         converter = JSONConverter(None)
-        expected = converter.json_match_to_match_pb(self.match_data)
+        expected = converter.json_match_to_match_pb(SAMPLES["match"])
         for response in responses:
             self.assertEqual(response, expected)
         self.assertTrue(self.service.cache_manager.save_match.called)
@@ -128,18 +116,12 @@ class MatchFetcherTest(unittest.TestCase):
         """Ensures we can fetch last matches from a summoner name"""
         self.service.cache_manager.find_match.return_value = None
         self.service.cache_manager.find_summoner.return_value = None
-        self.service.riot_api_handler.get_match_list.return_value = (
-            self.match_list_data)
-        self.service.riot_api_handler.get_match.return_value = (
-            self.match_data)
-        self.service.riot_api_handler.get_summoner.return_value = (
-            self.summoner_data)
 
         responses = self.stub.UpdateSummoner(constants_pb2.Summoner(
             name="Foo Bar", region=constants_pb2.EUW))
 
         converter = JSONConverter(None)
-        expected = converter.json_match_to_match_pb(self.match_data)
+        expected = converter.json_match_to_match_pb(SAMPLES["match"])
         for response in responses:
             self.assertEqual(response, expected)
         self.assertTrue(self.service.cache_manager.save_match.called)
@@ -149,19 +131,15 @@ class MatchFetcherTest(unittest.TestCase):
     def test_update_summoner_by_name_with_cache(self):
         """Ensures summoners are stored correctly"""
         self.service.cache_manager.find_match.return_value = None
-        self.service.riot_api_handler.get_match_list.return_value = (
-            self.match_list_data)
-        self.service.riot_api_handler.get_match.return_value = (
-            self.match_data)
         region = constants_pb2.EUW
 
         self.service.cache_manager.find_summoner.return_value = dict(
-            self.summoner_data, region=constants_pb2.Region.Name(region))
+            SAMPLES["summoner"], region=constants_pb2.Region.Name(region))
         responses = self.stub.UpdateSummoner(constants_pb2.Summoner(
             name="Foo Bar", region=region))
 
         converter = JSONConverter(None)
-        expected = converter.json_match_to_match_pb(self.match_data)
+        expected = converter.json_match_to_match_pb(SAMPLES["match"])
         for response in responses:
             self.assertEqual(response, expected)
         self.assertTrue(self.service.cache_manager.save_match.called)
