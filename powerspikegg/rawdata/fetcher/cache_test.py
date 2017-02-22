@@ -10,6 +10,7 @@ from powerspikegg.rawdata.fetcher import cache
 from powerspikegg.rawdata.fetcher import service_pb2
 from powerspikegg.rawdata.public import constants_pb2
 from powerspikegg.lib.mongodb import wrapper
+from third_party.python.riotwatcher.mock import SAMPLES
 
 """Set of tests for the caching library."""
 
@@ -43,13 +44,6 @@ class CacheManagerTest(unittest.TestCase):
         cache.CacheManager.address = cls.server.address
         cls.client = cls.server.client
 
-        # Read a match sample
-        this_path = os.path.dirname(os.path.realpath(__file__))
-        with open(os.sep.join([this_path, "samples", "match.json"])) as f:
-            cls.sample_match = json.load(f)
-        with open(os.sep.join([this_path, "samples", "summoner.json"])) as f:
-            cls.sample_summoner = json.load(f)["foobar"]
-
         FLAGS([])
 
     @classmethod
@@ -62,12 +56,12 @@ class CacheManagerTest(unittest.TestCase):
         collection = self.setup_test_collection().matches
 
         manager = cache.CacheManager()
-        manager.save_match(self.sample_match)
+        manager.save_match(SAMPLES["match"])
 
         # Check if the match is saved into the database.
         cursor = collection.find({
-            "matchId": self.sample_match["matchId"],
-            "region": self.sample_match["region"],
+            "matchId": SAMPLES["match"]["matchId"],
+            "region": SAMPLES["match"]["region"],
         })
         self.assertEquals(cursor.count(), 1,
             "Unexpected amount of matches matching the request.")
@@ -77,27 +71,27 @@ class CacheManagerTest(unittest.TestCase):
         collection = self.setup_test_collection().matches
 
         # Insert a match into the database
-        collection.insert_one(self.sample_match)
+        collection.insert_one(SAMPLES["match"])
 
         # Try to find this match
         manager = cache.CacheManager()
         match = manager.find_match(service_pb2.MatchRequest(
-            id=self.sample_match["matchId"],
-            region=constants_pb2.Region.Value(self.sample_match["region"])))
+            id=SAMPLES["match"]["matchId"],
+            region=constants_pb2.Region.Value(SAMPLES["match"]["region"])))
 
-        self.assertEquals(match, self.sample_match)
+        self.assertEquals(match, SAMPLES["match"])
 
     def test_summoner_insertion(self):
         """Test if insertion of a summoner is correctly handled."""
         collection = self.setup_test_collection().summoners
 
         manager = cache.CacheManager()
-        manager.save_summoner(self.sample_summoner, constants_pb2.EUW)
+        manager.save_summoner(SAMPLES["summoner"], constants_pb2.EUW)
 
         # Check if the summoner is saved into the database.
         cursor = collection.find({
-            "name": self.sample_summoner["name"],
-            "id": self.sample_summoner["id"],
+            "name": SAMPLES["summoner"]["name"],
+            "id": SAMPLES["summoner"]["id"],
             "region": constants_pb2.Region.Name(constants_pb2.EUW),
         })
         self.assertEquals(cursor.count(), 1,
@@ -107,27 +101,27 @@ class CacheManagerTest(unittest.TestCase):
         """Tests if a summoner can be find in several ways."""
         collection = self.setup_test_collection().summoners
         region = constants_pb2.EUW
-        sample_with_region = dict(self.sample_summoner,
+        sample_with_region = dict(SAMPLES["summoner"],
             region=constants_pb2.Region.Name(region))
         collection.insert_one(sample_with_region)
 
         manager = cache.CacheManager()
 
         summoner = manager.find_summoner(constants_pb2.Summoner(
-            id=self.sample_summoner["id"],
+            id=SAMPLES["summoner"]["id"],
             region=region,
         ))
         self.assertEquals(summoner, sample_with_region)
 
         summoner = manager.find_summoner(constants_pb2.Summoner(
-            name=self.sample_summoner["name"],
+            name=SAMPLES["summoner"]["name"],
             region=region,
         ))
         self.assertEquals(summoner, sample_with_region)
 
         summoner = manager.find_summoner(constants_pb2.Summoner(
-            name=self.sample_summoner["name"],
-            id=self.sample_summoner["id"],
+            name=SAMPLES["summoner"]["name"],
+            id=SAMPLES["summoner"]["id"],
             region=region,
         ))
         self.assertEquals(summoner, sample_with_region)

@@ -33,11 +33,9 @@ py_test(
     srcs = [
         "server_test.py",
     ],
-    data = [
-        "//powerspikegg/rawdata/fetcher/samples",
-    ],
     deps = [
         ":server",
+        "//third_party/python/riotwatcher:mock",
         "@pydep_mock//:library",
     ],
 )
@@ -62,6 +60,7 @@ py_test(
     deps = [
         ":cache",
         "//powerspikegg/lib/mongodb:wrapper",
+        "//third_party/python/riotwatcher:mock",
     ],
 )
 
@@ -102,11 +101,9 @@ py_test(
         "converter_test.py",
         "//powerspikegg/rawdata/public:leagueoflegends_py",
     ],
-    data = [
-        "//powerspikegg/rawdata/fetcher/samples",
-    ],
     deps = [
         ":converter",
         "//powerspikegg/rawdata/lib/python:static",
+        "//third_party/python/riotwatcher:mock",
     ],
 )
