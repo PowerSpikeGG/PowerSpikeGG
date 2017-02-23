@@ -6,7 +6,7 @@
 
 load("@org_pubref_rules_protobuf//python:rules.bzl", "py_proto_compile")
 load("@io_bazel_rules_go//proto:go_proto_library.bzl", "go_proto_library")
-load("@org_pubref_rules_protobuf//java:rules.bzl",   "java_proto_library")
+load("@org_pubref_rules_protobuf//java:rules.bzl", "java_proto_library")
 
 DEFAULT_PROTO_VISIBILITY = ["//visibility:public"]
 
@@ -49,7 +49,6 @@ def _psgg_proto_library_java(name, srcs=[], deps=[], visibility=[], testonly=0):
 
 
 def psgg_proto_library(name, srcs=[], deps=[], has_services=0, visibility=[], testonly=0):
-
     """PowerSpikeGG proto library generic compilation rule."""
     if visibility == []:
         visibility = DEFAULT_PROTO_VISIBILITY

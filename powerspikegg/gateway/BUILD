@@ -9,15 +9,16 @@ filegroup(
 
 scala_binary(
     name = "server",
-    srcs = ["src"],
+    srcs = [":src"],
     main_class = "gg.powerspike.Main",
     deps = [
-        "akka-http_2.11",
-        "grpc-all",
+        ":akka-http_2.11",
+        ":grpc-all",
         "//powerspikegg/rawdata/fetcher:service_java",
     ],
 )
 
+# TODO(funkysayu): move this to the third_party directory
 java_library(
     name = "akka-http_2.11",
     visibility = ["//visibility:public"],

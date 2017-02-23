@@ -171,6 +171,7 @@ scala_repositories()
 
 #
 # Java dependencies
+# TODO(cassand): move the dependencies into the gateway module
 # Generated with https://github.com/pgr0ss/bazel-deps
 #
 
