@@ -11,13 +11,13 @@ import com.google.protobuf.util.JsonFormat
 import gg.powerspike.rpc.{GrpcContext, MatchFetcher}
 
 /**
-  * This object contains the server web server including the actor system and akka materializer
+  * This object contains the web server including the actor system and akka materializer
   */
 object WebServer extends HttpApp {
 
   /**
     * The Grpc Context contains the configuration and the channels instances to other services
-    * Only one context ;ust be present by web server
+    * Only one context must be present by web server
     */
   private val grpcContext = new GrpcContext()
   private val grpcToJson = JsonFormat.printer()
@@ -41,4 +41,5 @@ object WebServer extends HttpApp {
   override def waitForShutdownSignal(actorSystem: ActorSystem)(implicit executionContext: ExecutionContext): Future[Done] = {
     systemReference.get().whenTerminated.map(_ => Done)
   }
+
 }
