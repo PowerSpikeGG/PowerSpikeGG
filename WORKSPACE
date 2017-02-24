@@ -112,12 +112,11 @@ pypi_repository(
 # Python package, we manage its dependency through github instead of Pypi
 # with a custom BUILD file.
 new_git_repository(
-    name="pydep_requests",
-    build_file="third_party/python/requests.BUILD",
-    remote="https://github.com/kennethreitz/requests.git",
-    tag="v2.13.0",
+    name = "pydep_requests",
+    build_file = "third_party/python/requests.BUILD",
+    remote = "https://github.com/kennethreitz/requests.git",
+    tag = "v2.13.0",
 )
-
 
 #
 # Go dependencies
@@ -155,6 +154,11 @@ new_go_repository(
     importpath = "golang.org/x/net",
 )
 
+new_go_repository(
+    name = "com_github_op_go_logging",
+    commit = "970db520ece77730c7e4724c61121037378659d9",
+    importpath = "github.com/op/go-logging",
+)
 
 #
 # Scala rules
