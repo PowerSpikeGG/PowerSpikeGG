@@ -137,7 +137,7 @@ class MatchFetcher(service_pb2.MatchFetcherServicer):
         summoner = self.converter.json_summoner_to_summoner_pb(summoner_data,
             partial_summoner.region)
 
-        self.cache_manager.save_summoner(summoner)
+        self.cache_manager.save_summoner(summoner_data, partial_summoner.region)
         return summoner
 
 
