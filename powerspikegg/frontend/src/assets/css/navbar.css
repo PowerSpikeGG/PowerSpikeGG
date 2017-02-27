@@ -1,0 +1,41 @@
+nav {
+  background: #1f1f1f;
+  height: 55px;
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.navbar-wrap {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #fff;
+}
+
+.navbar-items {
+  display: inline-block;
+  position: relative;
+  height:55px;
+  margin:0 auto;
+}
+
+.navbar-items > li {
+  display: inline-block;
+  position: relative;
+  list-style: none;
+  height:55px;
+  margin-right: 50px;
+  cursor: pointer;
+}
+
+.navbar-items > li > a,
+.navbar-items > li > a:link,
+.navbar-items > li > a:visited {
+  line-height: 55px;
+  text-decoration: none;
+  color: inherit;
+  font-size: 15px;
+}

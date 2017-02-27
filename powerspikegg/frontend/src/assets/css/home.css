@@ -1,6 +1,7 @@
 .video-background {
   position: relative;
   height: 750px;
+  margin-top: 55px;
   overflow: hidden;
 }
 
@@ -32,9 +33,9 @@
 
 .video-header h1 {
   margin-top: 150px;
-  font-size: 35px;
+  font-size: 55px;
   color: #fff;
-  text-transform: uppercase;
+  font-family: VikingSquad,serif;
 }
 
 app-searchbar .search-input {
@@ -46,15 +47,15 @@ app-searchbar .search-input {
 
 app-searchbar .search-input > md-icon {
   position: absolute;
-  top: 20px;
-  right: -2px;
+  top: 25px;
+  right: -5px;
   color: #7b7b7b;
   cursor: pointer;
 }
 
 app-searchbar input {
   background: #fff!important;
-  padding: 20px!important;
+  padding: 25px!important;
   margin-left: -20px;
   font-size: 18px;
   border-radius: 5px;
@@ -79,7 +80,7 @@ app-searchbar input:focus {
 
 app-location-picker .location-button {
   position: absolute;
-  top: 12px;
+  top: 18px;
   right: 40px;
   font-size: 15px;
   padding: 10px;
