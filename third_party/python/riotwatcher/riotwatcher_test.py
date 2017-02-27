@@ -88,14 +88,15 @@ class RiotWatcherLocalTest(unittest.TestCase):
     If you are doing changes on this module, please also run the online tests.
     """
 
-    server_address = ("localhost", 50923)
+    server_address = None
     handler = FakeRiotAPIRequestHandler
     sample_data = {"somekey": "somevalue"}
 
     @classmethod
     def setUpClass(cls):
         """Create and serve a fake HTTP server. Also instantiate a client"""
-        cls.httpd = HTTPServer(cls.server_address, cls.handler)
+        cls.httpd = HTTPServer(("127.0.0.1", 0), cls.handler)
+        cls.server_address = cls.httpd.socket.getsockname()
         cls.running_thread = threading.Thread(target=cls.httpd.serve_forever)
         cls.running_thread.start()
 
