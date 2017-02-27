@@ -81,7 +81,7 @@ class MongoDBServer():
             A pymongo client able to reach the server, None else.
         """
         client = pymongo.MongoClient("mongodb://127.0.0.1:%s" % self.port,
-            serverSelectionTimeoutMS=1)
+            serverSelectionTimeoutMS=10000)
         try:
             client.server_info()
             return client
