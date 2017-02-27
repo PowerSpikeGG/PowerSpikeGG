@@ -224,7 +224,7 @@ def raise_status(response):
         response.raise_for_status()
 
 
-class RateLimit:
+class RateLimit(object):
     def __init__(self, allowed_requests, seconds):
         self.allowed_requests = allowed_requests
         self.seconds = seconds
@@ -243,7 +243,7 @@ class RateLimit:
         return len(self.made_requests) < self.allowed_requests
 
 
-class RiotWatcher:
+class RiotWatcher(object):
 
     # Used for testing purpose (do NOT modify this for production code)
     enable_https = True
