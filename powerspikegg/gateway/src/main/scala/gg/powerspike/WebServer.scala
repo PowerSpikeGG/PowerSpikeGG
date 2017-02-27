@@ -24,16 +24,18 @@ object WebServer extends HttpApp {
   private val fetcher = new MatchFetcher(grpcContext)
 
   def route: Route = {
-    path("matchs" / LongNumber) { matchId =>
-      get {
-        complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, grpcToJson.print(fetcher.getById(matchId))))
-      }
-    } ~
-    path("summoner" / Remaining) { summonerId =>
-      get {
-        complete(HttpEntity(ContentTypes.`text/html(UTF-8)`,
-          fetcher.getBySummoner(summonerId).map(grpcToJson.print(_)).mkString("[", ",", "]")
-        ))
+    pathPrefix("api") {
+      path("matchs" / LongNumber) { matchId =>
+        get {
+          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, grpcToJson.print(fetcher.getById(matchId))))
+        }
+      } ~
+      path("summoner" / Remaining) { summonerId =>
+        get {
+          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`,
+            fetcher.getBySummoner(summonerId).map(grpcToJson.print(_)).mkString("[", ",", "]")
+          ))
+        }
       }
     }
   }
