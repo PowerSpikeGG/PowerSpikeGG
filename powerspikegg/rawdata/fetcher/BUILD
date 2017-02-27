@@ -49,6 +49,7 @@ py_library(
     ],
     deps = [
         "@pydep_pymongo//:library",
+        "@pydep_gflags//:library",
     ],
 )
 
