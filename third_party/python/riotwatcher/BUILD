@@ -15,9 +15,9 @@ py_test(
 )
 
 py_library(
-    name = "mock",
+    name = "rwmock",
     testonly = 1,
-    srcs = ["mock.py"],
+    srcs = ["rwmock.py"],
     data = glob(["samples/*.json"]),
     deps = ["@pydep_mock//:library"],
 )

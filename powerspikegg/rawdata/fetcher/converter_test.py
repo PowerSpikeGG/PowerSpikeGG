@@ -5,7 +5,7 @@ import unittest
 from powerspikegg.rawdata.fetcher import converter
 from powerspikegg.rawdata.lib.python import static
 from powerspikegg.rawdata.public import constants_pb2
-from third_party.python.riotwatcher.mock import SAMPLES
+from third_party.python.riotwatcher.rwmock import SAMPLES
 
 
 class ConverterEndToEndTest(unittest.TestCase):

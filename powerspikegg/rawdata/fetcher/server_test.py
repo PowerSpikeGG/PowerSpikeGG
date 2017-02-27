@@ -12,8 +12,8 @@ from powerspikegg.rawdata.fetcher.server import start_server
 from powerspikegg.rawdata.public import constants_pb2
 from powerspikegg.rawdata.public import match_pb2
 from third_party.python.riotwatcher import riotwatcher
-from third_party.python.riotwatcher.mock import RiotWatcherMock
-from third_party.python.riotwatcher.mock import SAMPLES
+from third_party.python.riotwatcher.rwmock import RiotWatcherMock
+from third_party.python.riotwatcher.rwmock import SAMPLES
 
 
 class MatchFetcherTest(unittest.TestCase):

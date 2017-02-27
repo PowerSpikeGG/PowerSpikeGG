@@ -10,7 +10,7 @@ from powerspikegg.rawdata.fetcher import cache
 from powerspikegg.rawdata.fetcher import service_pb2
 from powerspikegg.rawdata.public import constants_pb2
 from powerspikegg.lib.mongodb import wrapper
-from third_party.python.riotwatcher.mock import SAMPLES
+from third_party.python.riotwatcher.rwmock import SAMPLES
 
 """Set of tests for the caching library."""
 
