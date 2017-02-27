@@ -35,7 +35,7 @@ py_test(
     ],
     deps = [
         ":server",
-        "//third_party/python/riotwatcher:mock",
+        "//third_party/python/riotwatcher:rwmock",
         "@pydep_mock//:library",
     ],
 )
@@ -60,7 +60,7 @@ py_test(
     deps = [
         ":cache",
         "//powerspikegg/lib/mongodb:wrapper",
-        "//third_party/python/riotwatcher:mock",
+        "//third_party/python/riotwatcher:rwmock",
     ],
 )
 
@@ -104,6 +104,6 @@ py_test(
     deps = [
         ":converter",
         "//powerspikegg/rawdata/lib/python:static",
-        "//third_party/python/riotwatcher:mock",
+        "//third_party/python/riotwatcher:rwmock",
     ],
 )
