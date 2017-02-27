@@ -1,7 +1,5 @@
-<form>
-  <div class="search-input">
-    <input md-input type="text" placeholder="Summoner name">
-    <app-location-picker></app-location-picker>
-    <md-icon md-list-avatar>search</md-icon>
-  </div>
-</form>
+<div class="search-input">
+  <input md-input type="text" placeholder="Summoner name" [(ngModel)]="summonerQuery">
+  <app-location-picker></app-location-picker>
+  <md-icon md-list-avatar (click)="sendRequest()">search</md-icon>
+</div>
