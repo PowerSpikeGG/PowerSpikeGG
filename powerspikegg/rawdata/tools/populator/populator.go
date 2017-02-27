@@ -26,7 +26,7 @@ var (
 )
 
 // getConnectedSummoners feed the summonersChan with the summoners that played
-// played with the summoner given as parameter.
+// with the summoner given as parameter.
 func getConnectedSummoners(summoner string, summonersChan chan string) {
 	request := &lolpb.Summoner{
 		Name:   summoner,
