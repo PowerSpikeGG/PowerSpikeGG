@@ -24,7 +24,7 @@ PreCommit::TypeScriptChecks () {
     local filepath="$1"
 
     which npm > /dev/null || Log::Failure "npm binary not found. Aborting..."
-    which tslint > /dev/null || Prompt::YesNoPrompt "Please install tslint: 'sudo npm install -g tslint typescript'"
+    which tslint > /dev/null || Log::Failure "Please install tslint: 'sudo npm install -g tslint typescript'"
 
     tslint -c "devutils/tslint.json" $filepath || Log::Failure "Invalid typescript file. Please fix."
 }
