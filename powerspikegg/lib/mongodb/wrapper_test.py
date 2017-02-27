@@ -7,20 +7,24 @@ class MongoStartupTest(unittest.TestCase):
 
     def setUp(self):
         """For each tests, create a server available in instance variable"""
+        self.disable_shutdown_in_tear_down = False
         self.server = wrapper.create_mongo_server()
 
     def tearDown(self):
         """Ensures the previously created server is shutdown correctly."""
-        try:
+        if not self.disable_shutdown_in_tear_down:
             self.server.shutdown()
-        except RuntimeError:
-            pass
 
     def test_pid_startup_shutdown(self):
         """Ensures the server starts and shutdown correctly.
 
         Test done by checking the state of the process through the subprocess
         API."""
+        # Since we are shutting down the server in this test, make sure the
+        # test tear down does not attempt to shutdown an already killed
+        # process.
+        self.disable_shutdown_in_tear_down = True
+
         self.assertIsNone(self.server.process.poll(),
             "Process exited with return code %s; expected it to run." %
             self.server.process.returncode)
