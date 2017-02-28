@@ -10,6 +10,7 @@ export class SummonerComponent implements OnInit {
   }
 
   ngOnInit() {
+
   }
 
 }
