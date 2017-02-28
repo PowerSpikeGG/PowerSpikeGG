@@ -34,7 +34,7 @@ type matchCommand struct {
 	hasError     bool
 }
 
-// registerMatchCommand create a new match command and registers it into subcommands
+// registerMatchCommand create a new match command and registers it into subcommands.
 func registerMatchCommand() {
 	command := &matchCommand{
 		waitGroup:    &sync.WaitGroup{},
@@ -42,8 +42,8 @@ func registerMatchCommand() {
 	}
 
 	command.Initialize("match", "Fetch matches based on their IDs",
-		"Query the rawdata fetcher in order to retrieve matches based on "+
-			"their IDs. Use -region to change the default region.",
+		"Query the rawdata fetcher in order to retrieve matches based on their IDs. " +
+			"Use -region to change the default region.",
 	)
 
 	subcommands.Register(command, "")
@@ -53,11 +53,10 @@ func registerMatchCommand() {
 func (c *matchCommand) SetFlags(f *flag.FlagSet) {
 	c.base.SetFlags(f)
 
-	f.StringVar(&c.regionFlag, "region", defaultRegion.String(),
-		"region on which the matches was played")
+	f.StringVar(&c.regionFlag, "region", defaultRegion.String(), "region on which the matches was played")
 }
 
-// displayMatchResults asynchroneoulsy fetch and display match results
+// displayMatchResults asynchroneoulsy fetch and display match results.
 func (c *matchCommand) displayMatchResults(ctx context.Context, client fetcherpb.MatchFetcherClient, matchId int64) {
 	defer c.waitGroup.Done()
 
@@ -74,20 +73,20 @@ func (c *matchCommand) displayMatchResults(ctx context.Context, client fetcherpb
 		c.hasError = true
 		return
 	}
-	fmt.Printf("\nResults for match ID %d:\n", matchId)
+	fmt.Printf("Results for match ID %d:\n", matchId)
 	fmt.Println(proto.MarshalTextString(response))
 }
 
-// ParseFlags parses the given flags to ensure they are correct
+// ParseFlags parses the given flags to ensure they are correct.
 func (c *matchCommand) ParseFlags(f *flag.FlagSet) error {
-	// Check region parameter
+	// Check region parameter.
 	if parsedRegion, ok := lolpb.Region_value[strings.ToUpper(c.regionFlag)]; ok {
 		c.region = lolpb.Region(parsedRegion)
 	} else {
 		return fmt.Errorf("unknown / unsupported region: %v", c.regionFlag)
 	}
 
-	// Check args are integers
+	// Check args are integers.
 	for _, arg := range f.Args() {
 		matchID, err := strconv.ParseInt(arg, 10, 64)
 		if err != nil {
@@ -99,11 +98,10 @@ func (c *matchCommand) ParseFlags(f *flag.FlagSet) error {
 	return nil
 }
 
-// Execute run the command 'match'
+// Execute run the command 'match'.
 func (c *matchCommand) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
-	parseErr := c.ParseFlags(f)
-	if parseErr != nil {
-		fmt.Println(parseErr)
+	if err := c.ParseFlags(f); err != nil {
+		fmt.Fprintln(os.Stderr, err)
 		return subcommands.ExitFailure
 	}
 
