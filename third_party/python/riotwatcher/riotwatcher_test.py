@@ -10,10 +10,12 @@ import unittest
 if sys.version_info > (3, 0):
     from http.server import HTTPServer
     from http.server import SimpleHTTPRequestHandler
+    from urllib.parse import quote_plus
 else:
     from BaseHTTPServer import HTTPServer
     from SimpleHTTPServer import SimpleHTTPRequestHandler
     from io import open  # Support the error handling on open function.
+    from urllib import quote_plus
 
 from third_party.python.riotwatcher import riotwatcher
 
@@ -468,7 +470,17 @@ class RiotWatcherLocalTest(unittest.TestCase):
         """Test if summoners can be fetched by name."""
         summoner_names = ["foo"]
         expected_route = self.format_route('summoner',
-            '/by-name/{names}'.format(names=summoner_names[0]))
+            '/by-name/{names}'.format(names=summoner_names[0].lower()))
+
+        self.assertValidResults(expected_route,
+            self.client.get_summoners(names=summoner_names))
+
+    def test_summoners_by_utf8_name(self):
+        """Test if summoners can be fetched by name."""
+        summoner_names = ["YórickÅrchCrét"]
+        expected_route = self.format_route('summoner',
+            '/by-name/{names}'.format(
+                names=quote_plus(summoner_names[0].lower())))
 
         self.assertValidResults(expected_route,
             self.client.get_summoners(names=summoner_names))
