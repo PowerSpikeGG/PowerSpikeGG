@@ -10,7 +10,6 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { HomeModule } from './home/home.module';
 import { NavbarComponent } from './navbar/navbar.component';
 import { SummonerModule } from './summoner/summoner.module';
-import { SummonerService } from './services/summoner.service';
 
 @NgModule({
   declarations: [
@@ -28,8 +27,7 @@ import { SummonerService } from './services/summoner.service';
     SummonerModule
   ],
   providers: [
-    appRoutingProviders,
-    SummonerService
+    appRoutingProviders
   ],
   bootstrap: [AppComponent]
 })
