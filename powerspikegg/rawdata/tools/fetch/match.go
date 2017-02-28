@@ -70,7 +70,7 @@ func (c *matchCommand) displayMatchResults(ctx context.Context, client fetcherpb
 	c.displayMutex.Lock()
 	defer c.displayMutex.Unlock()
 	if err != nil {
-		fmt.Errorf("server raised an error while getting match %d: %v", matchId, err)
+		fmt.Fprintf(os.Stderr, "server raised an error while getting match %d: %v", matchId, err)
 		c.hasError = true
 		return
 	}
@@ -101,7 +101,11 @@ func (c *matchCommand) ParseFlags(f *flag.FlagSet) error {
 
 // Execute run the command 'match'
 func (c *matchCommand) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
-	c.ParseFlags(f)
+	parseErr := c.ParseFlags(f)
+	if parseErr != nil {
+		fmt.Println(parseErr)
+		return subcommands.ExitFailure
+	}
 
 	// Set up a connection to the server.
 	conn, err := c.base.Connect()
