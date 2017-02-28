@@ -36,8 +36,8 @@ func registerSummonerCommand() {
 	command.Initialize(
 		"summoner",
 		"Fetch summoner matches based on the summoner name",
-		"Query the rawdata fetcher in order to update a summoner and returns the list of updated matches. " +
-			"Use -region to change the default region.",
+		"Query the rawdata fetcher in order to update a summoner and returns the list of updated matches.\n"+
+			"usage: fetch summoner [flags] <summoner name>\n",
 	)
 
 	subcommands.Register(command, "")
