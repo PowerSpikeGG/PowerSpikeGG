@@ -479,7 +479,7 @@ class RiotWatcherLocalTest(unittest.TestCase):
 
     def test_summoners_by_utf8_name(self):
         """Test if summoners can be fetched by name."""
-        summoner_names = ["YórickÅrchCrét"]
+        summoner_names = ["YórickårchCrét"]
         expected_route = self.format_route('summoner',
             '/by-name/{names}'.format(
                 names=quote_plus(summoner_names[0].lower())))

@@ -316,9 +316,9 @@ class RiotWatcher(object):
 
     @staticmethod
     def sanitized_name(name):
-        # By using u'' + name, we ensure the string is converted to unicode
-        # without failing in Python 3
-        return (u'' + name).replace(u' ', u'').lower()
+        if sys.version_info > (3, 0):
+            return name.replace(u' ', u'').lower()
+        return name.decode("utf-8").replace(u' ', u'').lower()
 
     # champion-v1.2
     def _champion_request(self, end_url, region, **kwargs):
