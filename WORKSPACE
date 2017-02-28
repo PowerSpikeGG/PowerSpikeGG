@@ -41,13 +41,21 @@ git_repository(
 # Development dependencies
 #
 
-# MongoDB dependency, used for test purpose (not used in production)
+# MongoDB dependency, used for test purpose.
 new_http_archive(
-    name = "com_mongodb_binary",
-    build_file = "third_party/mongodb.BUILD",
+    name = "com_mongodb_linux_x86_64",
+    build_file = "third_party/mongodb/archive.BUILD",
     sha256 = "7d8aa843c83ed1cbcd05b5ad8b9c9d6d46de12506c77d3c29c303fba7f19eebc",
     strip_prefix = "mongodb-linux-x86_64-3.4.1",
     url = "https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-3.4.1.tgz",
+)
+
+new_http_archive(
+    name = "com_mongodb_darwin_x86_64",
+    build_file = "third_party/mongodb/archive.BUILD",
+    sha256 = "b7910cd4c840b58b249c1c3d5320d64ff3b708ae49c4526ddf7abaa549449e7f",
+    strip_prefix = "mongodb-osx-x86_64-3.4.1",
+    url = "https://fastdl.mongodb.org/osx/mongodb-osx-x86_64-3.4.1.tgz",
 )
 
 #
