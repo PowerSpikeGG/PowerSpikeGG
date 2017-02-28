@@ -6,6 +6,7 @@ go_library(
         "base.go",
         "fetch.go",
         "match.go",
+        "summoner.go",
     ],
     visibility = ["//visibility:private"],
     deps = [

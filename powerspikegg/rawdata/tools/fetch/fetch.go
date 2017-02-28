@@ -10,6 +10,7 @@ import (
 
 func main() {
 	registerMatchCommand()
+	registerSummonerCommand()
 	subcommands.Register(subcommands.HelpCommand(), "")
 
 	flag.Parse()
