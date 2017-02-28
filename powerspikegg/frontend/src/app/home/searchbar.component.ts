@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { SummonerService } from '../services/summoner.service';
+import { SummonerService } from '../summoner/summoner.service';
 
 @Component({
   selector: 'app-searchbar',

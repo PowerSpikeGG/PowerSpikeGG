@@ -1,0 +1,72 @@
+.spinner-wrapper {
+  /* IE10+ */
+  background-image: -ms-radial-gradient(center, ellipse farthest-corner, #327BFF 0%, #102751 100%);
+  /* Mozilla Firefox */
+  background-image: -moz-radial-gradient(center, ellipse farthest-corner, #327BFF 0%, #102751 100%);
+  /* Opera */
+  background-image: -o-radial-gradient(center, ellipse farthest-corner, #327BFF 0%, #102751 100%);
+  /* Webkit (Safari/Chrome 10) */
+  background-image: -webkit-gradient(radial, center center, 0, center center, 286, color-stop(0, #327BFF), color-stop(100, #102751));
+  /* Webkit (Chrome 11+) */
+  background-image: -webkit-radial-gradient(center, ellipse farthest-corner, #327BFF 0%, #102751 100%);
+  /* W3C Markup */
+  background-image: radial-gradient(ellipse farthest-corner at center, #327BFF 0%, #102751 100%);
+  height: 100%; width: 100%;
+  left: 0; top: 0;
+  position: fixed;
+  z-index: 10;
+}
+
+.spinner {
+  font-size: 10px;
+  height: 100px; width: 100px;
+  margin:auto;
+  text-align: center;
+  position: absolute;
+  top:0; bottom: 0; left: 0; right: 0;
+  z-index: 11;
+}
+
+.spinner > div {
+  background-color: #fff;
+  display: inline-block;
+  height: 100%;
+  width: 6px;
+  -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
+  animation: sk-stretchdelay 1.2s infinite ease-in-out;
+}
+
+.spinner .rect2 {
+  -webkit-animation-delay: -1.1s;
+  animation-delay: -1.1s;
+}
+
+.spinner .rect3 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+.spinner .rect4 {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s;
+}
+
+.spinner .rect5 {
+  -webkit-animation-delay: -0.8s;
+  animation-delay: -0.8s;
+}
+
+@-webkit-keyframes sk-stretchdelay {
+  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }
+  20% { -webkit-transform: scaleY(1.0) }
+}
+
+@keyframes sk-stretchdelay {
+  0%, 40%, 100% {
+    transform: scaleY(0.4);
+    -webkit-transform: scaleY(0.4);
+  }  20% {
+       transform: scaleY(1.0);
+       -webkit-transform: scaleY(1.0);
+     }
+}

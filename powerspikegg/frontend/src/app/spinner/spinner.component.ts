@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Input } from "@angular/core/src/metadata/directives";
 
 @Component({
   selector: 'app-spinner',
@@ -7,9 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SpinnerComponent implements OnInit {
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
   }
+
+  @Input() showSpinner: boolean;
 
 }
