@@ -8,5 +8,13 @@ __pycache__
 # Configuration files
 /config
 
+# IntelliJ IDEA
+**/.idea
+*.iml
+
+# Gateway compilation files
+powerspikegg/gateway/project/
+powerspikegg/gateway/target/
+
 # Misc
 *.swp
