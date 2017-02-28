@@ -1,8 +1,9 @@
-import {NgModule} from '@angular/core';
+import { NgModule } from '@angular/core';
+import { MaterialModule } from '@angular/material';
+import { FormsModule } from '@angular/forms';
 
-import {SummonerComponent}   from './summoner.component';
-import {MaterialModule} from "@angular/material";
-import {FormsModule} from "@angular/forms";
+import { SummonerComponent }   from './summoner.component';
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 @NgModule({
   imports: [
@@ -10,7 +11,10 @@ import {FormsModule} from "@angular/forms";
     MaterialModule
   ],
   exports: [],
-  declarations: [SummonerComponent],
+  declarations: [
+    SummonerComponent,
+    SpinnerComponent
+  ],
   providers: [],
 })
 export class SummonerModule {
