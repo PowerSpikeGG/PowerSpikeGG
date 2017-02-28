@@ -84,7 +84,7 @@ class MatchFetcher(service_pb2.MatchFetcherServicer):
             season=constants_pb2.Season.keys())
 
         # Fetch match details from the summoner ID
-        for raw_match_reference in raw_match_references["matches"]:
+        for raw_match_reference in raw_match_references.get("matches", []):
             match_id = raw_match_reference["matchId"]
             yield self.Match(service_pb2.MatchRequest(id=match_id,
                 region=request.region), context)
