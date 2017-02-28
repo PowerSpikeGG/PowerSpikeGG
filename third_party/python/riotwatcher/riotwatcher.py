@@ -1,6 +1,8 @@
 from collections import deque
 import time
 import requests
+import sys
+
 
 # Constants
 BRAZIL = u'br'
@@ -314,7 +316,9 @@ class RiotWatcher(object):
 
     @staticmethod
     def sanitized_name(name):
-        return name.replace(u' ', u'').lower()
+        # By using u'' + name, we ensure the string is converted to unicode
+        # without failing in Python 3
+        return (u'' + name).replace(u' ', u'').lower()
 
     # champion-v1.2
     def _champion_request(self, end_url, region, **kwargs):
