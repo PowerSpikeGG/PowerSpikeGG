@@ -42,7 +42,7 @@ func registerMatchCommand() {
 	}
 
 	command.Initialize("match", "Fetch matches based on their IDs",
-		"Query the rawdata fetcher in order to retrieve matches based on their IDs. " +
+		"Query the rawdata fetcher in order to retrieve matches based on their IDs. "+
 			"Use -region to change the default region.",
 	)
 

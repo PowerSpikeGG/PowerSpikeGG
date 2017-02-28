@@ -2,12 +2,12 @@ package main
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 	"strings"
-	"io"
-	"errors"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/google/subcommands"
@@ -24,10 +24,8 @@ type summonerCommand struct {
 
 	// parsed flags / arguments
 	summonerName string
-	region lolpb.Region
-
+	region       lolpb.Region
 }
-
 
 // registerSummonerCommand create a new summoner command and registers it into subcommands.
 func registerSummonerCommand() {
@@ -43,16 +41,15 @@ func registerSummonerCommand() {
 	subcommands.Register(command, "")
 }
 
-
 func (c *summonerCommand) displaySummonerMatchResults(ctx context.Context, client fetcherpb.MatchFetcherClient, summonerName string) error {
-	summoner := &lolpb.Summoner {
-		Name: summonerName,
+	summoner := &lolpb.Summoner{
+		Name:   summonerName,
 		Region: c.region,
 	}
 
 	response, err := client.UpdateSummoner(ctx, summoner)
 	if err != nil {
-		return fmt.Errorf("server raised an error while updating summoner %s: %v", summoner.Name,	err)
+		return fmt.Errorf("server raised an error while updating summoner %s: %v", summoner.Name, err)
 	}
 
 	fmt.Printf("Results for summoner %s:\n", summoner.Name)
