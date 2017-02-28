@@ -84,8 +84,8 @@ func (c *summonerCommand) ParseFlags(f *flag.FlagSet) error {
 		return fmt.Errorf("unknown / unsupported region: %v", c.regionFlag)
 	}
 
-	if len(f.Args()) <= 0 {
-		return errors.New("please specify a summoner name")
+	if len(f.Args()) != 1 {
+		return errors.New("please specify one summoner name")
 	}
 	c.summonerName = f.Args()[0]
 
