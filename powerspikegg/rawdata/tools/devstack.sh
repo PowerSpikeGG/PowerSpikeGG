@@ -43,9 +43,9 @@ mkdir $mongo_data_dir
 
 # Build first
 bazel build //powerspikegg/rawdata/fetcher:server \
-            @com_mongodb_binary//:server || exit_error "Unable to build."
+            //third_party/mongodb:server || exit_error "Unable to build."
 
-bazel-genfiles/external/com_mongodb_binary/mongod \
+bazel-genfiles/third_party/mongodb/mongod \
     --pidfilepath=$mongo_pidfile \
     --dbpath=$mongo_data_dir &
 

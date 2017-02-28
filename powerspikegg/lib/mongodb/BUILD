@@ -5,7 +5,7 @@ py_library(
         "wrapper.py",
     ],
     data = [
-        "@com_mongodb_binary//:server_files",
+        "//third_party/mongodb:server",
     ],
     visibility = [
         "//visibility:public",

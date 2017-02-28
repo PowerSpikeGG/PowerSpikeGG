@@ -14,7 +14,6 @@ try:
 except ImportError:
     from urllib import quote_plus  # Python 2.x
 
-MONGO_SERVER_REPOSITORY_NAME = "com_mongodb_binary"
 FOLDER_LEVEL_TO_WORKSPACE = 3
 MAX_INSTANTATION_ATTEMPT = 3
 
@@ -121,9 +120,8 @@ def _get_binary_path():
 
     return os.sep.join([
         workspace,
-        "external",
-        MONGO_SERVER_REPOSITORY_NAME,
-        "bin",
+        "third_party",
+        "mongodb",
         "mongod",
     ])
 
