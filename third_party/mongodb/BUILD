@@ -6,7 +6,7 @@ licenses(["notice"])  # GNU AGPL v3.0
 alias(
     name = "server_files",
     actual = select({
-        "//config:darwin": "@com_mongodb_darwin//:server_files",
+        "//config:darwin": "@com_mongodb_darwin_x86_64//:server_files",
         "//config:darwin_x86_64": "@com_mongodb_darwin_x86_64//:server_files",
         "//conditions:default": "@com_mongodb_linux_x86_64//:server_files",
     }),
@@ -16,7 +16,7 @@ alias(
 alias(
     name = "client_files",
     actual = select({
-        "//config:darwin": "@com_mongodb_darwin//:client_files",
+        "//config:darwin": "@com_mongodb_darwin_x86_64//:client_files",
         "//config:darwin_x86_64": "@com_mongodb_darwin_x86_64//:client_files",
         "//conditions:default": "@com_mongodb_linux_x86_64//:client_files",
     }),
