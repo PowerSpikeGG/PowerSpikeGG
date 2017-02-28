@@ -15,7 +15,7 @@ gflags.DEFINE_string("rawdata_cache_server_address", "localhost:27017",
     "address of the Mongo database caching the Riot API data.")
 gflags.DEFINE_string("rawdata_cache_database_name", "rawdata",
     "database name containing Riot API data.")
-gflags.DEFINE_integer("mongodb_connection_timeout", 1,
+gflags.DEFINE_integer("mongodb_connection_timeout", 10000,
     "seconds before assuming the mongodb connection timeouts.")
 gflags.DEFINE_boolean("disable_mongodb_exception", False,
     "disable MongoDB exception propagation.")
