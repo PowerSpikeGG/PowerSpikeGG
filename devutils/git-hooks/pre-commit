@@ -13,9 +13,16 @@ source "$(dirname "${BASH_SOURCE[0]}")/../lib/bash/prompt.bash"
 
 # Rules checking Go code validity
 PreCommit::GoChecks () {
-    [ -z "$GOPATH" ] && Log::Failure "please install golang on workstation (\$GOPATH missing)"
+    local filepath="$1"
 
-    # TODO(funkysayu) add go precommits
+    [ -z "$GOPATH" ] && Log::Failure "please install golang on workstation (\$GOPATH missing)"
+    local golint="$GOPATH/bin/golint"
+    [ -x "$golint" ] || Log::Failure "golint not found. Please run 'go get -u github.com/golang/lint/golint'."
+
+    # Check file is correctly formatted.
+    [ -n "$(gofmt -d "$filepath")" ] && Log::Error "go code is not correctly formatted."
+    $golint -set_exit_status "$filepath" || Log::Error "golint tool returned errors."
+    go tool vet "$filepath" || Log::Error "go vet tool returned errors."
 }
 
 
@@ -26,7 +33,7 @@ PreCommit::TypeScriptChecks () {
     which npm > /dev/null || Log::Failure "npm binary not found. Aborting..."
     which tslint > /dev/null || Log::Failure "Please install tslint: 'sudo npm install -g tslint typescript'"
 
-    tslint -c "devutils/tslint.json" $filepath || Log::Failure "Invalid typescript file. Please fix."
+    tslint -c "devutils/tslint.json" "$filepath" || Log::Error "invalid typescript formatting"
 }
 
 
@@ -44,33 +51,61 @@ PreCommit::BuildChecks () {
         go install github.com/bazelbuild/buildifier/buildifier
     fi
 
-    output=$("$GOPATH/bin/buildifier" -mode=check $filepath)
+    output=$("$GOPATH/bin/buildifier" -mode=check "$filepath")
     if [ -n "$output" ]; then
         Log::Warning "$output"
-        Log::Failure "formatting error in a BUILD file. Aborting..."
+        Log::Error "formatting error in a BUILD file."
+    fi
+}
+
+
+# Rules checking file is correctly registered in the commit
+PreCommit::GitChecks () {
+    local filepath="$1"
+
+    # Ensure commit contains the same file that the one currently in the project
+    if [ "$(git status --porcelain "$filepath" | cut -c2)" != ' ' ]; then
+        Log::Error "unstaged change detected, but file is staged in the commit"
     fi
 }
 
 
 main () {
-    cd $(bazel info workspace)
+    cd "$(bazel info workspace)" || Log::Failure "unable to go in the workspace root. Aborting..."
 
     # Ensures every tests affected by modified targets pass
     git diff --name-only --staged HEAD \
         | Bazel::GetAssociatedTests \
         | Bazel::TestTargets || Log::Failure "test failure, aborting commit."
+    Log::Success "tests passed successfully!"
 
     # Per languages rules
-    git diff --name-only --staged HEAD | while read filepath
+    has_errors=false
+    while read -r filepath
     do
+        Log::ResetErrorCounter
         if [ -e "$filepath" ]; then
             case "$filepath" in
-                *.go) PreCommit::GoChecks $filepath || exit 1 ;;
-                *.ts) PreCommit::TypeScriptChecks $filepath || exit 1;;
-                *BUILD) PreCommit::BuildChecks $filepath || exit 1 ;;
+                *.go) PreCommit::GoChecks "$filepath";;
+                *.ts) PreCommit::TypeScriptChecks "$filepath";;
+                *BUILD) PreCommit::BuildChecks "$filepath";;
             esac
         fi
-    done
+        PreCommit::GitChecks "$filepath"
+
+        if [ "$(Log::GetErrorCounter)" -ne "0" ]; then
+            has_errors=true
+            Log::Error "file $filepath contains errors"
+        else
+            Log::Success "file $filepath is valid"
+        fi
+    done <<< "$(git diff --name-only --staged HEAD)"
+
+    if $has_errors; then
+        Log::Failure "per files error detected. Aborting commit."
+    fi
+
+    Log::Success "commit is valid!"
 }
 
 
