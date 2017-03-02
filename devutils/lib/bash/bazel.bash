@@ -17,12 +17,12 @@ Bazel::GetAssociatedTests () {
         do
             local rule_to_file=$(bazel query $file 2> /dev/null)
             if [ "$rule_to_file" = "" ]; then
-                Log::Notice "file is not part of a package: $file"
+                Log::Notice "file is not part of Bazel a package: $file"
             elif [[ "$rule_to_file" != *:BUILD ]]; then
                 dependencies=$(bazel query --logging 0 --curses no "kind('.*_test',
                     rdeps(..., attr('srcs', $rule_to_file, ...)))")
                 if [ "$dependencies" = "" ]; then
-                    Log::Warning "file does not have associated test suite: $file"
+                    Log::Warning "file does not have associated Bazel test suite: $file"
                 else
                     echo "$dependencies"
                 fi
@@ -39,7 +39,11 @@ Bazel::TestTargets () {
 
     while read target
     do
-        bazel test --ignore_unsupported_sandboxing $target || return 1
+        $made_tests || Log::Notice "testing associated targets (this might take a while)"
+        bazel test --noshow_progress \
+                   --noverbose_test_summary \
+                   --ignore_unsupported_sandboxing \
+                   $target || return 1
         made_tests=true
     done
 
