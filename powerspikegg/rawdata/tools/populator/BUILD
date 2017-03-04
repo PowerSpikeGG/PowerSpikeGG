@@ -7,6 +7,7 @@ go_library(
     deps = [
         "//powerspikegg/rawdata/fetcher:service_gopb",
         "//powerspikegg/rawdata/public:leagueoflegends_gopb",
+        "@com_github_oleiade_lane//:go_default_library",
         "@com_github_op_go_logging//:go_default_library",
         "@org_golang_google_grpc//:go_default_library",
         "@org_golang_x_net//context:go_default_library",
