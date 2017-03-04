@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"io"
 	"os"
@@ -55,6 +56,7 @@ func (f *summonerFetcher) enqueueNewSummoners(match *lolpb.MatchReference) error
 			}
 		}
 	}
+	return nil
 }
 
 // getConnectedSummoners retrieve from the fetcher the summoners that played
