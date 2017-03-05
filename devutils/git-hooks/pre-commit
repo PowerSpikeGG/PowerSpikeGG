@@ -17,7 +17,7 @@ PreCommit::GoChecks () {
 
     [ -z "$GOPATH" ] && Log::Failure "please install golang on workstation (\$GOPATH missing)"
     local golint="$GOPATH/bin/golint"
-    [ -x "$golint" ] || Log::Failure "golint not found. Please run 'go get -u github.com/golang/lint/golint'."
+    [ ! -x "$golint" ] && Log::Failure "golint not found. Please run 'go get -u github.com/golang/lint/golint'."
 
     # Check file is correctly formatted.
     [ -n "$(gofmt -d "$filepath")" ] && Log::Error "go code is not correctly formatted."
@@ -64,9 +64,8 @@ PreCommit::GitChecks () {
     local filepath="$1"
 
     # Ensure commit contains the same file that the one currently in the project
-    if [ "$(git status --porcelain "$filepath" | cut -c2)" != ' ' ]; then
+    [ "$(git status --porcelain "$filepath" | cut -c2)" != ' ' ] && \
         Log::Error "unstaged change detected, but file is staged in the commit"
-    fi
 }
 
 
@@ -84,7 +83,7 @@ main () {
     while read -r filepath
     do
         Log::ResetErrorCounter
-        if [ -e "$filepath" ]; then
+        if [ -f "$filepath" ]; then
             case "$filepath" in
                 *.go) PreCommit::GoChecks "$filepath";;
                 *.ts) PreCommit::TypeScriptChecks "$filepath";;
@@ -93,7 +92,7 @@ main () {
         fi
         PreCommit::GitChecks "$filepath"
 
-        if [ "$(Log::GetErrorCounter)" -ne "0" ]; then
+        if [ "$(Log::GetErrorCounter)" -ne 0 ]; then
             has_errors=true
             Log::Error "file $filepath contains errors"
         else
@@ -101,10 +100,7 @@ main () {
         fi
     done <<< "$(git diff --name-only --staged HEAD)"
 
-    if $has_errors; then
-        Log::Failure "per files error detected. Aborting commit."
-    fi
-
+    ( $has_errors ) && Log::Failure "per files error detected. Aborting commit."
     Log::Success "commit is valid!"
 }
 
