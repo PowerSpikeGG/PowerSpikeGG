@@ -1,4 +1,4 @@
-package gg.powerspike
+package gg.powerspike.services
 
 import fetcher.rds.MatchFetcherGrpc.MatchFetcherImplBase
 import fetcher.rds.Service.MatchRequest

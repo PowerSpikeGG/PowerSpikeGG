@@ -3,7 +3,14 @@ load("@io_bazel_rules_scala//scala:scala.bzl", "scala_library", "scala_binary", 
 filegroup(
     name = "src",
     srcs = glob([
-        "src/**/*",
+        "src/main/**/*",
+    ]),
+)
+
+filegroup(
+    name = "test",
+    srcs = glob([
+        "src/test/**/*",
     ]),
 )
 
@@ -20,7 +27,10 @@ scala_binary(
 
 scala_test(
     name = "test_api",
-    srcs = [":src"],
+    srcs = [
+        ":src",
+        ":test",
+    ],
     deps = [
         ":akka-http-testkit_2.11",
         ":akka-http_2.11",
