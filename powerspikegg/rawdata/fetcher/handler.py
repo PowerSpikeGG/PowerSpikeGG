@@ -1,11 +1,13 @@
 import threading
 import time
 
+from powerspikegg.rawdata.fetcher import monitoring
 from third_party.python.riotwatcher import riotwatcher
 
 """
 Riot API handler sur-definition.
 """
+
 
 class RateLimiter(riotwatcher.RateLimit):
     """Add a contextual management on the rate limiter, blocking request.
@@ -44,14 +46,16 @@ class RiotAPIHandler(riotwatcher.RiotWatcher):
     """Adds support of request locking when the rate limit is reached.
     """
 
-    def __init__(self, key, default_region="na",
-        limits=None):
+    def __init__(self, key, default_region="na", limits=None):
         """Constructor. Register the key and the rate limiters."""
         self.key = key
         self.default_region = default_region
+
         self.limits = limits
         if self.limits is None:
             self.limits = [RateLimiter(10, 10), RateLimiter(500, 600)]
+        for limiter in self.limits:
+            monitoring.FetcherWatcher.register_rate_limiter(limiter)
 
     def acquire(self):
         """Acquire the locks, and wait until a request is available"""
