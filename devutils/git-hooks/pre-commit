@@ -26,6 +26,16 @@ PreCommit::GoChecks () {
 }
 
 
+# Rules checking Python code validity
+PreCommit::PythonChecks () {
+    local filepath="$1"
+
+    which pep8 > /dev/null || Log::Failure "pep8 not found. Install it with pip install pep8."
+
+    pep8 $filepath || Log::Error "invalid Python formating"
+}
+
+
 # Rules checking Typescript code validity
 PreCommit::TypeScriptChecks () {
     local filepath="$1"
@@ -53,8 +63,7 @@ PreCommit::BuildChecks () {
 
     output=$("$GOPATH/bin/buildifier" -mode=check "$filepath")
     if [ -n "$output" ]; then
-        Log::Warning "$output"
-        Log::Error "formatting error in a BUILD file."
+        Log::Error "$output"
     fi
 }
 
@@ -86,8 +95,10 @@ main () {
         if [ -f "$filepath" ]; then
             case "$filepath" in
                 *.go) PreCommit::GoChecks "$filepath";;
+                *.py) PreCommit::PythonChecks "$filepath";;
                 *.ts) PreCommit::TypeScriptChecks "$filepath";;
                 *BUILD) PreCommit::BuildChecks "$filepath";;
+                *WORKSPACE) PreCommit::BuildChecks "$filepath";;
             esac
         fi
         PreCommit::GitChecks "$filepath"
