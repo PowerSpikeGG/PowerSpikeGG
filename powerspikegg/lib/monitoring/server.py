@@ -10,7 +10,7 @@ FLAGS = gflags.FLAGS
 # TODO(funkysayu): once the stack fully support prometheus, remove this flag.
 gflags.DEFINE_boolean("enable_prometheus", False, "enable prometheus tracing")
 gflags.DEFINE_integer("prometheus_server_port", 8002,
-    "port on which the prometheus server will listen")
+                      "port on which the prometheus server will listen")
 
 
 @contextlib.contextmanager
@@ -20,5 +20,5 @@ def prometheus_monitoring():
     if FLAGS.enable_prometheus:
         start_http_server(FLAGS.prometheus_server_port)
         logging.info("Prometheus server started up on :%d" %
-            FLAGS.prometheus_server_port)
+                     FLAGS.prometheus_server_port)
     yield None

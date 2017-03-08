@@ -11,6 +11,7 @@ gflags.DEFINE_boolean("enable_rpc_monitoring", True, "enable rpc monitoring")
 
 counter = None  # Counter is only initialized if required
 
+
 def endpoint_monitoring():
     """Decorator used to create automatically a monitoring entry in Prometheus.
 
@@ -18,8 +19,10 @@ def endpoint_monitoring():
     """
     global counter
     if counter is None:
-        counter = core.Counter('rpc_endpoint',
-                'gRPC endpoint monitoring', ['rpc', 'type'])
+        counter = core.Counter(
+            'rpc_endpoint',
+            'gRPC endpoint monitoring', ['rpc', 'type'],
+        )
 
     def decorator(func):
         endpoint_name = func.__name__
