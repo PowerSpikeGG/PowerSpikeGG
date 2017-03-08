@@ -109,6 +109,14 @@ pypi_repository(
 )
 
 pypi_repository(
+    name = "pydep_prometheus_client",
+    pkg = "prometheus_client",
+    pure = 1,
+    srcs_version = "PY2AND3",
+    version = "0.0.19",
+)
+
+pypi_repository(
     name = "pydep_pymongo",
     pkg = "pymongo",
     pure = 1,
