@@ -67,11 +67,33 @@ py_test(
 )
 
 py_library(
+    name = "monitoring",
+    srcs = [
+        "monitoring.py",
+    ],
+    deps = [
+        "@pydep_prometheus_client//:library",
+    ],
+)
+
+py_test(
+    name = "monitoring_test",
+    srcs = [
+        "monitoring_test.py",
+    ],
+    deps = [
+        ":handler",
+        ":monitoring",
+    ],
+)
+
+py_library(
     name = "handler",
     srcs = [
         "handler.py",
     ],
     deps = [
+        ":monitoring",
         "//third_party/python/riotwatcher",
     ],
 )
