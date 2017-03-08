@@ -23,6 +23,7 @@ py_binary(
         ":cache",
         ":converter",
         ":handler",
+        "//powerspikegg/lib/monitoring:rpc",
         "//third_party/python/riotwatcher",
         "@pydep_gflags//:library",
     ],
@@ -48,8 +49,8 @@ py_library(
         "//powerspikegg/rawdata/public:leagueoflegends_py",
     ],
     deps = [
-        "@pydep_pymongo//:library",
         "@pydep_gflags//:library",
+        "@pydep_pymongo//:library",
     ],
 )
 
