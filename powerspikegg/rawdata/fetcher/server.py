@@ -8,6 +8,8 @@ import traceback
 
 from concurrent import futures
 
+from powerspikegg.lib.monitoring import rpc
+from powerspikegg.lib.monitoring.server import prometheus_monitoring
 from powerspikegg.rawdata.public import match_pb2
 from powerspikegg.rawdata.public import constants_pb2
 from powerspikegg.rawdata.fetcher import cache
@@ -24,10 +26,11 @@ Match fetcher. Find match informations based on search query.
 
 FLAGS = gflags.FLAGS
 
-gflags.DEFINE_string("riot_api_token", "", "token used to reach the Riot API")
+gflags.DEFINE_string("riot_api_token", None,
+                     "token used to reach the Riot API")
 gflags.DEFINE_integer("port", 50001, "port on which the server will listen")
 gflags.DEFINE_integer("max_workers", 10,
-    "number of threads handling the requests")
+                      "number of threads handling the requests")
 
 
 class ServerError(Exception):
@@ -59,6 +62,7 @@ class MatchFetcher(service_pb2.MatchFetcherServicer):
             self.cache_manager = cache.CacheManager()
         self.converter = converter.JSONConverter(self.riot_api_handler)
 
+    @rpc.endpoint_monitoring()
     def UpdateSummoner(self, request, context):
         """Update the match list of a summoner.
 
@@ -86,9 +90,12 @@ class MatchFetcher(service_pb2.MatchFetcherServicer):
         # Fetch match details from the summoner ID
         for raw_match_reference in raw_match_references.get("matches", []):
             match_id = raw_match_reference["matchId"]
-            yield self.Match(service_pb2.MatchRequest(id=match_id,
-                region=request.region), context)
+            yield self.Match(service_pb2.MatchRequest(
+                id=match_id,
+                region=request.region
+            ), context)
 
+    @rpc.endpoint_monitoring()
     def Match(self, request, context):
         """Get a match based on its identifier.
 
@@ -108,8 +115,8 @@ class MatchFetcher(service_pb2.MatchFetcherServicer):
 
         if match_data is None:
             try:
-                match_data = self.riot_api_handler.get_match(request.id,
-                    constants_pb2.Region.Name(request.region))
+                match_data = self.riot_api_handler.get_match(
+                    request.id, constants_pb2.Region.Name(request.region))
             except riotwatcher.LoLException as e:
                 logging.debug(traceback.format_exc())
                 logging.error("Riot API handler raised an exception: %s", e)
@@ -134,10 +141,11 @@ class MatchFetcher(service_pb2.MatchFetcherServicer):
         summoner_data = self.riot_api_handler.get_summoner(
             name=partial_summoner.name,
             region=constants_pb2.Region.Name(partial_summoner.region))
-        summoner = self.converter.json_summoner_to_summoner_pb(summoner_data,
-            partial_summoner.region)
+        summoner = self.converter.json_summoner_to_summoner_pb(
+            summoner_data, partial_summoner.region)
 
-        self.cache_manager.save_summoner(summoner_data, partial_summoner.region)
+        self.cache_manager.save_summoner(summoner_data,
+                                         partial_summoner.region)
         return summoner
 
 
@@ -155,12 +163,11 @@ def start_server(riot_api_token, listening_port, max_workers):
 
 def main():
     """Parse command line arguments and start the server."""
-    if FLAGS.riot_api_token == "":
-        logging.critical("Required argument 'riot_api_token' is empty.")
-        return 1
-
-    server, _ = start_server(FLAGS.riot_api_token, FLAGS.port,
-        FLAGS.max_workers)
+    server, _ = start_server(
+        FLAGS.riot_api_token,
+        FLAGS.port,
+        FLAGS.max_workers,
+    )
 
     try:
         while True:
@@ -169,5 +176,7 @@ def main():
         server.stop(0)
 
 if __name__ == '__main__':
+    gflags.mark_flag_as_required('riot_api_token')
     FLAGS(sys.argv)
-    main()
+    with prometheus_monitoring():
+        main()
