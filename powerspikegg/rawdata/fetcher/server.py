@@ -32,6 +32,8 @@ gflags.DEFINE_integer("port", 50001, "port on which the server will listen")
 gflags.DEFINE_integer("max_workers", 10,
                       "number of threads handling the requests")
 
+gflags.mark_flag_as_required('riot_api_token')
+
 
 class ServerError(Exception):
     """Exception raised when an error is send from the Riot API.
@@ -176,7 +178,8 @@ def main():
         server.stop(0)
 
 if __name__ == '__main__':
-    gflags.mark_flag_as_required('riot_api_token')
+    # TODO(funkysayu): This should be refactored into a generic function doing
+    #                  this for the whole stack
     FLAGS(sys.argv)
     with prometheus_monitoring():
         main()
