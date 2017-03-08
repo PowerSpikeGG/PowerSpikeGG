@@ -20,16 +20,16 @@ class TestRPCCounter(unittest.TestCase):
     def get_counters_values(self, endpoint):
         """Gets the counters values for an endpoint."""
         return [
-            core.REGISTRY.get_sample_value('rpc_endpoint',
-                {'rpc': endpoint, 'type': 'calls'}),
-            core.REGISTRY.get_sample_value('rpc_endpoint',
-                {'rpc': endpoint, 'type': 'success'}),
-            core.REGISTRY.get_sample_value('rpc_endpoint',
-                {'rpc': endpoint, 'type': 'errors'}),
+            core.REGISTRY.get_sample_value(
+                'rpc_endpoint', {'rpc': endpoint, 'type': 'calls'}),
+            core.REGISTRY.get_sample_value(
+                'rpc_endpoint', {'rpc': endpoint, 'type': 'success'}),
+            core.REGISTRY.get_sample_value(
+                'rpc_endpoint', {'rpc': endpoint, 'type': 'errors'}),
         ]
 
     def test_rpc_call_correctly_incremented(self):
-        """Checks counters are incremented depending of the function behavior."""
+        """Checks counters are incremented base on the function behavior."""
         @rpc.endpoint_monitoring()
         def MyEndpoint(raise_exception=False):
             if raise_exception:

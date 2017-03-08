@@ -4,8 +4,8 @@ py_library(
         "server.py",
     ],
     deps = [
-        "@pydep_prometheus_client//:library",
         "@pydep_gflags//:library",
+        "@pydep_prometheus_client//:library",
     ],
 )
 
@@ -14,13 +14,13 @@ py_library(
     srcs = [
         "rpc.py",
     ],
-    deps = [
-        ":server",
-        "@pydep_prometheus_client//:library",
-        "@pydep_gflags//:library",
-    ],
     visibility = [
         "//visibility:public",
+    ],
+    deps = [
+        ":server",
+        "@pydep_gflags//:library",
+        "@pydep_prometheus_client//:library",
     ],
 )
 
