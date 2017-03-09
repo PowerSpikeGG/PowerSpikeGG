@@ -34,3 +34,21 @@ py_test(
         "@pydep_pymongo//:library",
     ],
 )
+
+py_library(
+    name = "watcher",
+    srcs = [
+        "watcher.py",
+    ],
+)
+
+py_test(
+    name = "watcher_test",
+    srcs = [
+        "watcher_test.py",
+    ],
+    deps = [
+        ":watcher",
+        "@pydep_mock//:library",
+    ],
+)
