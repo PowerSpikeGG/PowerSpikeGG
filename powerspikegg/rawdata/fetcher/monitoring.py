@@ -2,6 +2,8 @@ from collections import OrderedDict
 
 from prometheus_client import core
 
+from powerspikegg.lib.monitoring import watcher
+
 """Monitoring logic of the rawdata fetcher server.
 
 Implements a watcher periodically checking status of the endpoint.
@@ -14,6 +16,7 @@ rate_limit_counter = core.Gauge(
 )
 
 
+@watcher.register_watcher
 class FetcherWatcher():
     """Implements a watcher that periodically get information on the fetcher.
 

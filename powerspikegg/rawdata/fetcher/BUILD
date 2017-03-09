@@ -72,6 +72,7 @@ py_library(
         "monitoring.py",
     ],
     deps = [
+        "//powerspikegg/lib/monitoring:watcher",
         "@pydep_prometheus_client//:library",
     ],
 )
