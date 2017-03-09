@@ -4,6 +4,8 @@ import logging
 
 from prometheus_client import start_http_server
 
+from powerspikegg.lib.monitoring import watcher
+
 
 FLAGS = gflags.FLAGS
 
@@ -11,6 +13,8 @@ FLAGS = gflags.FLAGS
 gflags.DEFINE_boolean("enable_prometheus", False, "enable prometheus tracing")
 gflags.DEFINE_integer("prometheus_server_port", 8002,
                       "port on which the prometheus server will listen")
+gflags.DEFINE_integer("prometheus_watcher_update_rate", 100,
+                      "update rate of the watchers")
 
 
 @contextlib.contextmanager
@@ -21,4 +25,5 @@ def prometheus_monitoring():
         start_http_server(FLAGS.prometheus_server_port)
         logging.info("Prometheus server started up on :%d" %
                      FLAGS.prometheus_server_port)
-    yield None
+    with watcher.create_context(FLAGS.prometheus_watcher_update_rate):
+        yield None

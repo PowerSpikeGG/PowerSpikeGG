@@ -4,6 +4,7 @@ py_library(
         "server.py",
     ],
     deps = [
+        ":watcher",
         "@pydep_gflags//:library",
         "@pydep_prometheus_client//:library",
     ],
@@ -39,6 +40,9 @@ py_library(
     name = "watcher",
     srcs = [
         "watcher.py",
+    ],
+    visibility = [
+        "//visibility:public",
     ],
 )
 

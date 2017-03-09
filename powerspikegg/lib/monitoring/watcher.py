@@ -2,6 +2,7 @@ import contextlib
 import threading
 import time
 
+
 class _Registry:
     """Manage the list of watchers registered from diverse libraries."""
 
@@ -12,6 +13,7 @@ class _Registry:
     def register_watcher(self, watcher_class):
         """Add a watcher class into the registry and initialize it."""
         self.registered_watchers.append(watcher_class())
+        return watcher_class
 
     def start_watchers(self, update_rate):
         """Starts a thread periodically updating registered watchers."""
@@ -46,7 +48,7 @@ class _Registry:
                 if not self._keep_alive:
                     return
                 time.sleep(0.05)
-            time.sleep(update_rate * 1. / 100 - waited_time)
+            time.sleep(max(update_rate * 1. / 100 - waited_time, 0))
 
             for watchers in self.registered_watchers:
                 try:
