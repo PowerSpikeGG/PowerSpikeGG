@@ -37,11 +37,27 @@ git_repository(
     remote = "https://github.com/gengo/rules_pypi",
 )
 
+# Python packaging management
+# For packaging python
+git_repository(
+    name = "subpar",
+    commit = "74529f1df2178f07d34c72b3d270355dab2a10fc",
+    remote = "https://github.com/google/subpar",
+)
+
+# Bazel countineous integration
+git_repository(
+    name = "io_bazel_ci",
+    commit = "44f34b35cc23bbc403a4fcf255514d86a3bdf0ad",
+    remote = "https://github.com/bazelbuild/continuous-integration",
+)
+
 #
 # Development dependencies
 #
 
 # MongoDB dependency, used for test purpose.
+# TODO(funkysayu): Migrate this to docker if possible
 new_http_archive(
     name = "com_mongodb_linux_x86_64",
     build_file = "third_party/mongodb/archive.BUILD",
@@ -56,6 +72,22 @@ new_http_archive(
     sha256 = "b7910cd4c840b58b249c1c3d5320d64ff3b708ae49c4526ddf7abaa549449e7f",
     strip_prefix = "mongodb-osx-x86_64-3.4.1",
     url = "https://fastdl.mongodb.org/osx/mongodb-osx-x86_64-3.4.1.tgz",
+)
+
+#
+# Docker dependencies
+#
+
+load("@io_bazel_ci//base:docker_pull.bzl", "docker_pull")
+
+docker_pull(
+    name = "docker_debian",
+    tag = "debian",
+)
+
+docker_pull(
+    name = "docker_python3",
+    tag = "funkysayu/py3grpcio:1.1.3",
 )
 
 #
