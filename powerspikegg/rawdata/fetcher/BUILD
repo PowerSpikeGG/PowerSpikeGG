@@ -1,6 +1,18 @@
 # Raw data fetcher
 
 load("//powerspikegg:powerspikegg.bzl", "psgg_proto_library")
+load("@bazel_tools//tools/build_defs/docker:docker.bzl", "docker_build")
+load("@subpar//:subpar.bzl", "par_binary")
+
+docker_build(
+    name = "docker",
+    base = "@docker_python3//:image",
+    entrypoint = [
+        "python3",
+        "./server.par",
+    ],
+    files = [":server.par"],
+)
 
 psgg_proto_library(
     name = "service",
@@ -12,7 +24,7 @@ psgg_proto_library(
     ],
 )
 
-py_binary(
+par_binary(
     name = "server",
     srcs = [
         "server.py",
