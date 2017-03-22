@@ -261,78 +261,68 @@ maven_jar(
 
 # GRPC
 maven_jar(
-    name = "com_google_errorprone_error_prone_annotations_2_0_11",
-    artifact = "com.google.errorprone:error_prone_annotations:jar:2.0.11",
-)
-
-maven_jar(
     name = "com_google_auth_google_auth_library_credentials_0_4_0",
     artifact = "com.google.auth:google-auth-library-credentials:jar:0.4.0",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_all_1_1_2",
-    artifact = "io.grpc:grpc-all:jar:1.1.2",
+    name = "io_grpc_grpc_all_1_0_3",
+    artifact = "io.grpc:grpc-all:jar:1.0.3",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_auth_1_1_2",
-    artifact = "io.grpc:grpc-auth:jar:1.1.2",
+    name = "io_grpc_grpc_auth_1_0_3",
+    artifact = "io.grpc:grpc-auth:jar:1.0.3",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_context_1_1_2",
-    artifact = "io.grpc:grpc-context:jar:1.1.2",
+    name = "io_grpc_grpc_context_1_0_3",
+    artifact = "io.grpc:grpc-context:jar:1.0.3",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_core_1_1_2",
-    artifact = "io.grpc:grpc-core:jar:1.1.2",
+    name = "io_grpc_grpc_core_1_0_3",
+    artifact = "io.grpc:grpc-core:jar:1.0.3",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_netty_1_1_2",
-    artifact = "io.grpc:grpc-netty:jar:1.1.2",
+    name = "io_grpc_grpc_netty_1_0_3",
+    artifact = "io.grpc:grpc-netty:jar:1.0.3",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_okhttp_1_1_2",
-    artifact = "io.grpc:grpc-okhttp:jar:1.1.2",
+    name = "io_grpc_grpc_okhttp_1_0_3",
+    artifact = "io.grpc:grpc-okhttp:jar:1.0.3",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_protobuf_1_1_2",
-    artifact = "io.grpc:grpc-protobuf:jar:1.1.2",
+    name = "io_grpc_grpc_protobuf_1_0_3",
+    artifact = "io.grpc:grpc-protobuf:jar:1.0.3",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_protobuf_lite_1_1_2",
-    artifact = "io.grpc:grpc-protobuf-lite:jar:1.1.2",
+    name = "io_grpc_grpc_protobuf_lite_1_0_3",
+    artifact = "io.grpc:grpc-protobuf-lite:jar:1.0.3",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_protobuf_nano_1_1_2",
-    artifact = "io.grpc:grpc-protobuf-nano:jar:1.1.2",
+    name = "io_grpc_grpc_protobuf_nano_1_0_3",
+    artifact = "io.grpc:grpc-protobuf-nano:jar:1.0.3",
 )
 
 maven_jar(
-    name = "io_grpc_grpc_stub_1_1_2",
-    artifact = "io.grpc:grpc-stub:jar:1.1.2",
+    name = "io_grpc_grpc_stub_1_0_3",
+    artifact = "io.grpc:grpc-stub:jar:1.0.3",
 )
 
 maven_jar(
-    name = "com_google_code_gson_gson_2_7",
-    artifact = "com.google.code.gson:gson:jar:2.7",
+    name = "com_google_code_gson_gson_2_3",
+    artifact = "com.google.code.gson:gson:jar:2.3",
 )
 
 maven_jar(
-    name = "com_google_guava_guava_20_0",
-    artifact = "com.google.guava:guava:jar:20.0",
-)
-
-maven_jar(
-    name = "com_google_instrumentation_instrumentation_api_0_3_0",
-    artifact = "com.google.instrumentation:instrumentation-api:jar:0.3.0",
+    name = "com_google_guava_guava_19_0",
+    artifact = "com.google.guava:guava:jar:19.0",
 )
 
 maven_jar(
@@ -341,53 +331,53 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_netty_netty_buffer_4_1_8_Final",
-    artifact = "io.netty:netty-buffer:jar:4.1.8.Final",
+    name = "io_netty_netty_buffer_4_1_6_Final",
+    artifact = "io.netty:netty-buffer:jar:4.1.6.Final",
 )
 
 maven_jar(
-    name = "io_netty_netty_codec_4_1_8_Final",
-    artifact = "io.netty:netty-codec:jar:4.1.8.Final",
+    name = "io_netty_netty_codec_4_1_6_Final",
+    artifact = "io.netty:netty-codec:jar:4.1.6.Final",
 )
 
 maven_jar(
-    name = "io_netty_netty_codec_http_4_1_8_Final",
-    artifact = "io.netty:netty-codec-http:jar:4.1.8.Final",
+    name = "io_netty_netty_codec_http_4_1_6_Final",
+    artifact = "io.netty:netty-codec-http:jar:4.1.6.Final",
 )
 
 maven_jar(
-    name = "io_netty_netty_codec_http2_4_1_8_Final",
-    artifact = "io.netty:netty-codec-http2:jar:4.1.8.Final",
+    name = "io_netty_netty_codec_http2_4_1_6_Final",
+    artifact = "io.netty:netty-codec-http2:jar:4.1.6.Final",
 )
 
 maven_jar(
-    name = "io_netty_netty_codec_socks_4_1_8_Final",
-    artifact = "io.netty:netty-codec-socks:jar:4.1.8.Final",
+    name = "io_netty_netty_codec_socks_4_1_6_Final",
+    artifact = "io.netty:netty-codec-socks:jar:4.1.6.Final",
 )
 
 maven_jar(
-    name = "io_netty_netty_common_4_1_8_Final",
-    artifact = "io.netty:netty-common:jar:4.1.8.Final",
+    name = "io_netty_netty_common_4_1_6_Final",
+    artifact = "io.netty:netty-common:jar:4.1.6.Final",
 )
 
 maven_jar(
-    name = "io_netty_netty_handler_4_1_8_Final",
-    artifact = "io.netty:netty-handler:jar:4.1.8.Final",
+    name = "io_netty_netty_handler_4_1_6_Final",
+    artifact = "io.netty:netty-handler:jar:4.1.6.Final",
 )
 
 maven_jar(
-    name = "io_netty_netty_handler_proxy_4_1_8_Final",
-    artifact = "io.netty:netty-handler-proxy:jar:4.1.8.Final",
+    name = "io_netty_netty_handler_proxy_4_1_6_Final",
+    artifact = "io.netty:netty-handler-proxy:jar:4.1.6.Final",
 )
 
 maven_jar(
-    name = "io_netty_netty_resolver_4_1_8_Final",
-    artifact = "io.netty:netty-resolver:jar:4.1.8.Final",
+    name = "io_netty_netty_resolver_4_1_6_Final",
+    artifact = "io.netty:netty-resolver:jar:4.1.6.Final",
 )
 
 maven_jar(
-    name = "io_netty_netty_transport_4_1_8_Final",
-    artifact = "io.netty:netty-transport:jar:4.1.8.Final",
+    name = "io_netty_netty_transport_4_1_6_Final",
+    artifact = "io.netty:netty-transport:jar:4.1.6.Final",
 )
 
 maven_jar(
@@ -401,13 +391,13 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_protobuf_protobuf_java_3_1_0",
-    artifact = "com.google.protobuf:protobuf-java:jar:3.1.0",
+    name = "com_google_protobuf_protobuf_java_3_0_2",
+    artifact = "com.google.protobuf:protobuf-java:jar:3.0.2",
 )
 
 maven_jar(
-    name = "com_google_protobuf_protobuf_java_util_3_1_0",
-    artifact = "com.google.protobuf:protobuf-java-util:jar:3.1.0",
+    name = "com_google_protobuf_protobuf_java_util_3_0_2",
+    artifact = "com.google.protobuf:protobuf-java-util:jar:3.0.2",
 )
 
 maven_jar(
@@ -420,6 +410,7 @@ maven_jar(
     artifact = "com.google.protobuf:protobuf-lite:jar:3.0.1",
 )
 
+# Akka testkut
 maven_jar(
     name = "com_typesafe_akka_akka_http_testkit_2_11_10_0_3",
     artifact = "com.typesafe.akka:akka-http-testkit_2.11:jar:10.0.3",
@@ -460,4 +451,3 @@ new_go_repository(
     commit = "3053869314bb02cb983dc2205da8ea2abe46fa96",
     importpath = "github.com/oleiade/lane",
 )
-
