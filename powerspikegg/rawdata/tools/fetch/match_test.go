@@ -119,7 +119,7 @@ func TestMatchCommand(t *testing.T) {
 
 		status := c.Execute(context.Background(), f)
 		if status != testValue.expectedStatus {
-			t.Fatalf("command returned an unexpected status: %v", err)
+			t.Fatalf("command returned an unexpected status: %v", status)
 		}
 		if len(s.requests) != len(testValue.expectedRequests) {
 			t.Fatalf("command sent innapropriate number of requests: expected %d got %d",
