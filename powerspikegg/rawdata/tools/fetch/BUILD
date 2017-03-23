@@ -26,7 +26,10 @@ go_binary(
 
 go_test(
     name = "go_default_test",
-    srcs = ["match_test.go"],
+    srcs = [
+        "match_test.go",
+        "summoner_test.go",
+        ],
     library = ":go_default_library",
     deps = [
         "//powerspikegg/rawdata/fetcher:service_gopb",
