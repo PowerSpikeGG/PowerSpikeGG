@@ -29,7 +29,7 @@ go_test(
     srcs = [
         "match_test.go",
         "summoner_test.go",
-        ],
+    ],
     library = ":go_default_library",
     deps = [
         "//powerspikegg/rawdata/fetcher:service_gopb",
