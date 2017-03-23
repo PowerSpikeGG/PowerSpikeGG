@@ -90,6 +90,11 @@ docker_pull(
     tag = "funkysayu/py3grpcio:1.1.3",
 )
 
+docker_pull(
+    name = "docker_openjdk",
+    tag = "openjdk:8"
+)
+
 #
 # Repository / library bootstraping
 #

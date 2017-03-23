@@ -1,4 +1,5 @@
 load("@io_bazel_rules_scala//scala:scala.bzl", "scala_library", "scala_binary", "scala_test")
+load("@bazel_tools//tools/build_defs/docker:docker.bzl", "docker_build")
 
 filegroup(
     name = "src",
@@ -44,6 +45,19 @@ scala_test(
         ":akka-http_2.11",
         ":grpc-all",
         "//powerspikegg/rawdata/fetcher:service_java",
+    ],
+)
+
+docker_build(
+    name = "docker",
+    base = "@docker_openjdk//:image",
+    entrypoint = [
+        "java",
+        "-jar",
+        "server_deploy.jar",
+    ],
+    files = [
+        ":server_deploy.jar",
     ],
 )
 
