@@ -52,6 +52,38 @@ git_repository(
 # Development dependencies
 #
 
+# Tensorflow and tensorflow serving
+local_repository(
+    name = "org_tensorflow",
+    path = "third_party/tensorflow",
+)
+
+git_repository(
+    name = "tf_serving",
+    remote = "https://github.com/tensorflow/serving.git",
+    commit = "4d0a571ff9c15b937f58d3d5e97a5310b5decf2b"
+)
+
+#
+# Rules closure is a dependency of tensorflow, therefore this rule must be present and loaded,
+# however do not execute it in the current WORKSPACE as it is not compatible with scala and java rules
+#
+
+http_archive(
+    name = "io_bazel_rules_closure",
+    sha256 = "60fc6977908f999b23ca65698c2bb70213403824a84f7904310b6000d78be9ce",
+    strip_prefix = "rules_closure-5ca1dab6df9ad02050f7ba4e816407f88690cf7d",
+    urls = [
+        "http://bazel-mirror.storage.googleapis.com/github.com/bazelbuild/rules_closure/archive/5ca1dab6df9ad02050f7ba4e816407f88690cf7d.tar.gz",  # 2017-02-03
+        "https://github.com/bazelbuild/rules_closure/archive/5ca1dab6df9ad02050f7ba4e816407f88690cf7d.tar.gz",
+    ],
+)
+
+load("@io_bazel_rules_closure//closure:defs.bzl", "closure_repositories")
+
+load("@tf_serving//tensorflow_serving:workspace.bzl", "tf_serving_workspace")
+tf_serving_workspace()
+
 # MongoDB dependency, used for test purpose.
 # TODO(funkysayu): Migrate this to docker if possible
 new_http_archive(
