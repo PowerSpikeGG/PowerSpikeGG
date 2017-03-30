@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { SummonerService } from '../summoner/summoner.service';
+import { SummonerService } from '../../summoner/summoner.service';
 
 @Component({
-  selector: 'app-searchbar',
-  templateUrl: './searchbar.component.html',
+  selector: 'app-search-bar',
+  templateUrl: './search-bar.component.html',
+  styleUrls: ['./search-bar.component.css']
 })
 export class SearchBarComponent implements OnInit {
 
@@ -24,7 +25,7 @@ export class SearchBarComponent implements OnInit {
     }
   }
 
-  errorHandler(error: any) {
+  static errorHandler(error: any) {
     let logStr = '[ERROR] [QUERY SENDER SERVICE] ' + error;
     console.log(logStr);
   }

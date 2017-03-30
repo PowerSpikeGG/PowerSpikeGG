@@ -1,0 +1,36 @@
+.video-background {
+  height: 750px;
+  margin-top: 55px;
+  overflow: hidden;
+  position: relative;
+}
+
+.video-background video,
+.video-background img {
+  min-height: 100%;
+  min-width: 100%;
+}
+
+.video-background:before {
+  background: #132f63;
+  content: "";
+  opacity: .8;
+  position: absolute;
+  top: 0; bottom: 0; left: 0; right: 0;
+  z-index: 1;
+}
+
+.video-header {
+  margin: auto;
+  position: absolute;
+  text-align: center;
+  top:0; left:0; right:0; bottom:0;
+  z-index: 10;
+}
+
+.video-header h1 {
+  color: #fff;
+  font-size: 55px;
+  font-family: VikingSquad,serif;
+  margin-top: 150px;
+}

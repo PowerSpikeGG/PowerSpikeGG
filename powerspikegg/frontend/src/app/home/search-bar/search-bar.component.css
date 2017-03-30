@@ -1,0 +1,22 @@
+.summoner-search-input {
+  margin: 50px auto 0;
+  position: relative;
+  width: 540px;
+}
+
+.summoner-search-input > md-icon {
+  color: #7b7b7b;
+  cursor: pointer;
+  position: absolute;
+  top: 25px; right: -5px;
+}
+
+.summoner-search-input input {
+  background: #fff!important;
+  border-radius: 5px;
+  border-width: 0;
+  font-size: 18px;
+  margin-left: -20px;
+  padding: 25px!important;
+  width: 100%;
+}
