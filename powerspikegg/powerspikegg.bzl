@@ -7,7 +7,7 @@
 load("@org_pubref_rules_protobuf//python:rules.bzl", "py_proto_compile")
 load("@org_pubref_rules_protobuf//go:rules.bzl", "go_proto_library")
 load("@org_pubref_rules_protobuf//java:rules.bzl", "java_proto_library")
-
+load("@tf_serving//tensorflow_serving:serving.bzl", "serving_proto_library")
 DEFAULT_PROTO_VISIBILITY = ["//visibility:public"]
 
 def _psgg_proto_library_py(name, srcs=[], deps=[], visibility=[],
@@ -47,6 +47,14 @@ def _psgg_proto_library_java(name, srcs=[], deps=[], visibility=[], testonly=0):
         with_grpc = True
     )
 
+def _psgg_proto_library_cc(name, srcs=[], deps=[], visibility=[], testonly=0):
+    """Compiles a proto file to a c++ library."""
+    serving_proto_library(
+        name=name+"_cc",
+        srcs=srcs,
+        cc_api_version=2,
+        visibility=visibility 
+    ) 
 
 def psgg_proto_library(name, srcs=[], deps=[], has_services=0, visibility=[], testonly=0):
     """PowerSpikeGG proto library generic compilation rule."""
@@ -76,6 +84,13 @@ def psgg_proto_library(name, srcs=[], deps=[], has_services=0, visibility=[], te
     )
 
     _psgg_proto_library_java(
+        name=name,
+        srcs=srcs,
+        deps=deps,
+        visibility=visibility
+    )
+
+    _psgg_proto_library_cc(
         name=name,
         srcs=srcs,
         deps=deps,
