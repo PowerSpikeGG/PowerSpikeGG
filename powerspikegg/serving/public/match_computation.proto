@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package serving;
+
+import "powerspikegg/rawdata/public/match.proto";
+
+service MatchComputation {
+	rpc GetFeature(MatchComputationRequest) returns (MatchComputationFeature) {}
+}
+
+message MatchComputationRequest {
+	string model_name = 1;
+
+  game.leagueoflegends.MatchReference match = 2;
+}
+
+message MatchComputationFeature {
+  string result = 1;
+}
