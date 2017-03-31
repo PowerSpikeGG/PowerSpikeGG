@@ -1,5 +1,6 @@
 import gflags
 import json
+import mock
 import random
 import time
 import traceback
@@ -126,6 +127,17 @@ class CacheManagerTest(unittest.TestCase):
         ))
         self.assertEquals(summoner, sample_with_region)
 
+    def test_cache_query_forwarded_to_aggregator(self):
+        """Tests the cache query are forwarded to the aggregator."""
+        manager = cache.CacheManager()
+
+        manager.aggregator = mock.Mock()
+        manager.aggregator.SearchMatchesMatchingQuery.return_value = (
+            [SAMPLES["match"]])
+
+        results = list(manager.query_matches_cache(service_pb2.Query()))
+        self.assertEqual(results, [SAMPLES["match"]])
+        self.assertTrue(manager.aggregator.SearchMatchesMatchingQuery.called)
 
 if __name__ == "__main__":
     unittest.main()

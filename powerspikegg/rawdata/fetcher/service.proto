@@ -14,6 +14,9 @@ service MatchFetcher {
 
     // Get details about a specific match.
     rpc Match (MatchRequest) returns (game.leagueoflegends.MatchReference);
+
+    // Get cached matches based on a query semantic.
+    rpc CacheQuery (Query) returns (stream game.leagueoflegends.MatchReference);
 }
 
 // Message used to request a match to the gRPC endpoint.
@@ -23,4 +26,34 @@ message MatchRequest {
 
     // Region where the match was observed. Required.
     game.leagueoflegends.Region region = 2;
+}
+
+// Message used to search matches into the cache of the fetcher.
+//
+// Query message are used to search into the cache and return matches
+// matching the query. At least one element must be specified. If multiple
+// elements are specified (such as League and Champion), the query system
+// will operate as an AND operator.
+message Query {
+    // Find matches where a player achieved a specific rank
+    //
+    // The query system will match matches if at least one player has its
+    // highest achieved season tier in this league.
+    game.leagueoflegends.League league = 1;
+
+    // Find matches where a player played a specific champion
+    //
+    // If combined with other selectors (such as League), the selectors
+    // will be applied on the summoner playing the champion specified.
+    // Since we only fetch draft selection based matches, there are no
+    // ambiguities.
+    game.leagueoflegends.Champion champion = 2;
+
+    // Find matches where a summoner played
+    //
+    // TODO(funkysayu): Support this feature
+    //
+    // If combined with other selectors, the selectors will be applied on
+    // this summoner.
+    game.leagueoflegends.Summoner summoner = 3;
 }

@@ -128,6 +128,17 @@ class MatchFetcher(service_pb2.MatchFetcherServicer):
 
         return self.converter.json_match_to_match_pb(match_data)
 
+    def CacheQuery(self, query_pb, context):
+        """Query the Mongo DB cache based on a query message.
+
+        Parameters:
+            query: filters to apply on the mongo db.
+        Returns:
+            A stream of matches containing matches matching the query.
+        """
+        for match in self.cache_manager.query_matches_cache(query_pb):
+            yield self.converter.json_match_to_match_pb(match)
+
     def _GetSummonerFromName(self, partial_summoner):
         """Query the Riot API to retrive a summoner ID from its name.
 
