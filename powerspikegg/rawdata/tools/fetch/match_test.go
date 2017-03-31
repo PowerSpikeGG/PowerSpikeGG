@@ -17,10 +17,6 @@ import (
 	lolpb "powerspike.gg/powerspikegg/rawdata/public/leagueoflegends_gopb"
 )
 
-const (
-	testPort = ":50051"
-)
-
 type mockMatchFetcherServer struct {
 	fetcherpb.MatchFetcherServer
 
@@ -32,14 +28,18 @@ type mockMatchFetcherServer struct {
 	response *lolpb.MatchReference
 	// err contains an eventual error to throw back to the client
 	err error
+	// address contains the server address
+	address string
 }
 
-func newMockMatchFetcherServer(port string) (*mockMatchFetcherServer, error) {
-	lis, err := net.Listen("tcp", port)
+func newMockMatchFetcherServer() (*mockMatchFetcherServer, error) {
+	lis, err := net.Listen("tcp", "127.0.0.1:0")
 	if err != nil {
 		return nil, fmt.Errorf("failed to listen: %v", err)
 	}
-	mock := &mockMatchFetcherServer{}
+	mock := &mockMatchFetcherServer{
+		address: lis.Addr().String(),
+	}
 	mock.server = grpc.NewServer()
 	fetcherpb.RegisterMatchFetcherServer(mock.server, mock)
 	// Register reflection service on gRPC server.
@@ -93,12 +93,12 @@ func TestMatchCommand(t *testing.T) {
 		},
 	}
 
-	s, err := newMockMatchFetcherServer(testPort)
-	defer s.server.Stop()
+	s, err := newMockMatchFetcherServer()
 	if err != nil {
 		t.Fatalf("unable to create test server: %v", err)
 	}
-	addressFlag := "--address=" + testPort
+	defer s.server.Stop()
+	addressFlag := "--address=" + s.address
 
 	for _, testValue := range testValues {
 		s.reset()
