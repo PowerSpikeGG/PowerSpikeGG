@@ -5,6 +5,7 @@ import pymongo
 from functools import wraps
 from bson.objectid import ObjectId
 
+from powerspikegg.rawdata.fetcher import aggregator
 from powerspikegg.rawdata.public import constants_pb2
 
 """Riot API data caching management."""
@@ -54,6 +55,7 @@ class CacheManager:
 
     address = None
     database_name = None
+    aggregator = aggregator
 
     def __init__(self):
         """Constructor. Initialize the client to the Mongo server."""
@@ -159,3 +161,17 @@ class CacheManager:
 
         summoners = self.client[self.database_name].summoners
         summoners.insert_one(summoner_data)
+
+    def query_matches_cache(self, query_pb):
+        """Query the cache based on a query message.
+
+        Parameters:
+            query_pb: protocol buffer containing filters on the database.
+        Returns:
+            A generator containing matches matching the query.
+        """
+        matches = self.client[self.database_name].matches
+        generator = self.aggregator.SearchMatchesMatchingQuery(
+            matches, query_pb)
+        for match in generator:
+            yield match

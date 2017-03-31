@@ -146,6 +146,20 @@ class MatchFetcherTest(unittest.TestCase):
         self.assertFalse(self.service.riot_api_handler.get_summoner.called)
         self.assertFalse(self.service.cache_manager.save_summoner.called)
 
+    def test_query_cache_correctly_forwarded(self):
+        """Ensure query is correctly forwarded."""
+        converter = JSONConverter(None)
+        expected = [SAMPLES["match"]]
+        self.service.cache_manager.query_matches_cache.return_value = expected
+
+        query = service_pb2.Query(summoner=constants_pb2.Summoner(name="foo"))
+        responses = self.stub.CacheQuery(query)
+        for response, expected_response in zip(responses, expected):
+            self.assertEqual(response, converter.json_match_to_match_pb(
+                expected_response))
+
+        self.assertTrue(self.service.cache_manager.query_matches_cache.called)
+
 
 if __name__ == "__main__":
     unittest.main()
