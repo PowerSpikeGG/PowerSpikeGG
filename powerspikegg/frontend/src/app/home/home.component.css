@@ -14,7 +14,7 @@
 .video-background:before {
   background: #132f63;
   content: "";
-  opacity: .8;
+  opacity: .96;
   position: absolute;
   top: 0; bottom: 0; left: 0; right: 0;
   z-index: 1;
