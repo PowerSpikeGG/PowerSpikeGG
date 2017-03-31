@@ -12,16 +12,31 @@ from powerspikegg.rawdata.public import constants_pb2
 
 FLAGS = gflags.FLAGS
 
-gflags.DEFINE_string("rawdata_cache_server_address", "localhost:27017",
-    "address of the Mongo database caching the Riot API data.")
-gflags.DEFINE_string("rawdata_cache_database_name", "rawdata",
-    "database name containing Riot API data.")
-gflags.DEFINE_integer("mongodb_connection_timeout", 1000,
-    "seconds before assuming the mongodb connection timeouts.")
-gflags.DEFINE_boolean("disable_mongodb_exception", False,
-    "disable MongoDB exception propagation.")
-gflags.DEFINE_integer("mongodb_connection_retry", 10,
-    "maximum connection attempts to the mongo database.")
+gflags.DEFINE_string(
+    "rawdata_cache_server_address",
+    "localhost:27017",
+    "address of the Mongo database caching the Riot API data."
+)
+gflags.DEFINE_string(
+    "rawdata_cache_database_name",
+    "rawdata",
+    "database name containing Riot API data."
+)
+gflags.DEFINE_integer(
+    "mongodb_connection_timeout",
+    1000,
+    "seconds before assuming the mongodb connection timeouts."
+)
+gflags.DEFINE_boolean(
+    "disable_mongodb_exception",
+    False,
+    "disable MongoDB exception propagation."
+)
+gflags.DEFINE_integer(
+    "mongodb_connection_retry",
+    10,
+    "maximum connection attempts to the mongo database."
+)
 
 
 def _silent_connection_failure(func):
@@ -77,8 +92,8 @@ class CacheManager:
         Parameters:
             address: MongoDB server address.
         """
-        client = pymongo.MongoClient(address,
-            serverSelectionTimeoutMS=FLAGS.mongodb_connection_timeout)
+        client = pymongo.MongoClient(
+            address, serverSelectionTimeoutMS=FLAGS.mongodb_connection_timeout)
 
         # Send a query to the server to see if the connection is working.
         try:
