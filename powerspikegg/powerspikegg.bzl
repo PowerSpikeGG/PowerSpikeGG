@@ -25,14 +25,12 @@ def _psgg_proto_library_py(name, srcs=[], deps=[], visibility=[],
 
 def _psgg_proto_library_go(name, srcs=[], deps=[], has_services=0, visibility=[], testonly=0):
     """Generates a Go proto library"""
-    protodeps = [dep + "_protos" for dep in deps]
     godeps = [dep + "_gopb" for dep in deps]
 
     go_proto_library(
         name=name + "_gopb",
         protos=srcs,
         proto_deps=godeps,
-        #has_services=has_services,
         testonly=testonly,
         with_grpc=True,
         visibility=visibility,
