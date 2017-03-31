@@ -20,7 +20,10 @@ cc_library(
 	name = "computation_service",
 	srcs = ["src/match_computation.cc"],
 	hdrs = ["src/match_computation.h"],
-	deps = [":match_computation"]
+	deps = [
+		":match_computation",
+		"@tf_serving//tensorflow_serving/model_servers:server_core"
+	]
 )
 
 serving_proto_library(
