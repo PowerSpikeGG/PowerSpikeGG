@@ -64,8 +64,11 @@ class CacheManagerTest(unittest.TestCase):
             "matchId": SAMPLES["match"]["matchId"],
             "region": SAMPLES["match"]["region"],
         })
-        self.assertEquals(cursor.count(), 1,
-            "Unexpected amount of matches matching the request.")
+        self.assertEquals(
+            cursor.count(),
+            1,
+            "Unexpected amount of matches matching the request."
+        )
 
     def test_find_match(self):
         """Tests if a match can be find from its ID from the database."""
@@ -95,15 +98,18 @@ class CacheManagerTest(unittest.TestCase):
             "id": SAMPLES["summoner"]["id"],
             "region": constants_pb2.Region.Name(constants_pb2.EUW),
         })
-        self.assertEquals(cursor.count(), 1,
-            "Unexpected amount of summoners matching the request.")
+        self.assertEquals(
+            cursor.count(),
+            1,
+            "Unexpected amount of summoners matching the request."
+        )
 
     def test_find_summoner(self):
         """Tests if a summoner can be find in several ways."""
         collection = self.setup_test_collection().summoners
         region = constants_pb2.EUW
-        sample_with_region = dict(SAMPLES["summoner"],
-            region=constants_pb2.Region.Name(region))
+        sample_with_region = dict(
+            SAMPLES["summoner"], region=constants_pb2.Region.Name(region))
         collection.insert_one(sample_with_region)
 
         manager = cache.CacheManager()

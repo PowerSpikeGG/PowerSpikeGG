@@ -47,8 +47,8 @@ class MatchFetcherTest(unittest.TestCase):
         # Setup mocks
         self.service.cache_manager.find_match.return_value = None
 
-        response = self.stub.Match(service_pb2.MatchRequest(id=4242,
-            region=constants_pb2.EUW))
+        response = self.stub.Match(service_pb2.MatchRequest(
+            id=4242, region=constants_pb2.EUW))
 
         # Check the conversion of the sample is matching the response
         converter = JSONConverter(None)
@@ -61,8 +61,8 @@ class MatchFetcherTest(unittest.TestCase):
         # Setup mocks
         self.service.cache_manager.find_match.return_value = SAMPLES["match"]
 
-        response = self.stub.Match(service_pb2.MatchRequest(id=4242,
-            region=constants_pb2.EUW))
+        response = self.stub.Match(service_pb2.MatchRequest(
+            id=4242, region=constants_pb2.EUW))
 
         # Check the conversion of the sample is matching the response
         self.assertTrue(self.service.cache_manager.find_match.called)
@@ -75,8 +75,8 @@ class MatchFetcherTest(unittest.TestCase):
         self.service.riot_api_handler.get_match.side_effect = (
             riotwatcher.LoLException("404", requests.Response()))
 
-        response = self.stub.Match(service_pb2.MatchRequest(id=4242,
-            region=constants_pb2.EUW))
+        response = self.stub.Match(service_pb2.MatchRequest(
+            id=4242, region=constants_pb2.EUW))
         self.assertEqual(response, match_pb2.MatchReference())
 
     def test_bad_requests(self):
@@ -103,8 +103,8 @@ class MatchFetcherTest(unittest.TestCase):
         """Test the summoner update query correctly the summoners."""
         self.service.cache_manager.find_match.return_value = None
 
-        responses = self.stub.UpdateSummoner(constants_pb2.Summoner(id=4242,
-            region=constants_pb2.EUW))
+        responses = self.stub.UpdateSummoner(constants_pb2.Summoner(
+            id=4242, region=constants_pb2.EUW))
 
         converter = JSONConverter(None)
         expected = converter.json_match_to_match_pb(SAMPLES["match"])
