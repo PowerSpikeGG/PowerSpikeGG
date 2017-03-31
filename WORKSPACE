@@ -52,6 +52,14 @@ git_repository(
 # Development dependencies
 #
 
+# C++ dependencies
+new_git_repository(
+    name = "gtest",
+    remote = "https://github.com/google/googletest.git",
+    tag = "release-1.8.0",
+    build_file = "third_party/gtest/gtest.BUILD"
+)
+
 # Tensorflow and tensorflow serving
 local_repository(
     name = "org_tensorflow",
