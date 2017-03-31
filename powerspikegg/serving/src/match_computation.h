@@ -32,6 +32,3 @@ class MatchComputationImpl final : public serving::MatchComputation::Service {
 };
 
 #endif  // POWERSPIKEGG_SERVING_SRC_MATCH_COMPUTATION_H_
-
-
-
