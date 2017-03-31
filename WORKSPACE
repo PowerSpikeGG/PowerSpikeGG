@@ -55,9 +55,9 @@ git_repository(
 # C++ dependencies
 new_git_repository(
     name = "gtest",
+    build_file = "third_party/gtest/gtest.BUILD",
     remote = "https://github.com/google/googletest.git",
     tag = "release-1.8.0",
-    build_file = "third_party/gtest/gtest.BUILD"
 )
 
 # Tensorflow and tensorflow serving
@@ -68,8 +68,8 @@ local_repository(
 
 git_repository(
     name = "tf_serving",
+    commit = "4d0a571ff9c15b937f58d3d5e97a5310b5decf2b",
     remote = "https://github.com/tensorflow/serving.git",
-    commit = "4d0a571ff9c15b937f58d3d5e97a5310b5decf2b"
 )
 
 #
@@ -88,8 +88,8 @@ http_archive(
 )
 
 load("@io_bazel_rules_closure//closure:defs.bzl", "closure_repositories")
-
 load("@tf_serving//tensorflow_serving:workspace.bzl", "tf_serving_workspace")
+
 tf_serving_workspace()
 
 # MongoDB dependency, used for test purpose.
