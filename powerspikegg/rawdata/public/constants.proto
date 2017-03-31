@@ -47,6 +47,18 @@ enum Season {
     SEASON2016 = 2;
 }
 
+// Existing League of Legends leagues
+enum League {
+    UNDEFINED = 0;
+    BRONZE = 1;
+    SILVER = 2;
+    GOLD = 3;
+    PLATINUM = 4;
+    DIAMOND = 5;
+    MASTER = 6;
+    CHALLENGER = 7;
+}
+
 // Summoner information.
 message Summoner {
     int32 id = 1;
