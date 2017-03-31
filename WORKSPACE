@@ -17,10 +17,6 @@ git_repository(
     tag = "0.4.0",
 )
 
-load("@io_bazel_rules_go//proto:go_proto_library.bzl", "go_proto_repositories")
-
-go_proto_repositories()
-
 # Protobuf compilation rules
 # TODO(funkysayu) Rewrite those rules to be more generic while generating
 #                 protobufs APIs.
@@ -92,7 +88,7 @@ docker_pull(
 
 docker_pull(
     name = "docker_openjdk",
-    tag = "openjdk:8"
+    tag = "openjdk:8",
 )
 
 #
@@ -107,8 +103,11 @@ go_repositories()
 # Load proto compiler per languages
 load("@org_pubref_rules_protobuf//python:rules.bzl", "py_proto_repositories")
 load("@org_pubref_rules_protobuf//java:rules.bzl", "java_proto_repositories")
+load("@org_pubref_rules_protobuf//go:rules.bzl", "go_proto_repositories")
 
 py_proto_repositories()  # Also bootstrap the cpp repository
+
+go_proto_repositories()
 
 java_proto_repositories()
 
@@ -197,14 +196,8 @@ new_go_repository(
 
 new_go_repository(
     name = "org_golang_google_grpc",
-    commit = "f7011571680d9e541df1e0221b8d865bf34f4248",
     importpath = "google.golang.org/grpc",
-)
-
-new_go_repository(
-    name = "org_golang_google_grpc",
-    commit = "f7011571680d9e541df1e0221b8d865bf34f4248",
-    importpath = "google.golang.org/grpc",
+    tag = "v1.0.5",
 )
 
 new_go_repository(

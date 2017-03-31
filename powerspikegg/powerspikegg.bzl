@@ -5,7 +5,7 @@
 # included in BUILD files.
 
 load("@org_pubref_rules_protobuf//python:rules.bzl", "py_proto_compile")
-load("@io_bazel_rules_go//proto:go_proto_library.bzl", "go_proto_library")
+load("@org_pubref_rules_protobuf//go:rules.bzl", "go_proto_library")
 load("@org_pubref_rules_protobuf//java:rules.bzl", "java_proto_library")
 
 DEFAULT_PROTO_VISIBILITY = ["//visibility:public"]
@@ -25,14 +25,16 @@ def _psgg_proto_library_py(name, srcs=[], deps=[], visibility=[],
 
 def _psgg_proto_library_go(name, srcs=[], deps=[], has_services=0, visibility=[], testonly=0):
     """Generates a Go proto library"""
+    protodeps = [dep + "_protos" for dep in deps]
     godeps = [dep + "_gopb" for dep in deps]
 
     go_proto_library(
         name=name + "_gopb",
-        srcs=srcs,
-        deps=godeps,
-        has_services=has_services,
+        protos=srcs,
+        proto_deps=godeps,
+        #has_services=has_services,
         testonly=testonly,
+        with_grpc=True,
         visibility=visibility,
     )
 
