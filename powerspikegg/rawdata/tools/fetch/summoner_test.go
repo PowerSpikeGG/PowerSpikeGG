@@ -104,10 +104,10 @@ func TestSummonerCommand(t *testing.T) {
 	}
 
 	s, err := newMockSummonerFetcherServer()
-	defer s.server.Stop()
 	if err != nil {
 		t.Fatalf("unable to create test server: %v", err)
 	}
+	defer s.server.Stop()
 	addressFlag := "--address=" + s.address
 
 	for _, testValue := range testValues {
