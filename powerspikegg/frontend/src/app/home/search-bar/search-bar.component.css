@@ -4,7 +4,7 @@
   width: 540px;
 }
 
-.summoner-search-input > md-icon {
+.summoner-search-input md-icon {
   color: #7b7b7b;
   cursor: pointer;
   position: absolute;

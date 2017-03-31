@@ -18,7 +18,7 @@ export class SearchBarComponent implements OnInit {
   ngOnInit() {
   }
 
-  sendRequest() {
+  sendSummonerRequest() {
     if (this.summonerName) {
       console.log('[INFO] Summoner Name sent: ' + this.summonerName);
       this.router.navigateByUrl('/summoner/' + this.summonerName);
