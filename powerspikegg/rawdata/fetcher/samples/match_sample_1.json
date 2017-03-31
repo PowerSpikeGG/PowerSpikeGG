@@ -1,0 +1,184 @@
+{
+   "region": "EUW",
+   "matchType": "MATCHED_GAME",
+   "matchCreation": 140001,
+   "participants": [
+      {
+         "timeline": {
+            "lane": "MIDDLE"
+         },
+         "participantId": 1,
+         "championId": 63,
+         "highestAchievedSeasonTier": "GOLD"
+      },
+      {
+         "timeline": {
+            "lane": "JUNGLE"
+         },
+         "participantId": 2,
+         "championId": 60,
+         "highestAchievedSeasonTier": "GOLD"
+      },
+      {
+         "timeline": {
+            "lane": "TOP"
+         },
+         "participantId": 3,
+         "championId": 122,
+         "highestAchievedSeasonTier": "PLATINUM"
+      },
+      {
+         "timeline": {
+            "lane": "BOTTOM"
+         },
+         "participantId": 4,
+         "championId": 45,
+         "highestAchievedSeasonTier": "PLATINUM"
+      },
+      {
+         "timeline": {
+            "lane": "BOTTOM"
+         },
+         "participantId": 5,
+         "championId": 202,
+         "highestAchievedSeasonTier": "PLATINUM"
+      },
+      {
+         "timeline": {
+            "lane": "JUNGLE"
+         },
+         "participantId": 6,
+         "championId": 58,
+         "highestAchievedSeasonTier": "GOLD"
+      },
+      {
+         "timeline": {
+            "lane": "BOTTOM"
+         },
+         "participantId": 7,
+         "championId": 89,
+         "highestAchievedSeasonTier": "GOLD"
+      },
+      {
+         "timeline": {
+            "lane": "BOTTOM"
+         },
+         "participantId": 8,
+         "championId": 81,
+         "highestAchievedSeasonTier": "GOLD"
+      },
+      {
+         "timeline": {
+            "lane": "MIDDLE"
+         },
+         "participantId": 9,
+         "championId": 55,
+         "highestAchievedSeasonTier": "BRONZE"
+      },
+      {
+         "timeline": {
+            "lane": "JUNGLE"
+         },
+         "participantId": 10,
+         "championId": 120,
+         "highestAchievedSeasonTier": "PLATINUM"
+      }
+   ],
+   "participantIdentities": [
+      {
+         "player": {
+            "profileIcon": 937,
+            "matchHistoryUri": "/v1/stats/player_history/EUW1/4242",
+            "summonerName": "Foo bar",
+            "summonerId": 4242
+         },
+         "participantId": 1
+      },
+      {
+         "player": {
+            "profileIcon": 772,
+            "matchHistoryUri": "/v1/stats/player_history/EUW1/2",
+            "summonerName": "Foo",
+            "summonerId": 1337
+         },
+         "participantId": 2
+      },
+      {
+         "player": {
+            "profileIcon": 1404,
+            "matchHistoryUri": "/v1/stats/player_history/EUW1/3",
+            "summonerName": "Irrelevant3",
+            "summonerId": 3
+         },
+         "participantId": 3
+      },
+      {
+         "player": {
+            "profileIcon": 1403,
+            "matchHistoryUri": "/v1/stats/player_history/EUW1/4",
+            "summonerName": "Irrelevant4",
+            "summonerId": 4
+         },
+         "participantId": 4
+      },
+      {
+         "player": {
+            "profileIcon": 558,
+            "matchHistoryUri": "/v1/stats/player_history/EUW1/5",
+            "summonerName": "Irrelevant5",
+            "summonerId": 5
+         },
+         "participantId": 5
+      },
+      {
+         "player": {
+            "profileIcon": 979,
+            "matchHistoryUri": "/v1/stats/player_history/EUW1/6",
+            "summonerName": "Irrelevant6",
+            "summonerId": 6
+         },
+         "participantId": 6
+      },
+      {
+         "player": {
+            "profileIcon": 1396,
+            "matchHistoryUri": "/v1/stats/player_history/EUW1/7",
+            "summonerName": "Irrelevant7",
+            "summonerId": 7
+         },
+         "participantId": 7
+      },
+      {
+         "player": {
+            "profileIcon": 929,
+            "matchHistoryUri": "/v1/stats/player_history/EUW1/8",
+            "summonerName": "Irrelevant8",
+            "summonerId": 8
+         },
+         "participantId": 8
+      },
+      {
+         "player": {
+            "profileIcon": 2076,
+            "matchHistoryUri": "/v1/stats/player_history/EUW1/9",
+            "summonerName": "Irrelevant9",
+            "summonerId": 9
+         },
+         "participantId": 9
+      },
+      {
+         "player": {
+            "profileIcon": 1299,
+            "matchHistoryUri": "/v1/stats/player_history/EUW1/10",
+            "summonerName": "Irrelevant10",
+            "summonerId": 10
+         },
+         "participantId": 10
+      }
+   ],
+   "mapId": 11,
+   "season": "PRESEASON2017",
+   "queueType": "TEAM_BUILDER_RANKED_SOLO",
+   "matchId": 1,
+   "matchDuration": 1659
+}
