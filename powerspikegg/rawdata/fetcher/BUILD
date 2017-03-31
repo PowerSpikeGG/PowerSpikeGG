@@ -54,6 +54,26 @@ py_test(
 )
 
 py_library(
+    name = "aggregator",
+    srcs = [
+        "aggregator.py",
+    ],
+)
+
+py_test(
+    name = "aggregator_test",
+    srcs = [
+        "aggregator_test.py",
+        ":service_py",
+        "//powerspikegg/rawdata/public:leagueoflegends_py",
+    ],
+    deps = [
+        ":aggregator",
+        "//powerspikegg/lib/mongodb:wrapper",
+    ],
+)
+
+py_library(
     name = "cache",
     srcs = [
         "cache.py",
@@ -61,6 +81,7 @@ py_library(
         "//powerspikegg/rawdata/public:leagueoflegends_py",
     ],
     deps = [
+        ":aggregator",
         "@pydep_gflags//:library",
         "@pydep_pymongo//:library",
     ],
@@ -75,6 +96,7 @@ py_test(
         ":cache",
         "//powerspikegg/lib/mongodb:wrapper",
         "//third_party/python/riotwatcher:rwmock",
+        "@pydep_mock//:library",
     ],
 )
 
