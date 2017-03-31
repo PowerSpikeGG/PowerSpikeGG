@@ -16,10 +16,6 @@ import (
 	lolpb "powerspike.gg/powerspikegg/rawdata/public/leagueoflegends_gopb"
 )
 
-const (
-	testPortSummoner = ":50051"
-)
-
 type mockSummonerFetcherServer struct {
 	fetcherpb.MatchFetcherServer
 
@@ -31,14 +27,18 @@ type mockSummonerFetcherServer struct {
 	response *lolpb.MatchReference
 	// err contains an eventual error to throw back to the client
 	err error
+	// address contains the server address
+	address string
 }
 
-func newMockSummonerFetcherServer(port string) (*mockSummonerFetcherServer, error) {
-	lis, err := net.Listen("tcp", port)
+func newMockSummonerFetcherServer() (*mockSummonerFetcherServer, error) {
+	lis, err := net.Listen("tcp", "127.0.0.1:0")
 	if err != nil {
 		return nil, fmt.Errorf("failed to listen: %v", err)
 	}
-	mock := &mockSummonerFetcherServer{}
+	mock := &mockSummonerFetcherServer{
+		address: lis.Addr().String(),
+	}
 	mock.server = grpc.NewServer()
 	fetcherpb.RegisterMatchFetcherServer(mock.server, mock)
 	// Register reflection service on gRPC server.
@@ -87,28 +87,28 @@ func TestSummonerCommand(t *testing.T) {
 			serverError: nil,
 			expectedRequests: []*lolpb.Summoner{
 				{
-					Name: "Rangork",
+					Name:   "Rangork",
 					Region: defaultRegion,
 				},
 			},
 			expectedStatus: subcommands.ExitSuccess,
 		},
 		{
-			name: "single normal query with wrong region",
-			args: []string{"-region=Foobar", "Rangork"},
-			serverResponse: nil,
-			serverError: nil,
+			name:             "single normal query with wrong region",
+			args:             []string{"-region=Foobar", "Rangork"},
+			serverResponse:   nil,
+			serverError:      nil,
 			expectedRequests: nil,
-			expectedStatus: subcommands.ExitFailure,
+			expectedStatus:   subcommands.ExitFailure,
 		},
 	}
 
-	s, err := newMockSummonerFetcherServer(testPortSummoner)
+	s, err := newMockSummonerFetcherServer()
 	defer s.server.Stop()
 	if err != nil {
 		t.Fatalf("unable to create test server: %v", err)
 	}
-	addressFlag := "--address=" + testPortSummoner
+	addressFlag := "--address=" + s.address
 
 	for _, testValue := range testValues {
 		s.reset()
