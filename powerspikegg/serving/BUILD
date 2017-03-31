@@ -37,3 +37,39 @@ serving_proto_library(
 	cc_grpc_version = 2
 )
 
+cc_test(
+    name = "grpc_interface",
+    srcs = [
+        "test/grpc_interface.cc"
+    ],
+    deps = [
+            "@gtest//:lib",
+            ":match_computation",
+            ":server",
+    ],
+    linkstatic = 1,
+)
+
+cc_binary(
+    name = "greeter_server",
+    srcs = ["tmp/greeter_server.cc"],
+    deps = [
+        ":match_computation",
+		"@tf_serving//tensorflow_serving/model_servers:server_core"
+   ]
+)
+
+cc_binary(
+   name = "greeter_client",
+   srcs = ["tmp/greeter_client.cc"],
+   deps = [
+		"@grpc//:grpc++",
+        ":match_computation",
+   ]
+)
+
+serving_proto_library(
+	name = "helloworld",
+    srcs = ["tmp/helloworld.proto"],
+	cc_grpc_version = 2
+)

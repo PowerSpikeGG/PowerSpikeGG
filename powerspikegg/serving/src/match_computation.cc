@@ -1,6 +1,6 @@
 #include "match_computation.h"
 
-#include "tensorflow_serving/model_servers/server_core.h"
+#include <iostream>
 
 MatchComputationImpl::MatchComputationImpl() {
   tensorflow::serving::ServerCore::Options options;
@@ -10,5 +10,7 @@ MatchComputationImpl::MatchComputationImpl() {
 grpc::Status MatchComputationImpl::GetFeature(grpc::ServerContext* context, 
                                               const serving::MatchComputationRequest* match, 
                                               serving::MatchComputationFeature* feature) {
+  feature->set_result("hello" + match->model_name());
+  std::cout << "Return response " << std::endl;
   return grpc::Status::OK;
 }

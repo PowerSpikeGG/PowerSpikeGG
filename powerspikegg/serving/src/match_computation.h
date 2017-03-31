@@ -1,7 +1,4 @@
-#include <grpc/grpc.h>
-#include <grpc++/server.h>
-#include <grpc++/server_builder.h>
-#include <grpc++/server_context.h>
+#include <grpc++/grpc++.h>
 
 #include "tensorflow_serving/model_servers/server_core.h"
 

@@ -6,4 +6,5 @@ using namespace std;
 int main() {
   Server server;
   server.Run();
+  server.Wait();
 }
