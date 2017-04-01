@@ -1,7 +1,7 @@
 package(default_visibility = ["//visibility:public"])
 
-load("@tf_serving//tensorflow_serving:serving.bzl", "serving_proto_library")
 load("@protobuf//:protobuf.bzl", "cc_proto_library")
+load("//powerspikegg:powerspikegg.bzl", "psgg_proto_library")
 
 cc_binary(
     name = "main",
@@ -21,19 +21,19 @@ cc_library(
     srcs = ["src/match_computation.cc"],
     hdrs = ["src/match_computation.h"],
     deps = [
-        ":match_computation",
+        ":match_computation_cc",
+        "@grpc//:grpc++",
         "@tf_serving//tensorflow_serving/model_servers:server_core",
     ],
 )
 
-serving_proto_library(
+psgg_proto_library(
     name = "match_computation",
     srcs = [
         "public/match_computation.proto",
     ],
-    cc_grpc_version = 2,
     deps = [
-        "//powerspikegg/rawdata/public:leagueoflegends_cc",
+        "//powerspikegg/rawdata/public:leagueoflegends",
     ],
 )
 
@@ -44,7 +44,7 @@ cc_test(
     ],
     linkstatic = 1,
     deps = [
-        ":match_computation",
+        ":match_computation_cc",
         ":server",
         "@gtest//:lib",
     ],

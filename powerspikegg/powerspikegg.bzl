@@ -50,10 +50,13 @@ def _psgg_proto_library_java(name, srcs=[], deps=[], visibility=[], testonly=0):
 
 def _psgg_proto_library_cc(name, srcs=[], deps=[], visibility=[], testonly=0):
     """Compiles a proto file to a c++ library."""
+    cc_deps = [dep + "_cc" for dep in deps]
+
     serving_proto_library(
         name=name+"_cc",
         srcs=srcs,
-        cc_api_version=2,
+        deps=cc_deps,
+        cc_grpc_version=2,
         visibility=visibility 
     ) 
 
