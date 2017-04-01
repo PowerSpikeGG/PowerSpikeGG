@@ -103,7 +103,7 @@ def SearchMatchesMatchingQuery(collection, query_pb):
     has_summoner = query_pb.summoner is None
     if has_summoner ^ any((query_pb.league, query_pb.champion)):
         for match in cursor:
-            yield cursor
+            yield match
         return
 
     # We do not support query by summoner and league + champions for now.
