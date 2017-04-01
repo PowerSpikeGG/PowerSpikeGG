@@ -21,14 +21,12 @@ func fetchMatchResults(ctx context.Context, client fetcherpb.MatchFetcherClient,
 	return response, err
 }
 
-func matchHandler(w http.ResponseWriter, r *http.Request) {
-	ctx := context.Background()
-
+func parseMatchRequestParameters(w http.ResponseWriter, r *http.Request) (int64, lolpb.Region, error) {
 	params := strings.Split(r.URL.Path[len("/api/match/"):], "/")
 	if len(params) < 2 {
-		http.Error(w, "not enough parameters", http.StatusBadRequest)
-		return
+		return 0, 0, fmt.Errorf("not enough parameters")
 	}
+
 	matchIDStr := params[0]
 	region := params[1]
 
@@ -36,14 +34,23 @@ func matchHandler(w http.ResponseWriter, r *http.Request) {
 	if parsedRegion, ok := lolpb.Region_value[strings.ToUpper(region)]; ok {
 		formattedRegion = lolpb.Region(parsedRegion)
 	} else {
-		http.Error(w, fmt.Sprintf("unknown / unsupported region: %v", region), http.StatusBadRequest)
-		return
+		return 0, 0, fmt.Errorf("unknown / unsupported region: %v", region)
 	}
 
 	matchID, err := strconv.ParseInt(matchIDStr, 10, 64)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Invalid match ID: %s, %v", matchIDStr, err)
-		return
+		return 0, 0, fmt.Errorf("Invalid match ID: %s, %v", matchIDStr, err)
+	}
+
+	return matchID, formattedRegion, nil
+}
+
+func matchHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+
+	matchID, formattedRegion, err := parseMatchRequestParameters(w, r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
 	response, err := fetchMatchResults(ctx, client, matchID, formattedRegion)
