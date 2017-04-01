@@ -48,18 +48,6 @@ git_repository(
     remote = "https://github.com/bazelbuild/continuous-integration",
 )
 
-#
-# Development dependencies
-#
-
-# C++ dependencies
-new_git_repository(
-    name = "gtest",
-    build_file = "third_party/gtest/gtest.BUILD",
-    remote = "https://github.com/google/googletest.git",
-    tag = "release-1.8.0",
-)
-
 # Tensorflow and tensorflow serving
 local_repository(
     name = "org_tensorflow",
@@ -70,6 +58,18 @@ git_repository(
     name = "tf_serving",
     commit = "4d0a571ff9c15b937f58d3d5e97a5310b5decf2b",
     remote = "https://github.com/tensorflow/serving.git",
+)
+
+#
+# Development dependencies
+#
+
+# C++ dependencies
+new_git_repository(
+    name = "gtest",
+    build_file = "third_party/gtest/gtest.BUILD",
+    remote = "https://github.com/google/googletest.git",
+    tag = "release-1.8.0",
 )
 
 #
