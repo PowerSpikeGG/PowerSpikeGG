@@ -5,11 +5,10 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 
-	"github.com/golang/protobuf/jsonpb"
 	fetcherpb "powerspike.gg/powerspikegg/rawdata/fetcher/service_gopb"
 	lolpb "powerspike.gg/powerspikegg/rawdata/public/leagueoflegends_gopb"
-	"strings"
 )
 
 func fetchSummonerMatchResults(ctx context.Context, client fetcherpb.MatchFetcherClient, summonerName string, region lolpb.Region) (fetcherpb.MatchFetcher_UpdateSummonerClient, error) {
@@ -26,13 +25,10 @@ func fetchSummonerMatchResults(ctx context.Context, client fetcherpb.MatchFetche
 	return response, nil
 }
 
-func summonerHandler(w http.ResponseWriter, r *http.Request) {
-	ctx := context.Background()
-
+func parseSummonerRequestParameters(w http.ResponseWriter, r *http.Request) (string, lolpb.Region, error) {
 	params := strings.Split(r.URL.Path[len("/api/summoner/"):], "/")
 	if len(params) < 2 {
-		http.Error(w, "not enough parameters", http.StatusBadRequest)
-		return
+		return "", 0, fmt.Errorf("not enough parameters")
 	}
 
 	summonerName := params[0]
@@ -42,8 +38,18 @@ func summonerHandler(w http.ResponseWriter, r *http.Request) {
 	if parsedRegion, ok := lolpb.Region_value[strings.ToUpper(region)]; ok {
 		formattedRegion = lolpb.Region(parsedRegion)
 	} else {
-		http.Error(w, fmt.Sprintf("unknown / unsupported region: %v", region), http.StatusBadRequest)
-		return
+		return "", 0, fmt.Errorf("unknown / unsupported region: %v", region)
+	}
+
+	return summonerName, formattedRegion, nil
+}
+
+func summonerHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+
+	summonerName, formattedRegion, err := parseSummonerRequestParameters(w, r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
 	response, err := fetchSummonerMatchResults(ctx, client, summonerName, formattedRegion)
@@ -55,6 +61,7 @@ func summonerHandler(w http.ResponseWriter, r *http.Request) {
 	var summonerMatches []string
 
 	for {
+		// for all summoner match in stream
 		match, err := response.Recv()
 		if err != nil {
 			// End of match stream.
@@ -65,7 +72,7 @@ func summonerHandler(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 
-		marshaler := jsonpb.Marshaler{}
+		// proto to json
 		json, err := marshaler.MarshalToString(match)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("%s: marshaling error: %v", match, err), http.StatusInternalServerError)
