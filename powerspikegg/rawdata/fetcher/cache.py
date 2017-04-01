@@ -6,6 +6,7 @@ from functools import wraps
 from bson.objectid import ObjectId
 
 from powerspikegg.rawdata.fetcher import aggregator
+from powerspikegg.rawdata.fetcher import monitoring
 from powerspikegg.rawdata.public import constants_pb2
 
 """Riot API data caching management."""
@@ -15,28 +16,23 @@ FLAGS = gflags.FLAGS
 gflags.DEFINE_string(
     "rawdata_cache_server_address",
     "localhost:27017",
-    "address of the Mongo database caching the Riot API data."
-)
+    "address of the Mongo database caching the Riot API data.")
 gflags.DEFINE_string(
     "rawdata_cache_database_name",
     "rawdata",
-    "database name containing Riot API data."
-)
+    "database name containing Riot API data.")
 gflags.DEFINE_integer(
     "mongodb_connection_timeout",
     1000,
-    "seconds before assuming the mongodb connection timeouts."
-)
+    "seconds before assuming the mongodb connection timeouts.")
 gflags.DEFINE_boolean(
     "disable_mongodb_exception",
     False,
-    "disable MongoDB exception propagation."
-)
+    "disable MongoDB exception propagation.")
 gflags.DEFINE_integer(
     "mongodb_connection_retry",
     10,
-    "maximum connection attempts to the mongo database."
-)
+    "maximum connection attempts to the mongo database.")
 
 
 def _silent_connection_failure(func):
@@ -78,6 +74,12 @@ class CacheManager:
             self.address = "mongodb://%s/" % FLAGS.rawdata_cache_server_address
         if self.database_name is None:
             self.database_name = FLAGS.rawdata_cache_database_name
+
+        monitoring.MongoDBWatcher.register_server_address(self.address)
+        monitoring.MongoDBWatcher.register_monitorable_collection(
+            self.database_name, "matches")
+        monitoring.MongoDBWatcher.register_monitorable_collection(
+            self.database_name, "summoners")
 
         for _ in range(FLAGS.mongodb_connection_retry):
             self.client = self._connect(self.address)
