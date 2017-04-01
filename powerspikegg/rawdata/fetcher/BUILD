@@ -84,6 +84,7 @@ py_library(
     ],
     deps = [
         ":aggregator",
+        ":monitoring",
         "@pydep_gflags//:library",
         "@pydep_pymongo//:library",
     ],
@@ -111,6 +112,7 @@ py_library(
     deps = [
         "//powerspikegg/lib/monitoring:watcher",
         "@pydep_prometheus_client//:library",
+        "@pydep_pymongo//:library",
     ],
 )
 
@@ -122,6 +124,7 @@ py_test(
     deps = [
         ":handler",
         ":monitoring",
+        "//powerspikegg/lib/mongodb:wrapper",
     ],
 )
 
