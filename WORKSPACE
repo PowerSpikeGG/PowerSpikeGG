@@ -127,6 +127,11 @@ docker_pull(
 )
 
 docker_pull(
+    name = "docker_nginx",
+    tag = "kyma/docker-nginx",
+)
+
+docker_pull(
     name = "docker_openjdk",
     tag = "openjdk:8",
 )
