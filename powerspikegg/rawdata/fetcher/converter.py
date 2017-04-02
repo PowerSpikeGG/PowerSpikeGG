@@ -1,3 +1,4 @@
+from powerspikegg.rawdata.fetcher import service_pb2
 from powerspikegg.rawdata.public import match_pb2
 from powerspikegg.rawdata.public import constants_pb2
 from powerspikegg.rawdata.lib.python import static
@@ -272,3 +273,16 @@ class JSONConverter():
             name=json_entry["name"],
             region=region,
         )
+
+    def json_aggregation_to_aggregation_pb(self, json_entry):
+        """Build an AggregatedStatistics message from a JSON entry.
+
+        Parameters:
+            json_entry: JSON returned by the aggregation workflow.
+        Returns:
+            An AggregatedStatistics message build from the JSON.
+        """
+        match_pool = json_entry.pop("total")
+        return service_pb2.AggregatedStatistics(
+            match_pool=match_pool,
+            stats=self.convert_player_statistics(json_entry))

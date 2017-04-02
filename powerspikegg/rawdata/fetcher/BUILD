@@ -94,6 +94,7 @@ py_test(
         "cache_test.py",
     ],
     deps = [
+        ":aggregator_test",
         ":cache",
         "//powerspikegg/lib/mongodb:wrapper",
         "//third_party/python/riotwatcher:rwmock",
@@ -148,6 +149,7 @@ py_library(
     name = "converter",
     srcs = [
         "converter.py",
+        ":service_py",
         "//powerspikegg/rawdata/public:leagueoflegends_py",
     ],
     deps = [
@@ -162,6 +164,7 @@ py_test(
         "//powerspikegg/rawdata/public:leagueoflegends_py",
     ],
     deps = [
+        ":aggregator_test",
         ":converter",
         "//powerspikegg/rawdata/lib/python:static",
         "//third_party/python/riotwatcher:rwmock",

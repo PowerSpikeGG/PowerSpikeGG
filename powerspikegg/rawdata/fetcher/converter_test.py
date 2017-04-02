@@ -2,6 +2,7 @@ import json
 import os
 import unittest
 
+from powerspikegg.rawdata.fetcher import aggregator_test
 from powerspikegg.rawdata.fetcher import converter
 from powerspikegg.rawdata.lib.python import static
 from powerspikegg.rawdata.public import constants_pb2
@@ -32,38 +33,7 @@ class ConverterEndToEndTest(unittest.TestCase):
             json_stats[prefix + "DamageDealtToChampions"])
         self.assertEqual(damage.taken, json_stats[prefix + "DamageTaken"])
 
-    def _check_participant(self, participant):
-        """Test if a participant is correctly constructed.
-
-        Parameters:
-            participant: A participant generated from the converter
-        """
-        json_participant = next((
-            p for p in SAMPLES["match"]["participants"]
-            if p["participantId"] == participant.id), None)
-        self.assertIsNotNone(json_participant)
-
-        json_identity = next((
-            i for i in SAMPLES["match"]["participantIdentities"]
-            if i["participantId"] == participant.id), None)
-        self.assertIsNotNone(json_identity)
-
-        # Participant
-        self.assertEqual(
-            participant.summoner.id,
-            json_identity["player"]["summonerId"])
-        self.assertEqual(
-            participant.summoner.name,
-            json_identity["player"]["summonerName"])
-        self.assertEqual(
-            participant.summoner.region,
-            constants_pb2.Region.Value(SAMPLES["match"]["region"]))
-        # TODO(funkysayu) test the summoner spells once it is supported.
-        # TODO(funkysayu) test items once it is supported.
-
-        # PlayerStatistics
-        stats = participant.statistics
-        json_stats = json_participant["stats"]
+    def _check_statistics(self, stats, json_stats, check_flags=True):
         self.assertEqual(stats.kills, json_stats["kills"])
         self.assertEqual(stats.deaths, json_stats["deaths"])
         self.assertEqual(stats.assists, json_stats["assists"])
@@ -102,27 +72,30 @@ class ConverterEndToEndTest(unittest.TestCase):
             json_stats["largestMultiKill"])
         self.assertEqual(stats.inhibitor_kills, json_stats["inhibitorKills"])
         self.assertEqual(stats.tower_kills, json_stats["towerKills"])
-        self.assertEqual(
-            stats.first_blood_assist,
-            json_stats["firstBloodAssist"])
-        self.assertEqual(
-            stats.first_blood_kill,
-            json_stats["firstBloodKill"])
-        self.assertEqual(
-            stats.first_inhibitor_kill,
-            json_stats["firstInhibitorKill"])
-        self.assertEqual(
-            stats.first_tower_assist,
-            json_stats["firstTowerAssist"])
-        self.assertEqual(
-            stats.first_tower_kill,
-            json_stats["firstTowerKill"])
+
         self.assertEqual(
             stats.total_crowd_control,
             json_stats["totalTimeCrowdControlDealt"])
         self.assertEqual(
             stats.total_units_healed,
             json_stats["totalUnitsHealed"])
+
+        if check_flags:
+            self.assertEqual(
+                stats.first_blood_assist,
+                json_stats["firstBloodAssist"])
+            self.assertEqual(
+                stats.first_blood_kill,
+                json_stats["firstBloodKill"])
+            self.assertEqual(
+                stats.first_inhibitor_kill,
+                json_stats["firstInhibitorKill"])
+            self.assertEqual(
+                stats.first_tower_assist,
+                json_stats["firstTowerAssist"])
+            self.assertEqual(
+                stats.first_tower_kill,
+                json_stats["firstTowerKill"])
 
         damage_data_with_prefix = [
             (stats.magic_damages, "magic"),
@@ -133,6 +106,40 @@ class ConverterEndToEndTest(unittest.TestCase):
 
         for damage_data, prefix in damage_data_with_prefix:
             self._check_damage_data(damage_data, json_stats, prefix)
+
+    def _check_participant(self, participant):
+        """Test if a participant is correctly constructed.
+
+        Parameters:
+            participant: A participant generated from the converter
+        """
+        json_participant = next((
+            p for p in SAMPLES["match"]["participants"]
+            if p["participantId"] == participant.id), None)
+        self.assertIsNotNone(json_participant)
+
+        json_identity = next((
+            i for i in SAMPLES["match"]["participantIdentities"]
+            if i["participantId"] == participant.id), None)
+        self.assertIsNotNone(json_identity)
+
+        # Participant
+        self.assertEqual(
+            participant.summoner.id,
+            json_identity["player"]["summonerId"])
+        self.assertEqual(
+            participant.summoner.name,
+            json_identity["player"]["summonerName"])
+        self.assertEqual(
+            participant.summoner.region,
+            constants_pb2.Region.Value(SAMPLES["match"]["region"]))
+        # TODO(funkysayu) test the summoner spells once it is supported.
+        # TODO(funkysayu) test items once it is supported.
+
+        # PlayerStatistics
+        stats = participant.statistics
+        json_stats = json_participant["stats"]
+        self._check_statistics(stats, json_stats)
 
     def _check_team(self, team):
         """Test if a team is correctly constructed.
@@ -221,6 +228,15 @@ class ConverterEndToEndTest(unittest.TestCase):
         self.assertEquals(summoner.id, SAMPLES["summoner"]["id"])
         self.assertEquals(summoner.name, SAMPLES["summoner"]["name"])
         self.assertEquals(summoner.region, region)
+
+    def test_aggregation_result_conversion(self):
+        """Tests the aggregation result is correctly converted."""
+        sample = aggregator_test.SAMPLE_AGGREGATED_DATA.copy()
+        result = self.converter.json_aggregation_to_aggregation_pb(
+            aggregator_test.SAMPLE_AGGREGATED_DATA.copy())
+
+        self.assertEqual(result.match_pool, sample.pop("total"))
+        self._check_statistics(result.stats, sample, False)
 
 
 if __name__ == "__main__":
