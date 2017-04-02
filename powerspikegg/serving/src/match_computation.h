@@ -5,7 +5,6 @@
 
 #include <memory>
 
-#include "tensorflow_serving/model_servers/server_core.h"
 #include "powerspikegg/serving/public/match_computation.grpc.pb.h"
 
 class MatchComputationImpl final : public serving::MatchComputation::Service {
@@ -25,10 +24,6 @@ class MatchComputationImpl final : public serving::MatchComputation::Service {
                             serving::MatchComputationFeature* feature);
 
  private:
-    /**
-     * The ServerCore is used to execute Tensorflow models
-     **/
-    std::unique_ptr<tensorflow::serving::ServerCore> core;
 };
 
 #endif  // POWERSPIKEGG_SERVING_SRC_MATCH_COMPUTATION_H_

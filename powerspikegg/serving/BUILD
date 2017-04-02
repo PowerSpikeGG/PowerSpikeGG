@@ -23,7 +23,6 @@ cc_library(
     deps = [
         ":match_computation_cc",
         "@grpc//:grpc++",
-        "@tf_serving//tensorflow_serving/model_servers:server_core",
     ],
 )
 

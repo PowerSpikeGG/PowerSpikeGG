@@ -3,10 +3,7 @@
 #include <iostream>
 #include <utility>
 
-MatchComputationImpl::MatchComputationImpl() {
-  tensorflow::serving::ServerCore::Options options;
-  tensorflow::serving::ServerCore::Create(std::move(options), &this->core);
-}
+MatchComputationImpl::MatchComputationImpl() {}
 
 grpc::Status MatchComputationImpl::GetFeature(
         grpc::ServerContext* context,
