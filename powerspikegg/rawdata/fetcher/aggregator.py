@@ -108,3 +108,99 @@ def SearchMatchesMatchingQuery(collection, query_pb):
 
     # We do not support query by summoner and league + champions for now.
     raise NotImplementedError()
+
+
+# List of player statistics that can be aggregated to their average.
+SUPPORTED_AVERAGE_STATS = [
+    "assists",
+    "champLevel",
+    "deaths",
+    "doubleKills",
+    "goldEarned",
+    "goldSpent",
+    "inhibitorKills",
+    "killingSprees",
+    "kills",
+    "largestCriticalStrike",
+    "largestKillingSpree",
+    "largestMultiKill",
+    "magicDamageDealt",
+    "magicDamageDealtToChampions",
+    "magicDamageTaken",
+    "minionsKilled",
+    "neutralMinionsKilled",
+    "neutralMinionsKilledEnemyJungle",
+    "neutralMinionsKilledTeamJungle",
+    "pentaKills",
+    "physicalDamageDealt",
+    "physicalDamageDealtToChampions",
+    "physicalDamageTaken",
+    "quadraKills",
+    "sightWardsBoughtInGame",
+    "totalDamageDealt",
+    "totalDamageDealtToChampions",
+    "totalHeal",
+    "totalTimeCrowdControlDealt",
+    "totalUnitsHealed",
+    "towerKills",
+    "tripleKills",
+    "trueDamageDealt",
+    "trueDamageDealtToChampions",
+    "trueDamageTaken",
+    "visionWardsBoughtInGame",
+    "wardsKilled",
+    "wardsPlaced",
+    "totalScoreRank",
+    "totalDamageTaken",
+]
+
+
+def _create_average_query():
+    """Creates pipeline group operation to aggregate the player statistics.
+
+    Returns:
+        A dictionnary, containing the group operation to average the
+        player statistics.
+    """
+    result = {
+        "_id": None,
+        "total": {"$sum": 1},
+    }
+
+    for stat_name in SUPPORTED_AVERAGE_STATS:
+        result[stat_name] = {"$avg": "$participants.stats.%s" % stat_name}
+
+    return {"$group": result}
+
+
+def AverageStatisticsOnQuery(collection, query_pb):
+    """Returns an average statistics based on a query semantic.
+
+    Parameters:
+        collection: MongoDB collection on which the request will be executed.
+        query_pb: Query message containing the requirements a returned match
+            must have.
+    Returns:
+        An average statistics of the player.
+    """
+    assert len(query_pb.ListFields()) >= 1
+
+    matcher = {}
+    if query_pb.league:
+        matcher["participants.highestAchievedSeasonTier"] = (
+            constants_pb2.League.Name(query_pb.league))
+    if query_pb.HasField("champion"):
+        if not query_pb.champion.id:
+            raise ValueError("Required champion id is unspecified.")
+        matcher["participants.championId"] = query_pb.champion.id
+
+    query = [
+        {"$match": {"region": "EUW"}},  # TODO(funkysayu)
+        {"$unwind": "$participants"},
+        {"$match": matcher},
+        _create_average_query(),
+    ]
+
+    result = next(collection.aggregate(query))
+    result.pop("_id")  # Remove generated field by the grouping
+    return result
