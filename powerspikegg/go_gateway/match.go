@@ -1,11 +1,10 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"github.com/golang/protobuf/jsonpb"
+	"golang.org/x/net/context"
 	"net/http"
-	"os"
 	fetcherpb "powerspike.gg/powerspikegg/rawdata/fetcher/service_gopb"
 	lolpb "powerspike.gg/powerspikegg/rawdata/public/leagueoflegends_gopb"
 	"strconv"
@@ -21,7 +20,7 @@ func fetchMatchResults(ctx context.Context, client fetcherpb.MatchFetcherClient,
 	return response, err
 }
 
-func parseMatchRequestParameters(w http.ResponseWriter, r *http.Request) (int64, lolpb.Region, error) {
+func parseMatchRequestParameters(r *http.Request) (int64, lolpb.Region, error) {
 	params := strings.Split(r.URL.Path[len("/api/match/"):], "/")
 	if len(params) < 2 {
 		return 0, 0, fmt.Errorf("not enough parameters")
@@ -45,25 +44,29 @@ func parseMatchRequestParameters(w http.ResponseWriter, r *http.Request) (int64,
 	return matchID, formattedRegion, nil
 }
 
-func matchHandler(w http.ResponseWriter, r *http.Request) {
+func (gws *gatewayServer) matchHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
-	matchID, formattedRegion, err := parseMatchRequestParameters(w, r)
+	matchID, formattedRegion, err := parseMatchRequestParameters(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
-	response, err := fetchMatchResults(ctx, client, matchID, formattedRegion)
+	response, err := fetchMatchResults(ctx, gws.matchFetcherClient, matchID, formattedRegion)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "server raised an error while getting match %d: %v", matchID, err)
+		http.Error(w, fmt.Sprintf("server raised an error while getting match %d: %v", matchID, err), http.StatusInternalServerError)
 		return
 	}
 
-	marshaler := jsonpb.Marshaler{}
+	// proto to json
+	marshaler := &jsonpb.Marshaler{}
 	json, err := marshaler.MarshalToString(response)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("%s: marshaling error: %v", response, err), http.StatusInternalServerError)
 	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
 
 	fmt.Fprintf(w, "%s", json)
 }

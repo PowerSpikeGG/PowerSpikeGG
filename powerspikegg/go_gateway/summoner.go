@@ -1,12 +1,14 @@
 package main
 
 import (
-	"context"
 	"fmt"
+	"golang.org/x/net/context"
 	"io"
 	"net/http"
 	"strings"
 
+	"errors"
+	"github.com/golang/protobuf/jsonpb"
 	fetcherpb "powerspike.gg/powerspikegg/rawdata/fetcher/service_gopb"
 	lolpb "powerspike.gg/powerspikegg/rawdata/public/leagueoflegends_gopb"
 )
@@ -25,10 +27,10 @@ func fetchSummonerMatchResults(ctx context.Context, client fetcherpb.MatchFetche
 	return response, nil
 }
 
-func parseSummonerRequestParameters(w http.ResponseWriter, r *http.Request) (string, lolpb.Region, error) {
+func parseSummonerRequestParameters(r *http.Request) (string, lolpb.Region, error) {
 	params := strings.Split(r.URL.Path[len("/api/summoner/"):], "/")
 	if len(params) < 2 {
-		return "", 0, fmt.Errorf("not enough parameters")
+		return "", 0, errors.New("not enough parameters")
 	}
 
 	summonerName := params[0]
@@ -44,15 +46,15 @@ func parseSummonerRequestParameters(w http.ResponseWriter, r *http.Request) (str
 	return summonerName, formattedRegion, nil
 }
 
-func summonerHandler(w http.ResponseWriter, r *http.Request) {
+func (gws *gatewayServer) summonerHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
-	summonerName, formattedRegion, err := parseSummonerRequestParameters(w, r)
+	summonerName, formattedRegion, err := parseSummonerRequestParameters(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
-	response, err := fetchSummonerMatchResults(ctx, client, summonerName, formattedRegion)
+	response, err := fetchSummonerMatchResults(ctx, gws.matchFetcherClient, summonerName, formattedRegion)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("server raised an error while fetching match of summoner %s: %v", summonerName, err), http.StatusInternalServerError)
 		return
@@ -73,6 +75,7 @@ func summonerHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// proto to json
+		marshaler := &jsonpb.Marshaler{}
 		json, err := marshaler.MarshalToString(match)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("%s: marshaling error: %v", match, err), http.StatusInternalServerError)
@@ -80,6 +83,9 @@ func summonerHandler(w http.ResponseWriter, r *http.Request) {
 
 		summonerMatches = append(summonerMatches, json)
 	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
 
 	fmt.Fprintf(w, "{result: [%s]}", strings.Join(summonerMatches[:], ","))
 }
