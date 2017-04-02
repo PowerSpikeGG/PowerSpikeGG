@@ -48,6 +48,7 @@ py_test(
         "server_test.py",
     ],
     deps = [
+        ":aggregator_test",
         ":server",
         "//third_party/python/riotwatcher:rwmock",
         "@pydep_mock//:library",

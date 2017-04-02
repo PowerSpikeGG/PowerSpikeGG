@@ -5,6 +5,7 @@ import os
 import requests
 import unittest
 
+from powerspikegg.rawdata.fetcher import aggregator_test
 from powerspikegg.rawdata.fetcher import service_pb2
 from powerspikegg.rawdata.fetcher.converter import JSONConverter
 from powerspikegg.rawdata.fetcher.server import MatchFetcher
@@ -159,6 +160,19 @@ class MatchFetcherTest(unittest.TestCase):
                 expected_response))
 
         self.assertTrue(self.service.cache_manager.query_matches_cache.called)
+
+    def test_aggregation_endpoint(self):
+        """Tests data returned by the aggregator are converted and sent."""
+        converter = JSONConverter(None)
+        expected = aggregator_test.SAMPLE_AGGREGATED_DATA
+        self.service.cache_manager.average_stats.return_value = expected.copy()
+
+        query = service_pb2.Query(league=constants_pb2.BRONZE)
+        response = self.stub.AverageStatistics(query)
+
+        self.assertEqual(
+            response,
+            converter.json_aggregation_to_aggregation_pb(expected))
 
 
 if __name__ == "__main__":
