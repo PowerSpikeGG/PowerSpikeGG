@@ -9,11 +9,43 @@ service MatchComputation {
 }
 
 message MatchComputationRequest {
-  string model_name = 1;
+    string model_name = 1;
 
-  game.leagueoflegends.MatchReference match = 2;
+    game.leagueoflegends.MatchReference match = 2;
+
+    // This id correspond to the global summoner id not the id of the summoner
+    // in the match
+    int32 summoner_id = 3;
 }
 
 message MatchComputationFeature {
-  string result = 1;
+  Statistics statistics = 1;
+}
+
+message StatisticFeature {
+  int32 value = 1;
+  float coefficient = 2;
+}
+
+message Statistics {
+    StatisticFeature kills = 1;
+    StatisticFeature deaths = 2;
+    StatisticFeature assists = 3;
+
+    StatisticFeature champion_level = 4;
+    StatisticFeature magic_damage = 5;
+    StatisticFeature physical_damages = 6;
+    StatisticFeature true_damages = 7;
+    StatisticFeature total_damages = 8;
+    StatisticFeature total_heal = 9;
+
+    StatisticFeature gold_earned = 10;
+    StatisticFeature minion_killed = 11;
+
+    StatisticFeature vision_wards_bought = 12;
+    StatisticFeature wards_placed = 13;
+    StatisticFeature wards_killed = 14;
+
+    StatisticFeature inhibitor_kills = 15;
+    StatisticFeature tower_kills = 16;
 }

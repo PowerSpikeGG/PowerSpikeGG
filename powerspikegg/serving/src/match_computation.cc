@@ -12,7 +12,7 @@ grpc::Status MatchComputationImpl::GetFeature(
         grpc::ServerContext* context,
         const serving::MatchComputationRequest* match,
         serving::MatchComputationFeature* feature) {
-  feature->set_result("hello" + match->model_name());
-  std::cout << "Return response " << std::endl;
+  serving::Statistics* stats = feature->mutable_statistics();
+  stats->mutable_kills()->set_value(5);
   return grpc::Status::OK;
 }
