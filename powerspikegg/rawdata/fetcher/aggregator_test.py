@@ -11,6 +11,51 @@ from powerspikegg.rawdata.fetcher import aggregator
 from powerspikegg.rawdata.fetcher import service_pb2
 
 
+SAMPLE_AGGREGATED_DATA = {
+    "total": 2,
+    "assists": 6,
+    "champLevel": 13,
+    "deaths": 2,
+    "doubleKills": 0,
+    "goldEarned": 8195,
+    "goldSpent": 7300,
+    "inhibitorKills": 0,
+    "killingSprees": 0,
+    "kills": 1,
+    "largestCriticalStrike": 0,
+    "largestKillingSpree": 0,
+    "largestMultiKill": 1,
+    "magicDamageDealt": 55942,
+    "magicDamageDealtToChampions": 6865,
+    "magicDamageTaken": 6099,
+    "minionsKilled": 165,
+    "neutralMinionsKilled": 0,
+    "neutralMinionsKilledEnemyJungle": 0,
+    "neutralMinionsKilledTeamJungle": 0,
+    "pentaKills": 0,
+    "physicalDamageDealt": 23168,
+    "physicalDamageDealtToChampions": 5802,
+    "physicalDamageTaken": 4752,
+    "quadraKills": 0,
+    "sightWardsBoughtInGame": 0,
+    "totalDamageDealt": 79151,
+    "totalDamageDealtToChampions": 12667,
+    "totalHeal": 462,
+    "totalTimeCrowdControlDealt": 489,
+    "totalUnitsHealed": 1,
+    "towerKills": 0,
+    "tripleKills": 0,
+    "trueDamageDealt": 40,
+    "trueDamageDealtToChampions": 0,
+    "trueDamageTaken": 0,
+    "visionWardsBoughtInGame": 2,
+    "wardsKilled": 2,
+    "wardsPlaced": 7,
+    "totalScoreRank": 0,
+    "totalDamageTaken": 10852,
+}
+
+
 class SearchTest(unittest.TestCase):
     """Set of tests checking if aggregator works correctly.
 
