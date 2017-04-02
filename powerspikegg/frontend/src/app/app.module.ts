@@ -10,6 +10,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { HomeModule } from './home/home.module';
 import { NavbarComponent } from './navbar/navbar.component';
 import { SummonerModule } from './summoner/summoner.module';
+import { FlexLayoutModule } from "@angular/flex-layout";
 
 @NgModule({
   declarations: [
@@ -22,9 +23,10 @@ import { SummonerModule } from './summoner/summoner.module';
     FormsModule,
     HttpModule,
     routing,
-    MaterialModule.forRoot(),
+    MaterialModule,
     HomeModule,
-    SummonerModule
+    SummonerModule,
+    FlexLayoutModule
   ],
   providers: [
     appRoutingProviders

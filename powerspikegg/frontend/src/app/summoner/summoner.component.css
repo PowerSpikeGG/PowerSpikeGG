@@ -1,0 +1,7 @@
+md-sidenav-container {
+  margin-top: 55px!important;
+}
+
+md-sidenav-container .container {
+  height: 100% !important;
+}

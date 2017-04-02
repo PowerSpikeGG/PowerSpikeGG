@@ -1,0 +1,62 @@
+md-sidenav {
+  background: #122c5e;
+  height: 100%;
+  padding-left: 40px;
+  padding-right: 40px;
+  position: relative;
+  text-align: center;
+}
+
+md-sidenav .summoner-icon {
+  margin-top: 40px;
+  position: relative;
+}
+
+md-sidenav .summoner-icon img {
+  border: 6px solid #785a28;
+  border-radius: 50%;
+  height: 130px; width: 130px;
+  margin-top: 5px;
+}
+
+md-sidenav .summoner-icon .border-circle {
+  border: 1px solid #785a28;
+  border-radius: 50%;
+  height: 155px; width: 155px;
+  margin: 0 auto;
+  position: absolute;
+  top: -2px; left: -1px; right: 0;
+}
+
+md-sidenav .summoner-icon .level-circle {
+  background: #1b1b1b;
+  border: 2px solid #424242;
+  border-radius: 50%;
+  bottom: 4px; right: 10px;
+  color: #fff;
+  font-size: 14px;
+  padding: 10px;
+  position: absolute;
+}
+
+md-sidenav h1 {
+  color: #fff;
+  font-size: 18px;
+}
+
+md-sidenav .renew-button {
+  background: #32579e;
+  color: white;
+}
+
+md-sidenav .renew-button md-icon {
+  font-size: 18px;
+  margin-left: -3px;
+  padding-top: 5px;
+  padding-right: 3px;
+}
+
+md-sidenav .divider {
+  border: 1px solid #0c1e42;
+  margin-top: 30px;
+}

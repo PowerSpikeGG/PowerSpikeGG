@@ -8,6 +8,7 @@ import { SummonerData } from '../models/summonerData';
 @Component({
   selector: 'app-summoner',
   templateUrl: './summoner.component.html',
+  styleUrls: ['./summoner.component.css']
 })
 export class SummonerComponent implements OnInit {
 
