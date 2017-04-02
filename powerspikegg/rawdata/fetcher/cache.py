@@ -190,3 +190,14 @@ class CacheManager:
             matches, query_pb)
         for match in generator:
             yield match
+
+    def average_stats(self, query_pb):
+        """Aggregate the players statistics based on a query message.
+
+        Parameters:
+            query_pb: protocol buffer containing filters on matches.
+        Returns:
+            A JSON containing aggregated statistics.
+        """
+        matches = self.client[self.database_name].matches
+        return self.aggregator.AverageStatisticsOnQuery(matches, query_pb)
