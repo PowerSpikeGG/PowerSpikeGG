@@ -139,7 +139,7 @@ message PlayerStatistics {
     int32 triple_kills = 22;
     int32 quadra_kills = 23;
     int32 penta_kills = 24;
-    int32 unreal_kills = 25;  // Kills after a player got a penta kill
+    reserved 25;
     int32 killing_sprees = 26;  // The number of killing sprees
     int32 largest_killing_spree = 27;
     int32 largest_multi_kill = 28;
@@ -147,11 +147,18 @@ message PlayerStatistics {
     // Objective assistance
     int32 inhibitor_kills = 29;
     int32 tower_kills = 30;
+
+    // Game flags.
+    // NOTE: those flags are not specified by the aggregation pipeline.
     bool first_blood_assist = 31;
     bool first_blood_kill = 32;
     bool first_inhibitor_kill = 33;
     bool first_tower_assist = 34;
     bool first_tower_kill = 35;
+
+    // Miscellaneous
+    int32 total_crowd_control = 36;
+    int32 total_units_healed = 37;
 }
 
 // Damage related statistics.

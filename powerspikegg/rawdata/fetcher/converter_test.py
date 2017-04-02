@@ -27,7 +27,8 @@ class ConverterEndToEndTest(unittest.TestCase):
             prefix: damage prefix (magic, physical, true or total)
         """
         self.assertEqual(damage.total, json_stats[prefix + "DamageDealt"])
-        self.assertEqual(damage.to_champions,
+        self.assertEqual(
+            damage.to_champions,
             json_stats[prefix + "DamageDealtToChampions"])
         self.assertEqual(damage.taken, json_stats[prefix + "DamageTaken"])
 
@@ -37,20 +38,25 @@ class ConverterEndToEndTest(unittest.TestCase):
         Parameters:
             participant: A participant generated from the converter
         """
-        json_participant = next((p for p in SAMPLES["match"]["participants"]
+        json_participant = next((
+            p for p in SAMPLES["match"]["participants"]
             if p["participantId"] == participant.id), None)
         self.assertIsNotNone(json_participant)
 
-        json_identity = next((i for i in SAMPLES["match"]["participantIdentities"]
+        json_identity = next((
+            i for i in SAMPLES["match"]["participantIdentities"]
             if i["participantId"] == participant.id), None)
         self.assertIsNotNone(json_identity)
 
         # Participant
-        self.assertEqual(participant.summoner.id,
+        self.assertEqual(
+            participant.summoner.id,
             json_identity["player"]["summonerId"])
-        self.assertEqual(participant.summoner.name,
+        self.assertEqual(
+            participant.summoner.name,
             json_identity["player"]["summonerName"])
-        self.assertEqual(participant.summoner.region,
+        self.assertEqual(
+            participant.summoner.region,
             constants_pb2.Region.Value(SAMPLES["match"]["region"]))
         # TODO(funkysayu) test the summoner spells once it is supported.
         # TODO(funkysayu) test items once it is supported.
@@ -63,18 +69,23 @@ class ConverterEndToEndTest(unittest.TestCase):
         self.assertEqual(stats.assists, json_stats["assists"])
         self.assertEqual(stats.champion_level, json_stats["champLevel"])
         self.assertEqual(stats.total_heal, json_stats["totalHeal"])
-        self.assertEqual(stats.largest_critical_strike,
+        self.assertEqual(
+            stats.largest_critical_strike,
             json_stats["largestCriticalStrike"])
         self.assertEqual(stats.gold_earned, json_stats["goldEarned"])
         self.assertEqual(stats.gold_spent, json_stats["goldSpent"])
         self.assertEqual(stats.minions_killed, json_stats["minionsKilled"])
-        self.assertEqual(stats.neutral_minions_killed,
+        self.assertEqual(
+            stats.neutral_minions_killed,
             json_stats["neutralMinionsKilled"])
-        self.assertEqual(stats.neutral_minions_killed_ennemy_jungle,
+        self.assertEqual(
+            stats.neutral_minions_killed_ennemy_jungle,
             json_stats["neutralMinionsKilledEnemyJungle"])
-        self.assertEqual(stats.neutral_minions_killed_team_jungle,
+        self.assertEqual(
+            stats.neutral_minions_killed_team_jungle,
             json_stats["neutralMinionsKilledTeamJungle"])
-        self.assertEqual(stats.vision_wards_bought,
+        self.assertEqual(
+            stats.vision_wards_bought,
             json_stats["visionWardsBoughtInGame"])
         self.assertEqual(stats.wards_placed, json_stats["wardsPlaced"])
         self.assertEqual(stats.wards_killed, json_stats["wardsKilled"])
@@ -82,24 +93,36 @@ class ConverterEndToEndTest(unittest.TestCase):
         self.assertEqual(stats.triple_kills, json_stats["tripleKills"])
         self.assertEqual(stats.quadra_kills, json_stats["quadraKills"])
         self.assertEqual(stats.penta_kills, json_stats["pentaKills"])
-        self.assertEqual(stats.unreal_kills, json_stats["unrealKills"])
         self.assertEqual(stats.killing_sprees, json_stats["killingSprees"])
-        self.assertEqual(stats.largest_killing_spree,
+        self.assertEqual(
+            stats.largest_killing_spree,
             json_stats["largestKillingSpree"])
-        self.assertEqual(stats.largest_multi_kill,
+        self.assertEqual(
+            stats.largest_multi_kill,
             json_stats["largestMultiKill"])
         self.assertEqual(stats.inhibitor_kills, json_stats["inhibitorKills"])
         self.assertEqual(stats.tower_kills, json_stats["towerKills"])
-        self.assertEqual(stats.first_blood_assist,
+        self.assertEqual(
+            stats.first_blood_assist,
             json_stats["firstBloodAssist"])
-        self.assertEqual(stats.first_blood_kill,
+        self.assertEqual(
+            stats.first_blood_kill,
             json_stats["firstBloodKill"])
-        self.assertEqual(stats.first_inhibitor_kill,
+        self.assertEqual(
+            stats.first_inhibitor_kill,
             json_stats["firstInhibitorKill"])
-        self.assertEqual(stats.first_tower_assist,
+        self.assertEqual(
+            stats.first_tower_assist,
             json_stats["firstTowerAssist"])
-        self.assertEqual(stats.first_tower_kill,
+        self.assertEqual(
+            stats.first_tower_kill,
             json_stats["firstTowerKill"])
+        self.assertEqual(
+            stats.total_crowd_control,
+            json_stats["totalTimeCrowdControlDealt"])
+        self.assertEqual(
+            stats.total_units_healed,
+            json_stats["totalUnitsHealed"])
 
         damage_data_with_prefix = [
             (stats.magic_damages, "magic"),
@@ -120,7 +143,8 @@ class ConverterEndToEndTest(unittest.TestCase):
         self.assertIsNotNone(team.id)
 
         # Get the corresponding json
-        json_team = next((t for t in SAMPLES["match"]["teams"]
+        json_team = next((
+            t for t in SAMPLES["match"]["teams"]
             if t["teamId"] == team.id), None)
         self.assertIsNotNone(json_team)
 
@@ -149,19 +173,25 @@ class ConverterEndToEndTest(unittest.TestCase):
         # MatchReference
         reference = self.converter.json_match_to_match_pb(SAMPLES["match"])
         self.assertEqual(reference.id, SAMPLES["match"]["matchId"])
-        self.assertEqual(reference.timestamp, SAMPLES["match"]["matchCreation"])
+        self.assertEqual(
+            reference.timestamp, SAMPLES["match"]["matchCreation"])
         self.assertEqual(reference.version, SAMPLES["match"]["matchVersion"])
-        self.assertEqual(reference.plateform_id, SAMPLES["match"]["platformId"])
-        self.assertEqual(reference.region,
+        self.assertEqual(
+            reference.plateform_id, SAMPLES["match"]["platformId"])
+        self.assertEqual(
+            reference.region,
             constants_pb2.Region.Value(SAMPLES["match"]["region"]))
-        self.assertEqual(reference.queue_type,
+        self.assertEqual(
+            reference.queue_type,
             constants_pb2.QueueType.Value(SAMPLES["match"]["queueType"]))
-        self.assertEqual(reference.season,
+        self.assertEqual(
+            reference.season,
             constants_pb2.Season.Value(SAMPLES["match"]["season"]))
 
         # MatchDetail
         detail = reference.detail
-        self.assertEqual(detail.map, static.get_map_from_id(SAMPLES["match"]["mapId"]))
+        self.assertEqual(
+            detail.map, static.get_map_from_id(SAMPLES["match"]["mapId"]))
         self.assertEqual(detail.duration, SAMPLES["match"]["matchDuration"])
         self.assertEqual(len(detail.teams), 2)
 
@@ -181,7 +211,8 @@ class ConverterEndToEndTest(unittest.TestCase):
     def test_summoner_conversion_with_region_embed(self):
         """Tests a summoner is correctly converted when region is embed."""
         region = constants_pb2.EUW
-        summoner_with_region = dict(SAMPLES["summoner"],
+        summoner_with_region = dict(
+            SAMPLES["summoner"],
             region=constants_pb2.Region.Name(region))
 
         summoner = self.converter.json_summoner_to_summoner_pb(
