@@ -19,11 +19,15 @@ message MatchComputationRequest {
 }
 
 message MatchComputationFeature {
-  Statistics statistics = 1;
+  Statistics expected_statistics = 1;
 }
 
 message StatisticFeature {
+  // Expected value for this statistic for a winning match
   int32 value = 1;
+
+  // This is the standard score of the value which determine 
+  // the importance of the value
   float coefficient = 2;
 }
 
