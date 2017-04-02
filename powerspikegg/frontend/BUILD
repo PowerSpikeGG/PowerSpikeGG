@@ -1,3 +1,5 @@
+load("@bazel_tools//tools/build_defs/docker:docker.bzl", "docker_build")
+
 genrule(
     name = "install",
     srcs = [
@@ -16,4 +18,12 @@ genrule(
     cmd = "bash $(location scripts/build.sh) $(@D) $(GENDIR)",
     local = 1,
     tools = ["install"],
+)
+
+docker_build(
+    name = "docker",
+    base = "@docker_nginx//:image",
+    directory = "/var/www",
+    tars = [":frontend"],
+    visibility = ["//visibility:public"],
 )

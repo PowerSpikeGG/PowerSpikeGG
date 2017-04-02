@@ -12,6 +12,7 @@ docker_build(
         "./server.par",
     ],
     files = [":server.par"],
+    visibility = ["//visibility:public"],
 )
 
 psgg_proto_library(
