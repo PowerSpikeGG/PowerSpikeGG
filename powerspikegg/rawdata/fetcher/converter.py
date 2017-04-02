@@ -6,6 +6,7 @@ from powerspikegg.rawdata.lib.python import static
 Convert a match in JSON to the protocol buffer message associated.
 """
 
+
 class ConstantSolver():
     """Helper class solving game constants and caching them.
 
@@ -51,7 +52,7 @@ class JSONConverter():
         """
         self.game_constant = ConstantSolver(api_handler)
 
-    def _get_player_statistics(self, json_statistics):
+    def convert_player_statistics(self, json_statistics):
         """Convert the JSON player statistics to a protocol buffer.
 
         Parameters:
@@ -75,10 +76,10 @@ class JSONConverter():
             gold_spent=json_statistics["goldSpent"],
             minions_killed=json_statistics["minionsKilled"],
             neutral_minions_killed=json_statistics["neutralMinionsKilled"],
-            neutral_minions_killed_ennemy_jungle=
-                json_statistics["neutralMinionsKilledEnemyJungle"],
-            neutral_minions_killed_team_jungle=
-                json_statistics["neutralMinionsKilledTeamJungle"],
+            neutral_minions_killed_ennemy_jungle=(
+                json_statistics["neutralMinionsKilledEnemyJungle"]),
+            neutral_minions_killed_team_jungle=(
+                json_statistics["neutralMinionsKilledTeamJungle"]),
             sight_wards_bought=json_statistics["sightWardsBoughtInGame"],
             vision_wards_bought=json_statistics["visionWardsBoughtInGame"],
             wards_placed=json_statistics["wardsPlaced"],
@@ -87,17 +88,13 @@ class JSONConverter():
             triple_kills=json_statistics["tripleKills"],
             quadra_kills=json_statistics["quadraKills"],
             penta_kills=json_statistics["pentaKills"],
-            unreal_kills=json_statistics["unrealKills"],
             killing_sprees=json_statistics["killingSprees"],
             largest_killing_spree=json_statistics["largestKillingSpree"],
             largest_multi_kill=json_statistics["largestMultiKill"],
             inhibitor_kills=json_statistics["inhibitorKills"],
             tower_kills=json_statistics["towerKills"],
-            first_blood_assist=json_statistics.get("firstBloodAssist", False),
-            first_blood_kill=json_statistics.get("firstBloodKill", False),
-            first_inhibitor_kill=json_statistics.get("firstInhibitorKill", False),
-            first_tower_assist=json_statistics.get("firstTowerAssist", False),
-            first_tower_kill=json_statistics.get("firstTowerKill", False),
+            total_crowd_control=json_statistics["totalTimeCrowdControlDealt"],
+            total_units_healed=json_statistics["totalUnitsHealed"],
             magic_damages=match_pb2.DamageStatistic(
                 total=json_statistics["magicDamageDealt"],
                 to_champions=json_statistics["magicDamageDealtToChampions"],
@@ -114,7 +111,14 @@ class JSONConverter():
                 total=json_statistics["totalDamageDealt"],
                 to_champions=json_statistics["totalDamageDealtToChampions"],
                 taken=json_statistics["totalDamageTaken"]),
+            first_blood_assist=json_statistics.get("firstBloodAssist", False),
+            first_blood_kill=json_statistics.get("firstBloodKill", False),
+            first_inhibitor_kill=json_statistics.get(
+                "firstInhibitorKill", False),
+            first_tower_assist=json_statistics.get("firstTowerAssist", False),
+            first_tower_kill=json_statistics.get("firstTowerKill", False),
         )
+        # pylint: enable=line-too-long
 
     def _get_participants_per_team_ids(self, json_entry):
         """Build a list of Participant protobuf from a JSON entry.
@@ -139,7 +143,7 @@ class JSONConverter():
 
         teams = {}
         for participant_json in json_entry["participants"]:
-            stats = self._get_player_statistics(participant_json["stats"])
+            stats = self.convert_player_statistics(participant_json["stats"])
 
             participant = match_pb2.Participant(
                 id=participant_json["participantId"],
@@ -208,17 +212,17 @@ class JSONConverter():
 
         for team_json in json_entry["teams"]:
             team = detail.teams.add()
-            team.MergeFrom(self._get_team(team_json,
-                participants_per_teams[team_json["teamId"]]))
+            team.MergeFrom(self._get_team(
+                team_json, participants_per_teams[team_json["teamId"]]))
 
         return detail
 
     def json_match_to_match_pb(self, json_entry):
         """Build a MatchReference protobuf from a JSON entry representing a match.
 
-        This function is used to convert data recovered from the Riot API (or the
-        Riot API project cache) to a comprehensive protocol buffer, used in all our
-        stack.
+        This function is used to convert data recovered from the Riot API (or
+        the Riot API project cache) to a comprehensive protocol buffer, used in
+        all our stack.
 
         Parameters:
             json_entry: a JSON formated as the Riot API's MatchDetail DTO [1].
