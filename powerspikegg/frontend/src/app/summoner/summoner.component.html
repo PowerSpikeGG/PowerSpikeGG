@@ -1,5 +1,8 @@
 <app-spinner *ngIf="showSpinner"></app-spinner>
 
-<div style="margin-top:80px">Summoner Page</div>
-
-
+<md-sidenav-container>
+  <div class="container" fxLayout="row">
+    <app-sidenav fxFlex.lg="20"></app-sidenav>
+    <app-matches fxFlex.lg="80"></app-matches>
+  </div>
+</md-sidenav-container>
