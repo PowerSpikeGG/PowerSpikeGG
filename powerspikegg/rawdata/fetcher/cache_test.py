@@ -7,6 +7,7 @@ import traceback
 import os
 import unittest
 
+from powerspikegg.rawdata.fetcher import aggregator_test
 from powerspikegg.rawdata.fetcher import cache
 from powerspikegg.rawdata.fetcher import service_pb2
 from powerspikegg.rawdata.public import constants_pb2
@@ -144,6 +145,18 @@ class CacheManagerTest(unittest.TestCase):
         results = list(manager.query_matches_cache(service_pb2.Query()))
         self.assertEqual(results, [SAMPLES["match"]])
         self.assertTrue(manager.aggregator.SearchMatchesMatchingQuery.called)
+
+    def test_average_query_forwarded_to_aggregator(self):
+        """Tests the average query are forwarded to the aggregator."""
+        manager = cache.CacheManager()
+
+        manager.aggregator = mock.Mock()
+        manager.aggregator.AverageStatisticsOnQuery.return_value = (
+            aggregator_test.SAMPLE_AGGREGATED_DATA)
+
+        result = manager.average_stats(service_pb2.Query())
+        self.assertEqual(result, aggregator_test.SAMPLE_AGGREGATED_DATA)
+        self.assertTrue(manager.aggregator.AverageStatisticsOnQuery.called)
 
 if __name__ == "__main__":
     unittest.main()
