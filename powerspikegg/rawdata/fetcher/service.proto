@@ -17,6 +17,9 @@ service MatchFetcher {
 
     // Get cached matches based on a query semantic.
     rpc CacheQuery (Query) returns (stream game.leagueoflegends.MatchReference);
+
+    // Get an average statistics based on a query semantic.
+    rpc AverageStatistics (Query) returns (AggregatedStatistics);
 }
 
 // Message used to request a match to the gRPC endpoint.
@@ -56,4 +59,15 @@ message Query {
     // If combined with other selectors, the selectors will be applied on
     // this summoner.
     game.leagueoflegends.Summoner summoner = 3;
+}
+
+// Message returned by the aggregation pipeline.
+//
+// Contains all PlayerStatistics' fields that are numeric and can be averaged.
+message AggregatedStatistics {
+    // match pool is the number of aggregated matches.
+    int32 match_pool = 1;
+
+    // aggregated statistics. Note that flags are remained undefined.
+    game.leagueoflegends.PlayerStatistics stats = 2;
 }

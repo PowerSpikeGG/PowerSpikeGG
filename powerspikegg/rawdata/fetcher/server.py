@@ -139,6 +139,18 @@ class MatchFetcher(service_pb2.MatchFetcherServicer):
         for match in self.cache_manager.query_matches_cache(query_pb):
             yield self.converter.json_match_to_match_pb(match)
 
+    def AverageStatistics(self, query_pb, context):
+        """Get the average statistics based on a query message.
+
+        Parameters:
+            query: filters to apply on the mongo db.
+        Returns:
+            An AggregatedStatistics message containing average statistics of
+            the matching matches.
+        """
+        result = self.cache_manager.average_stats(query_pb)
+        return self.converter.json_aggregation_to_aggregation_pb(result)
+
     def _GetSummonerFromName(self, partial_summoner):
         """Query the Riot API to retrive a summoner ID from its name.
 
