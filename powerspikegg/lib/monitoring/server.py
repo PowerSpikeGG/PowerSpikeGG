@@ -5,12 +5,12 @@ import logging
 from prometheus_client import start_http_server
 
 from powerspikegg.lib.monitoring import watcher
+from powerspikegg.lib.monitoring import flags  # pylint: disable=unused-import
 
 
 FLAGS = gflags.FLAGS
 
 # TODO(funkysayu): once the stack fully support prometheus, remove this flag.
-gflags.DEFINE_boolean("enable_prometheus", False, "enable prometheus tracing")
 gflags.DEFINE_integer("prometheus_server_port", 8002,
                       "port on which the prometheus server will listen")
 gflags.DEFINE_integer("prometheus_watcher_update_rate", 500,

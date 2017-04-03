@@ -1,8 +1,12 @@
+import gflags
 import mock
 import time
 import unittest
 
 from powerspikegg.lib.monitoring import watcher
+
+
+FLAGS = gflags.FLAGS
 
 
 class MockWatcher:
@@ -21,6 +25,11 @@ class SomeException(Exception):
 
 class MonitoringWatcherTest(unittest.TestCase):
     """Tests the library registers and auto-start the watchers."""
+
+    @classmethod
+    def setUpClass(cls):
+        """Enable prometheus monitoring."""
+        FLAGS(["--enable_prometheus"])
 
     def test_watcher_registration(self):
         """Tests watcher registration works as exepcted."""

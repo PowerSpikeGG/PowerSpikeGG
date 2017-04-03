@@ -1,6 +1,11 @@
 import contextlib
+import gflags
 import threading
 import time
+
+from powerspikegg.lib.monitoring import flags  # pylint: disable=unused-import
+
+FLAGS = gflags.FLAGS
 
 
 class _Registry:
@@ -34,6 +39,10 @@ class _Registry:
     @contextlib.contextmanager
     def context_manager(self, update_rate):
         """Create a context running the watchers, making sure it stops them."""
+        if not FLAGS.enable_prometheus:
+            yield
+            return
+
         self.start_watchers(update_rate)
         try:
             yield
