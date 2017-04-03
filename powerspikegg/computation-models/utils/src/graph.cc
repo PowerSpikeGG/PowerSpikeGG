@@ -12,10 +12,23 @@ tensorflow::Node* FindNodeWithNameInGraph(tensorflow::Graph* graph,
     return NULL;
 }
 
-void LoadGraphFromDefinition(tensorflow::Scope &scope, tensorflow::GraphDef &gDef) {
+tensorflow::Output GenerateOutputFromNode(tensorflow::Graph* graph, std::string name) {
+    tensorflow::Node* node = FindNodeWithNameInGraph(graph, name);
+    return tensorflow::Output(node);
+}
+
+void LoadGraphFromDefinition(tensorflow::Scope& scope,
+                             tensorflow::GraphDef& gDef) {
     tensorflow::GraphConstructorOptions options;
     tensorflow::ConvertGraphDefToGraph(options, gDef, scope.graph());
 }
 
+void LoadGraphFromFile(tensorflow::Scope& scope, std::string filename) {
+    tensorflow::GraphDef gDef;
+    tensorflow::ReadBinaryProto(tensorflow::Env::Default(), filename, &gDef);
+
+    tensorflow::GraphConstructorOptions options;
+    tensorflow::ConvertGraphDefToGraph(options, gDef, scope.graph());
+}
 }
 }

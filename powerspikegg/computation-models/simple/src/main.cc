@@ -17,12 +17,8 @@
 int main() {
     tensorflow::Scope root = tensorflow::Scope::NewRootScope();
 
-    // The GraphDef is a proto containing the node of the graph (whithout the value)
-    tensorflow::GraphDef gDef; 
-    tensorflow::ReadBinaryProto(tensorflow::Env::Default(),"/tmp/frozen_model.pb", &gDef);
-
-    tensorflow::GraphConstructorOptions options;
-    tensorflow::ConvertGraphDefToGraph(options, gDef, root.graph());
+    // Load the graph into the scope  
+    computation::utils::LoadGraphFromFile(root, "/tmp/frozen_model.pb");
 
     // This list the node in the graph (for debugging purpose)
     std::cout << root.graph()->num_nodes() << std::endl;
@@ -32,8 +28,8 @@ int main() {
     }
 
     // Find a node named logits (for the output)
-    tensorflow::Node* node = computation::utils::FindNodeWithNameInGraph(root.graph(), "logits");
-    tensorflow::Output output = tensorflow::Output(node);
+    //tensorflow::Node* node = computation::utils::FindNodeWithNameInGraph(root.graph(), "logits");
+    tensorflow::Output output = computation::utils::GenerateOutputFromNode(root.graph(), "logits");//tensorflow::Output(node);
 
     // Find a node named placeholder (for the input)
     tensorflow::Node* node2 = computation::utils::FindNodeWithNameInGraph(
