@@ -14,13 +14,14 @@ from __future__ import division
 from __future__ import print_function
 
 import math
+import os
 
 import tensorflow as tf
 
 # Number of statistics to use in order to make the prediction
 INPUT_SIZE = 2
 
-def inference(data, hidden1_units, hidden2_units):
+def inference(data, input_size, hidden1_units, hidden2_units):
   """Build the model up to where it may be used for inference.
 
   Args:
@@ -34,8 +35,8 @@ def inference(data, hidden1_units, hidden2_units):
   # Hidden 1
   with tf.name_scope('hidden1'):
     weights = tf.Variable(
-        tf.truncated_normal([INPUT_SIZE, hidden1_units],
-                            stddev=1.0 / math.sqrt(float(INPUT_SIZE))),
+        tf.truncated_normal([input_size, hidden1_units],
+                            stddev=1.0 / math.sqrt(float(input_size))),
         name='weights')
     biases = tf.Variable(tf.zeros([hidden1_units]),
                          name='biases')
@@ -128,6 +129,54 @@ def evaluation(logits, labels):
   # Return the number of true entries.
   return tf.reduce_sum(correct)
 
+def generate_graph(model_directory, input_size):
+  """Create a new graph from inference and training operator and export the model 
+  with an empty checkpoint
+  """
+  
+  with tf.Graph().as_default():
+
+    # Tensor containing the input values
+    input = tf.placeholder(tf.float32, shape=(None, input_size), name="placeholder")
+
+    # Tensor containing the correct answer for the input
+    answer = tf.placeholder(tf.float32, shape=(None, 1), name="answer")
+
+    # Result of the computation of the neural network
+    logits = inference(input, input_size, 5, 5);
+
+    # Squared sum of the difference between the predicted value and the answers
+    loss_op = loss(logits, answer)
+
+    # Operator to train the neural network
+    train_op = training(loss_op, 0.01)
+
+    # Give an estimation of the difference between the predicted values and the answer
+    eval_op = evaluation(logits, answer)
+
+    # Create a summary for tensorboard
+    summary = tf.summary.merge_all()
+
+    # Create all variables
+    init_op = tf.global_variables_initializer()
+
+    # Save the state of the graph and the variables
+    saver = tf.train.Saver()
+
+    # Create a session to execute the graph
+    with tf.Session() as sess:
+      
+        # Place a summary in the log directory
+        summary_writer = tf.summary.FileWriter(model_directory, sess.graph)
+
+        # Initialise all variables
+	sess.run(init_op)
+
+        # Save the model
+        checkpoint_file = os.path.join(model_directory, "model.ckpt")
+
+        saver.save(sess, checkpoint_file, 0)
+
 def test_training():
   """Train a neural network and display progression, export the model at the end.
   """
@@ -140,7 +189,7 @@ def test_training():
     answer = tf.placeholder(tf.float32, shape=(None, 1), name="answer")
 
     # Result of the computation of the neural network
-    logits = inference(input, 5,5);
+    logits = inference(input, INPUT_SIZE, 5,5);
 
     # Squared sum of the difference between the predicted value and the answers
     loss_op = loss(logits, answer)
@@ -191,5 +240,3 @@ def test_training():
 
         saver.save(sess, checkpoint_file, 2000)
 
-
-test_training()
