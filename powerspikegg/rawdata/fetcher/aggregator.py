@@ -100,9 +100,11 @@ def SearchMatchesMatchingQuery(collection, query_pb):
     Returns:
         A generator looking for matches matching the Query requirements.
     """
-    assert any((query_pb.summoner, query_pb.league, query_pb.champion))
+    mongo_query = []
 
-    mongo_query = [{"$match": _create_mongo_filters(query_pb)}]
+    filters = _create_mongo_filters(query_pb)
+    if filters:
+        mongo_query.append({"$match": filters})
     if query_pb.sample_size:
         mongo_query.append(_create_sampling_request(query_pb))
     cursor = collection.aggregate(mongo_query)
@@ -193,8 +195,6 @@ def AverageStatisticsOnQuery(collection, query_pb):
     Returns:
         An average statistics of the player.
     """
-    assert len(query_pb.ListFields()) >= 1
-
     matcher = {}
     if query_pb.league:
         matcher["participants.highestAchievedSeasonTier"] = (
