@@ -210,7 +210,7 @@ pypi_repository(
 # with a custom BUILD file.
 new_git_repository(
     name = "pydep_requests",
-    build_file = "third_party/python/requests.BUILD",
+    build_file = "third_party/python/requests/archive.BUILD",
     remote = "https://github.com/kennethreitz/requests.git",
     tag = "v2.13.0",
 )

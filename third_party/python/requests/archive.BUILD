@@ -3,6 +3,7 @@ licenses(["notice"])  # Apache v2
 filegroup(
     name = "certificates",
     srcs = glob(["requests/*.pem"]),
+    visibility = ["//visibility:public"],
 )
 
 py_library(
