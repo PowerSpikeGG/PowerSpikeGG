@@ -83,7 +83,7 @@ class SearchTest(unittest.TestCase):
         cls.server.shutdown()
 
     def test_summoner_filtering_only_name(self):
-        """Tests matches where "Foo bar" played are selectionned."""
+        """Tests matches where "Foo bar" played are selected."""
         query = service_pb2.Query(summoner=constants_pb2.Summoner(
             name="Foo bar"))
 
@@ -92,7 +92,7 @@ class SearchTest(unittest.TestCase):
         self.assertEquals(len(deque(generator)), 2)
 
     def test_summoner_filtering_only_id(self):
-        """Tests matches where summoner 1337 played are selectionned."""
+        """Tests matches where summoner 1337 played are selected."""
         query = service_pb2.Query(summoner=constants_pb2.Summoner(
             id=1337))
 
@@ -101,7 +101,7 @@ class SearchTest(unittest.TestCase):
         self.assertEquals(len(deque(generator)), 1)
 
     def test_summoner_filtering_both(self):
-        """Tests matches where summoner Foo bar of id 4242 are selectionned."""
+        """Tests matches where summoner Foo bar of id 4242 are selected."""
         query = service_pb2.Query(summoner=constants_pb2.Summoner(
             name="Foo bar", id=4242))
 
@@ -291,7 +291,7 @@ class SearchTest(unittest.TestCase):
         self.assertDictEqualWithDebug(result, expected)
 
     def test_avg_league_and_champions_filtering(self):
-        """Tests filter per champion on the average aggregation."""
+        """Tests filter per champion and league on the average aggregation."""
         # 2 occurences in samples 1 and 2
         query = service_pb2.Query(
             league=constants_pb2.PLATINUM,
