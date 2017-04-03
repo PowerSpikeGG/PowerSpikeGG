@@ -19,7 +19,7 @@ Gazelle::SanitizeWorkspace () {
     # Gazelle generates also dependencies to the proto paths. However, those
     # dependencies does not have the appropriate name. Replace all of them by
     # their appropriate names.
-    find . -name "BUILD" -exec sed -e $PROTO_RULE_REPLACEMENT_REGEX -i {} \;
+    find . -name "BUILD" -exec sed -i '' -e $PROTO_RULE_REPLACEMENT_REGEX {} \;
 }
 
 # Validate the format of a file.
