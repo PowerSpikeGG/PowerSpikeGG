@@ -1,0 +1,39 @@
+version: '2'
+services:
+    mongod:
+        image: "bazel/powerspikegg:mongod"
+        volumes:
+            - "mongod-dbpath:/data"
+        command: ["--dbpath=/data"]
+
+    fetcher:
+        image: "bazel/powerspikegg:fetcher"
+        command: [
+            "--enable_prometheus",
+            "--riot_api_token=$RIOT_API_TOKEN",
+            "--rawdata_cache_server_address=mongod:27017",
+        ]
+        depends_on:
+            - mongod
+
+    server:
+        image: "bazel/powerspikegg:server"
+        ports:
+            - "8080:8080"
+        command: [
+            "--grpc-server-address=fetcher:50001",
+            "--http-address=0.0.0.0",
+            "--http-port=8080",
+        ]
+        depends_on:
+            - fetcher
+
+    frontend:
+        image: "bazel/powerspikegg:webserver"
+        ports:
+            - "8000:80"
+        depends_on:
+            - server
+
+volumes:
+    mongod-dbpath:

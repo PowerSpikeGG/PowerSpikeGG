@@ -5,6 +5,9 @@ __pycache__
 # Bazel generated files
 /bazel-*
 
+# Generated docker compose file
+docker-compose.yml
+
 # Configuration files
 /config
 
