@@ -1,31 +1,37 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"google.golang.org/grpc"
+	"net"
 	"net/http"
 	"os"
 
-	"net"
+	"google.golang.org/grpc"
+
 	fetcherpb "powerspike.gg/powerspikegg/rawdata/fetcher/service_gopb"
-	computation "powerspike.gg/powerspikegg/serving/match_computation_gopb"
+	computationpb "powerspike.gg/powerspikegg/serving/match_computation_gopb"
+)
+
+var (
+	grpcServerAddress = flag.String("grpc-server-address", "127.0.0.1:50001", "Address of the GRPC server")
+	httpAddress       = flag.String("http-address", "127.0.0.1", "Address of the HTTP gateway")
+	httpPort          = flag.String("http-port", ":8080", "Port of the HTTP gateway")
 )
 
 type gatewayServer struct {
 	matchFetcherClient fetcherpb.MatchFetcherClient
-	computationClient  computation.MatchComputationClient
+	computationClient  computationpb.MatchComputationClient
 	server             *http.Server
 }
 
-func createServer(matchFetcherClient fetcherpb.MatchFetcherClient, computationClient computation.MatchComputationClient) *gatewayServer {
+func createServer(matchFetcherClient fetcherpb.MatchFetcherClient, computationClient computationpb.MatchComputationClient) *gatewayServer {
 	mux := http.NewServeMux()
 
-	s := &http.Server{
-		Handler: mux,
-	}
-
 	gs := &gatewayServer{
-		server:             s,
+		server: &http.Server{
+			Handler: mux,
+		},
 		matchFetcherClient: matchFetcherClient,
 		computationClient:  computationClient,
 	}
@@ -41,16 +47,18 @@ func createServer(matchFetcherClient fetcherpb.MatchFetcherClient, computationCl
 }
 
 func main() {
-	conn, err := grpc.Dial("localhost:50001", grpc.WithInsecure())
+	flag.Parse()
+
+	conn, err := grpc.Dial(*grpcServerAddress, grpc.WithInsecure())
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, fmt.Sprintf("unable to reach fetcher server: %v", err))
 	}
 	defer conn.Close()
 
 	matchFetcherClient := fetcherpb.NewMatchFetcherClient(conn)
-	computationClient := computation.NewMatchComputationClient(conn)
+	computationClient := computationpb.NewMatchComputationClient(conn)
 
-	lis, err := net.Listen("tcp", "127.0.0.1:8080")
+	lis, err := net.Listen("tcp", *httpAddress+*httpPort)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to listen: %v", err)
 		os.Exit(1)

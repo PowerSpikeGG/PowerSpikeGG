@@ -1,5 +1,3 @@
-package(default_visibility = ["//visibility:public"])
-
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
 
 go_library(
@@ -10,7 +8,6 @@ go_library(
         "match.go",
         "summoner.go",
     ],
-    visibility = ["//visibility:private"],
     deps = [
         "//powerspikegg/rawdata/fetcher:service_gopb",
         "//powerspikegg/rawdata/public:leagueoflegends_gopb",
