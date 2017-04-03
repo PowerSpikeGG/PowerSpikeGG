@@ -9,10 +9,10 @@ docker_build(
     base = "@docker_python3//:image",
     entrypoint = [
         "python3",
-        "./server.par",
+        "./server_par.par",
     ],
     files = [
-        ":server.par",
+        ":server_par.par",
         "@pydep_requests//:certificates",
     ],
     ports = [
@@ -32,13 +32,32 @@ psgg_proto_library(
     ],
 )
 
-par_binary(
+py_binary(
     name = "server",
     srcs = [
         "server.py",
         ":service_py",
         "//powerspikegg/rawdata/public:leagueoflegends_py",
     ],
+    deps = [
+        ":cache",
+        ":converter",
+        ":handler",
+        "//powerspikegg/lib/monitoring:rpc",
+        "//third_party/python/riotwatcher",
+        "@pydep_gflags//:library",
+    ],
+)
+
+# TODO(funkysayu): Find a way to not duplicate this rule
+par_binary(
+    name = "server_par",
+    srcs = [
+        "server.py",
+        ":service_py",
+        "//powerspikegg/rawdata/public:leagueoflegends_py",
+    ],
+    main = "server.py",
     deps = [
         ":cache",
         ":converter",
