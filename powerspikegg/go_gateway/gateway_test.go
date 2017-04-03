@@ -24,8 +24,10 @@ type mockMatchFetcherServer struct {
 	matchRequests []*fetcherpb.MatchRequest
 	// matchRequests contains the summoner request sent by the client
 	summonerRequests []*lolpb.Summoner
-	// response contains the response to send back to the client
-	response *lolpb.MatchReference
+	// matchResponse contains the response to send back to the client for a match
+	matchResponse *lolpb.MatchReference
+	// matchResponse contains the response to send back to the client for a summoner (stream of match)
+	summonerResponse []*lolpb.MatchReference
 	// err contains an eventual error to throw back to the client
 	err error
 	// address contains the server address
@@ -58,7 +60,7 @@ func (s *mockMatchFetcherServer) Match(_ context.Context, req *fetcherpb.MatchRe
 		return nil, s.err
 	}
 
-	return s.response, nil
+	return s.matchResponse, nil
 }
 
 // Resets the mock requests sent list
@@ -74,30 +76,52 @@ func (s *mockMatchFetcherServer) UpdateSummoner(req *lolpb.Summoner, resp fetche
 		return s.err
 	}
 
-	resp.Send(s.response)
+	for _, response := range s.summonerResponse {
+		resp.Send(response)
+	}
 
 	return nil
 }
 
+// AverageStatistics is a mock of the match endpoint.
+func (s *mockMatchFetcherServer) AverageStatistics(context.Context, *fetcherpb.Query) (*fetcherpb.AggregatedStatistics, error) {
+	// TODO
+	return nil, nil
+}
+
 // TestGateway ensures that the gateway is correctly parsing parameters and answering to API requests.
 func TestGateway(t *testing.T) {
-	tt := []struct {
+	summonerTT := []struct {
+		name             string
+		serverRequest    string
+		serverResponse   []*lolpb.MatchReference
+		expectedResponse string
+		expectedStatus   int
+	}{
+		{
+			name:          "normal summoner query",
+			serverRequest: "/api/summoner/Rangork/EUW",
+			serverResponse: []*lolpb.MatchReference{
+				{
+					Id: 3122561986,
+				},
+				{
+					Id: 3122561984,
+				},
+			},
+			expectedResponse: "{\"results\": [{\"id\":3.122561986e+09,\"timestamp\":0,\"version\":\"\",\"plateformId\":\"\",\"region\":\"BR\",\"queueType\":\"TEAM_BUILDER_RANKED_SOLO\",\"season\":\"SEASON2017\"}]}",
+			expectedStatus:   http.StatusOK,
+		},
+		// TODO: add some failing tests
+	}
+
+	matchTt := []struct {
 		name             string
 		serverRequest    string
 		serverResponse   *lolpb.MatchReference
 		expectedResponse string
 		expectedStatus   int
 	}{
-		{
-			name:          "summoner query",
-			serverRequest: "/api/summoner/Rangork/EUW",
-			serverResponse: &lolpb.MatchReference{
-				// TODO(archangel): add a test with multiple match references returned for summoner requests.
-				Id: 3122561986,
-			},
-			expectedResponse: "{\"results\": [{\"id\":3.122561986e+09,\"timestamp\":0,\"version\":\"\",\"plateformId\":\"\",\"region\":\"BR\",\"queueType\":\"TEAM_BUILDER_RANKED_SOLO\",\"season\":\"SEASON2017\"}]}",
-			expectedStatus:   http.StatusOK,
-		},
 		{
 			name:          "match query",
 			serverRequest: "/api/match/3122561986/EUW",
@@ -107,6 +131,7 @@ func TestGateway(t *testing.T) {
 			expectedResponse: "{\"id\":3.122561986e+09,\"timestamp\":0,\"version\":\"\",\"plateformId\":\"\",\"region\":\"BR\",\"queueType\":\"TEAM_BUILDER_RANKED_SOLO\",\"season\":\"SEASON2017\"}",
 			expectedStatus:   http.StatusOK,
 		},
+		// TODO: add some failing tests
 	}
 
 	matchFetcherServer, err := newMockMatchFetcherServer()
@@ -126,8 +151,6 @@ func TestGateway(t *testing.T) {
 	matchFetcherClient := fetcherpb.NewMatchFetcherClient(conn)
 	//computationClient := computation.NewMatchComputationClient(conn) // TODO(archangel): computation tests
 
-	// TODO: aggregation test
-
 	lis, err := net.Listen("tcp", "127.0.0.1:0")
 	if err != nil {
 		t.Fatalf("failed to listen: %v", err)
@@ -140,9 +163,34 @@ func TestGateway(t *testing.T) {
 		fmt.Printf("creating server on: %s", s.Addr)
 	}(s.server, lis)
 
-	for _, testValue := range tt {
+	for _, testValue := range matchTt {
 		matchFetcherServer.reset()
-		matchFetcherServer.response = testValue.serverResponse
+		matchFetcherServer.matchResponse = testValue.serverResponse
+
+		req, err := http.NewRequest("GET", s.server.Addr+testValue.serverRequest, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		rr := httptest.NewRecorder()
+
+		s.server.Handler.ServeHTTP(rr, req)
+
+		// Check the status code is what we expect.
+		if status := rr.Code; status != testValue.expectedStatus {
+			t.Errorf("handler returned wrong status code: got %v want %v", status, testValue.expectedStatus)
+		}
+
+		// Check the response body is what we expect.
+		if rr.Body.String() != testValue.expectedResponse {
+			t.Errorf("handler returned unexpected body: got %v want %v", rr.Body.String(), testValue.expectedResponse)
+		}
+	}
+
+	// TODO: generify
+	for _, testValue := range summonerTT {
+		matchFetcherServer.reset()
+		matchFetcherServer.summonerResponse = testValue.serverResponse
 
 		req, err := http.NewRequest("GET", s.server.Addr+testValue.serverRequest, nil)
 		if err != nil {
