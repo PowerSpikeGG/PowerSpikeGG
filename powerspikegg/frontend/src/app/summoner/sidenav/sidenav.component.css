@@ -1,34 +1,32 @@
-md-sidenav {
+.sidenav {
   background: #122c5e;
-  height: 100%;
-  padding-left: 40px;
-  padding-right: 40px;
-  position: relative;
+  height: 100%; width: 20%;
+  position: fixed;
   text-align: center;
 }
 
-md-sidenav .summoner-icon {
-  margin-top: 40px;
+.sidenav .summoner-icon {
+  padding-top: 40px;
   position: relative;
 }
 
-md-sidenav .summoner-icon img {
+.sidenav .summoner-icon img {
   border: 6px solid #785a28;
   border-radius: 50%;
   height: 130px; width: 130px;
   margin-top: 5px;
 }
 
-md-sidenav .summoner-icon .border-circle {
+.sidenav .summoner-icon .border-circle {
   border: 1px solid #785a28;
   border-radius: 50%;
-  height: 155px; width: 155px;
+  height: 154px; width: 154px;
   margin: 0 auto;
   position: absolute;
-  top: -2px; left: -1px; right: 0;
+  top: 38px; left: 0px; right: 0;
 }
 
-md-sidenav .summoner-icon .level-circle {
+.sidenav .summoner-icon .level-circle {
   background: #1b1b1b;
   border: 2px solid #424242;
   border-radius: 50%;
@@ -39,24 +37,24 @@ md-sidenav .summoner-icon .level-circle {
   position: absolute;
 }
 
-md-sidenav h1 {
+.sidenav h1 {
   color: #fff;
   font-size: 18px;
 }
 
-md-sidenav .renew-button {
+.sidenav .renew-button {
   background: #32579e;
   color: white;
 }
 
-md-sidenav .renew-button md-icon {
+.sidenav .renew-button md-icon {
   font-size: 18px;
   margin-left: -3px;
   padding-top: 5px;
   padding-right: 3px;
 }
 
-md-sidenav .divider {
+.sidenav .divider {
   border: 1px solid #0c1e42;
-  margin-top: 30px;
+  margin-top: 40px;
 }
