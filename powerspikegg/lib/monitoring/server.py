@@ -13,7 +13,7 @@ FLAGS = gflags.FLAGS
 gflags.DEFINE_boolean("enable_prometheus", False, "enable prometheus tracing")
 gflags.DEFINE_integer("prometheus_server_port", 8002,
                       "port on which the prometheus server will listen")
-gflags.DEFINE_integer("prometheus_watcher_update_rate", 100,
+gflags.DEFINE_integer("prometheus_watcher_update_rate", 500,
                       "update rate of the watchers")
 
 
