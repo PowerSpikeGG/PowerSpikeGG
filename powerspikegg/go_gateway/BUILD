@@ -4,6 +4,7 @@ load("@bazel_tools//tools/build_defs/docker:docker.bzl", "docker_build")
 go_library(
     name = "go_default_library",
     srcs = [
+        "aggregation.go",
         "computation.go",
         "gateway.go",
         "match.go",
