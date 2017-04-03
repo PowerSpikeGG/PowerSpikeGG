@@ -4,9 +4,20 @@ py_library(
         "server.py",
     ],
     deps = [
+        ":flags",
         ":watcher",
         "@pydep_gflags//:library",
         "@pydep_prometheus_client//:library",
+    ],
+)
+
+py_library(
+    name = "flags",
+    srcs = [
+        "flags.py",
+    ],
+    deps = [
+        "@pydep_gflags//:library",
     ],
 )
 
@@ -44,6 +55,10 @@ py_library(
     visibility = [
         "//visibility:public",
     ],
+    deps = [
+        ":flags",
+        "@pydep_gflags//:library",
+    ],
 )
 
 py_test(
@@ -52,7 +67,9 @@ py_test(
         "watcher_test.py",
     ],
     deps = [
+        ":flags",
         ":watcher",
+        "@pydep_gflags//:library",
         "@pydep_mock//:library",
     ],
 )
