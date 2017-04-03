@@ -11,7 +11,14 @@ docker_build(
         "python3",
         "./server.par",
     ],
-    files = [":server.par"],
+    files = [
+        ":server.par",
+        "@pydep_requests//:certificates",
+    ],
+    ports = [
+        "50001",  # Fetcher address
+        "8002",  # Prometheus server
+    ],
     visibility = ["//visibility:public"],
 )
 
@@ -37,6 +44,7 @@ par_binary(
         ":converter",
         ":handler",
         "//powerspikegg/lib/monitoring:rpc",
+        "//third_party/python/requests:docker_certificates",
         "//third_party/python/riotwatcher",
         "@pydep_gflags//:library",
     ],
