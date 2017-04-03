@@ -31,6 +31,8 @@ docker_build(
     directory = "/bin",
     entrypoint = ["/bin/mongod"],
     files = [":server_files"],
+    ports = ["27017"],
+    visibility = ["//visibility:public"],
 )
 
 genrule(
