@@ -19,6 +19,13 @@ the data.
 """
 
 
+def _create_sampling_request(query_pb):
+    """Creates a request to retrieve only a sample of the result."""
+    if query_pb.randomize_sample:
+        return {"$sample": {"size": query_pb.sample_size}}
+    return {"$limit": query_pb.sample_size}
+
+
 def _mongo_filter_by_summoner(initial_query, summoner_pb):
     """Create a filter for the aggregation pipeline based on a summoner.
 
@@ -95,7 +102,10 @@ def SearchMatchesMatchingQuery(collection, query_pb):
     """
     assert any((query_pb.summoner, query_pb.league, query_pb.champion))
 
-    cursor = collection.find(_create_mongo_filters(query_pb))
+    mongo_query = [{"$match": _create_mongo_filters(query_pb)}]
+    if query_pb.sample_size:
+        mongo_query.append(_create_sampling_request(query_pb))
+    cursor = collection.aggregate(mongo_query)
 
     # We must post process the data if and only if summoner is specified with
     # something else (e.g. league and champion). To avoid post processing for
@@ -198,8 +208,10 @@ def AverageStatisticsOnQuery(collection, query_pb):
         {"$match": {"region": "EUW"}},  # TODO(funkysayu)
         {"$unwind": "$participants"},
         {"$match": matcher},
-        _create_average_query(),
     ]
+    if query_pb.sample_size:
+        query.append(_create_sampling_request(query_pb))
+    query.append(_create_average_query())
 
     result = next(collection.aggregate(query))
     result.pop("_id")  # Remove generated field by the grouping

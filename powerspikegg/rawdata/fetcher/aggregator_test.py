@@ -109,6 +109,46 @@ class SearchTest(unittest.TestCase):
             self.collection, query)
         self.assertEquals(len(deque(generator)), 2)
 
+    def test_filtering_limited(self):
+        """Tests the limit argument of the query is handled."""
+        # This query, without the sample size, should return 2 elements.
+        query = service_pb2.Query(
+            summoner=constants_pb2.Summoner(name="Foo bar", id=4242),
+            sample_size=1)
+
+        generator = aggregator.SearchMatchesMatchingQuery(
+            self.collection, query)
+        self.assertEqual(len(deque(generator)), 1)
+
+    def test_filtering_randomized(self):
+        """Tests the limit and randomize arguments are handled."""
+        # This query, without the sample size, should return 2 elements.
+        query = service_pb2.Query(
+            summoner=constants_pb2.Summoner(name="Foo bar", id=4242),
+            sample_size=1,
+            randomize_sample=True)
+
+        # Pick a reference match
+        generator = aggregator.SearchMatchesMatchingQuery(
+            self.collection, query)
+        matches = deque(generator)
+        self.assertEqual(len(matches), 1)
+        match_reference = matches[0]
+
+        # We want to test that on 15 execution of the query, at least one
+        # result is different. We can the safely assume the randomizer works.
+        MAX_TRIES = 15
+        for _ in range(MAX_TRIES):
+            generator = aggregator.SearchMatchesMatchingQuery(
+                self.collection, query)
+            match = next(generator)
+
+            if match != match_reference:
+                return  # Test is a success.
+
+        raise AssertionError(
+            "After %s tries, the match are still the same." % MAX_TRIES)
+
     def test_summoner_filtering_both_invalid(self):
         """Tests search with invalid pair summoner id/name are empty."""
         query = service_pb2.Query(summoner=constants_pb2.Summoner(
@@ -343,6 +383,41 @@ class SearchTest(unittest.TestCase):
         }
         result = aggregator.AverageStatisticsOnQuery(self.collection, query)
         self.assertDictEqualWithDebug(result, expected)
+
+    def test_avg_sample_limitation(self):
+        """Tests the sample size limitation is correctly handled."""
+        # This query, without the sample size, should return 2 elements.
+        query = service_pb2.Query(
+            league=constants_pb2.PLATINUM,
+            champion=constants_pb2.Champion(id=122),
+            sample_size=1)
+
+        result = aggregator.AverageStatisticsOnQuery(self.collection, query)
+        self.assertEqual(result["total"], 1)
+
+    def test_avg_sample_randomization(self):
+        """Tests randomization of a sample is correctly handled."""
+        # This query, without the sample size, should return 2 elements.
+        query = service_pb2.Query(
+            league=constants_pb2.BRONZE,
+            sample_size=1,
+            randomize_sample=True)
+
+        reference = aggregator.AverageStatisticsOnQuery(self.collection, query)
+        self.assertEqual(reference["total"], 1)
+
+        # We want to test that on 15 execution of the query, at least one
+        # result is different. We can the safely assume the randomizer works.
+        MAX_TRIES = 15
+        for _ in range(MAX_TRIES):
+            result = aggregator.AverageStatisticsOnQuery(
+                self.collection, query)
+
+            if result != reference:
+                return  # Test is a success
+
+        raise AssertionError(
+            "After %s tries, the results are still the same." % MAX_TRIES)
 
 
 if __name__ == "__main__":

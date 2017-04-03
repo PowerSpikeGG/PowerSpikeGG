@@ -59,6 +59,16 @@ message Query {
     // If combined with other selectors, the selectors will be applied on
     // this summoner.
     game.leagueoflegends.Summoner summoner = 3;
+
+    // Maximum sample size required.
+    //
+    // If specified, it will limit the size of the output request.
+    int32 sample_size = 4;
+
+    // Enable randomization of the sample
+    //
+    // If true, the selected matches will be randomly taken.
+    bool randomize_sample = 5;
 }
 
 // Message returned by the aggregation pipeline.
