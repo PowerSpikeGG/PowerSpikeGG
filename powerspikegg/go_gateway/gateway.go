@@ -16,7 +16,7 @@ import (
 var (
 	grpcServerAddress = flag.String("grpc-server-address", "127.0.0.1:50001", "Address of the GRPC server")
 	httpAddress       = flag.String("http-address", "127.0.0.1", "Address of the HTTP gateway")
-	httpPort          = flag.String("http-port", ":8080", "Port of the HTTP gateway")
+	httpPort          = flag.String("http-port", "8080", "Port of the HTTP gateway")
 )
 
 type gatewayServer struct {
@@ -58,7 +58,7 @@ func main() {
 	matchFetcherClient := fetcherpb.NewMatchFetcherClient(conn)
 	computationClient := computationpb.NewMatchComputationClient(conn)
 
-	lis, err := net.Listen("tcp", *httpAddress+*httpPort)
+	lis, err := net.Listen("tcp", *httpAddress+":"+*httpPort)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to listen: %v", err)
 		os.Exit(1)
