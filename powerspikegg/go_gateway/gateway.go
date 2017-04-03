@@ -40,8 +40,10 @@ func createServer(matchFetcherClient fetcherpb.MatchFetcherClient, computationCl
 	mux.HandleFunc("/api/summoner/", gs.summonerHandler)
 	// /api/match/{matchID}/{region}
 	mux.HandleFunc("/api/match/", gs.matchHandler)
-	// /api/computation/{matchID}/{summonerID}/{region}
+	// /api/computation/{summonerID}/{matchID}/{region}
 	mux.HandleFunc("/api/computation/", gs.computationHandler)
+	// /api/aggregation/{league}/{championID}/{summonerID}/{region}
+	mux.HandleFunc("/api/aggregation/", gs.aggregationHandler)
 
 	return gs
 }

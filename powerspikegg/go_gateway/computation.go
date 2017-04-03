@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -16,7 +17,7 @@ import (
 func parseComputationRequestParameters(r *http.Request) (*computationpb.MatchComputationRequest, error) {
 	params := strings.Split(r.URL.Path[len("/api/computation/"):], "/")
 	if len(params) != 3 {
-		return nil, fmt.Errorf("not enough parameters")
+		return nil, errors.New("not enough parameters")
 	}
 
 	summonerIDStr := params[0]
