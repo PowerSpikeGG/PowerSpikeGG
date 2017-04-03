@@ -1,0 +1,37 @@
+#!/bin/bash
+
+set -e
+
+cd $(bazel info workspace)
+
+bazel run //powerspikegg:fetcher
+bazel run //powerspikegg:mongod
+bazel run //powerspikegg:webserver
+bazel run //powerspikegg:server
+
+RIOT_API_TOKEN=$(cat config/development/riot-api-token.txt)
+
+# Start containers and collect their IDs
+cid_mongod=$(docker run --net="host" -d \
+    bazel/powerspikegg:mongod --dbpath=/var)
+cid_fetcher=$(docker run --net="host" -d \
+    bazel/powerspikegg:fetcher --riot_api_token=$RIOT_API_TOKEN)
+cid_server=$(docker run --net="host" -d \
+    bazel/powerspikegg:server)
+cid_webserver=$(docker run --net="host" -p 8000:80 -d \
+    bazel/powerspikegg:webserver)
+
+# Function used to kill docker images
+kill_docker_images () {
+    docker kill $cid_mongod
+    docker kill $cid_fetcher
+    docker kill $cid_server
+    docker kill $cid_webserver
+}
+
+# Trap signals and wait until a SIGINT / SIGTERM comes.
+trap kill_docker_images INT TERM
+echo $$
+while true; do
+    sleep 20
+done
