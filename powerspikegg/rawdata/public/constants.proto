@@ -49,7 +49,7 @@ enum Season {
 
 // Existing League of Legends leagues
 enum League {
-    UNDEFINED = 0;
+    UNRANKED = 0;
     BRONZE = 1;
     SILVER = 2;
     GOLD = 3;
@@ -59,11 +59,29 @@ enum League {
     CHALLENGER = 7;
 }
 
+// Available roles
+enum Role {
+    UNDEFINED = 0;
+    TOP = 1;
+    JUNGLE = 2;
+    MIDDLE = 3;
+    ADCARRY = 4;
+    SUPPORT = 5;
+}
+
 // Summoner information.
 message Summoner {
+    // Summoner ID, as specified by the Riot API.
     int32 id = 1;
+
+    // Summoner name
     string name = 2;
+
+    // Region on which the summoner is registered
     Region region = 3;
+
+    // Current summoner league
+    League league = 4;
 }
 
 // Summoner spells. Conversion to named entities is provided by the Riot API.
