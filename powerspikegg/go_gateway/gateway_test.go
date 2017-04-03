@@ -1,17 +1,18 @@
 package main
 
 import (
-	fetcherpb "powerspike.gg/powerspikegg/rawdata/fetcher/service_gopb"
-	lolpb "powerspike.gg/powerspikegg/rawdata/public/leagueoflegends_gopb"
-	"testing"
-
 	"fmt"
-	"golang.org/x/net/context"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 	"net"
 	"net/http"
 	"net/http/httptest"
+	"testing"
+
+	"golang.org/x/net/context"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
+
+	fetcherpb "powerspike.gg/powerspikegg/rawdata/fetcher/service_gopb"
+	lolpb "powerspike.gg/powerspikegg/rawdata/public/leagueoflegends_gopb"
 )
 
 type mockMatchFetcherServer struct {
@@ -19,8 +20,9 @@ type mockMatchFetcherServer struct {
 
 	server *grpc.Server
 
-	// request contains the request sent by the client
-	matchRequests    []*fetcherpb.MatchRequest
+	// matchRequests contains the match request sent by the client
+	matchRequests []*fetcherpb.MatchRequest
+	// matchRequests contains the summoner request sent by the client
 	summonerRequests []*lolpb.Summoner
 	// response contains the response to send back to the client
 	response *lolpb.MatchReference
@@ -49,10 +51,9 @@ func newMockMatchFetcherServer() (*mockMatchFetcherServer, error) {
 	return mock, nil
 }
 
-// Mock of the match endpoint
+// Match is a mock of the match endpoint.
 func (s *mockMatchFetcherServer) Match(_ context.Context, req *fetcherpb.MatchRequest) (*lolpb.MatchReference, error) {
 	s.matchRequests = append(s.matchRequests, req)
-
 	if s.err != nil {
 		return nil, s.err
 	}
@@ -66,10 +67,9 @@ func (s *mockMatchFetcherServer) reset() {
 	s.summonerRequests = nil
 }
 
-// Mock of the match endpoint
+// UpdateSummoner is a mock of the match endpoint.
 func (s *mockMatchFetcherServer) UpdateSummoner(req *lolpb.Summoner, resp fetcherpb.MatchFetcher_UpdateSummonerServer) error {
 	s.summonerRequests = append(s.summonerRequests, req)
-
 	if s.err != nil {
 		return s.err
 	}
@@ -79,7 +79,7 @@ func (s *mockMatchFetcherServer) UpdateSummoner(req *lolpb.Summoner, resp fetche
 	return nil
 }
 
-// TestSummonerCommand ensures summoner command correctly recovers summoners' matchs from the fetcher
+// TestGateway ensures that the gateway is correctly parsing parameters and answering to API requests.
 func TestGateway(t *testing.T) {
 	tt := []struct {
 		name             string
@@ -92,11 +92,10 @@ func TestGateway(t *testing.T) {
 			name:          "summoner query",
 			serverRequest: "/api/summoner/Rangork/EUW",
 			serverResponse: &lolpb.MatchReference{
-				// FIXME: weird to only have a single match possibility here, we should make two test structs,
-				// one for each route as summoner needs multiple match response in its stream eventually
+				// TODO(archangel): add a test with multiple match references returned for summoner requests.
 				Id: 3122561986,
 			},
-			expectedResponse: "{result: [{\"id\":3.122561986e+09}]}", // FIXME
+			expectedResponse: "{result: [{\"id\":3.122561986e+09}]}",
 			expectedStatus:   http.StatusOK,
 		},
 		{
@@ -105,17 +104,16 @@ func TestGateway(t *testing.T) {
 			serverResponse: &lolpb.MatchReference{
 				Id: 3122561986,
 			},
-			expectedResponse: "{\"id\":3.122561986e+09}", // FIXME
+			expectedResponse: "{\"id\":3.122561986e+09}",
 			expectedStatus:   http.StatusOK,
 		},
 	}
 
 	matchFetcherServer, err := newMockMatchFetcherServer()
-
-	defer matchFetcherServer.server.Stop()
 	if err != nil {
 		t.Fatalf("unable to create mock match fetcher server: %v", err)
 	}
+	defer matchFetcherServer.server.Stop()
 
 	//computationClient := newMockMatchComputationServer() // TODO(archangel): computation tests
 
@@ -144,18 +142,13 @@ func TestGateway(t *testing.T) {
 		matchFetcherServer.reset()
 		matchFetcherServer.response = testValue.serverResponse
 
-		// Create a request to pass to our handler. We don't have any query parameters for now, so we'll
-		// pass 'nil' as the third parameter.
 		req, err := http.NewRequest("GET", s.server.Addr+testValue.serverRequest, nil)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		// We create a ResponseRecorder (which satisfies http.ResponseWriter) to record the response.
 		rr := httptest.NewRecorder()
 
-		// Our handlers satisfy http.Handler, so we can call their ServeHTTP method
-		// directly and pass in our Request and ResponseRecorder.
 		s.server.Handler.ServeHTTP(rr, req)
 
 		// Check the status code is what we expect.
