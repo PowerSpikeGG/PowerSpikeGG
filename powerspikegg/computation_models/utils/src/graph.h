@@ -14,12 +14,11 @@ tensorflow::Node* FindNodeWithNameInGraph(tensorflow::Graph* graph,
 void LoadGraphFromDefinition(tensorflow::Scope& scope,
                              tensorflow::GraphDef& gDef);
 
+void LoadGraphFromFile(tensorflow::Scope& scope, std::string filename);
 
-void LoadGraphFromFile(tensorflow::Scope& scope,
-                        std::string filename);
-
-tensorflow::Output GenerateOutputFromNode(tensorflow::Graph* graph, std::string name); 
-}
-}
+tensorflow::Output GenerateOutputFromNode(tensorflow::Graph* graph,
+                                          std::string name);
+}  // namespace computation
+}  // namespace utils
 
 #endif  // POWERSPIKEGG_COMPUTATION_MODELS_UTILS_GRAPH_H

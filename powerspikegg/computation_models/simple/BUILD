@@ -3,7 +3,7 @@ cc_binary(
     srcs = ["src/main.cc"],
     deps = [
         ":simple_model_graph",
-        "//powerspikegg/computation-models/utils:utils"
+        "//powerspikegg/computation_models/utils",
     ],
 )
 

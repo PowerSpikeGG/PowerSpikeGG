@@ -9,10 +9,11 @@ tensorflow::Node* FindNodeWithNameInGraph(tensorflow::Graph* graph,
         if (node->name() == name) return node;
     }
 
-    return NULL;
+    return nullptr;
 }
 
-tensorflow::Output GenerateOutputFromNode(tensorflow::Graph* graph, std::string name) {
+tensorflow::Output GenerateOutputFromNode(tensorflow::Graph* graph,
+                                          std::string name) {
     tensorflow::Node* node = FindNodeWithNameInGraph(graph, name);
     return tensorflow::Output(node);
 }
@@ -27,8 +28,7 @@ void LoadGraphFromFile(tensorflow::Scope& scope, std::string filename) {
     tensorflow::GraphDef gDef;
     tensorflow::ReadBinaryProto(tensorflow::Env::Default(), filename, &gDef);
 
-    tensorflow::GraphConstructorOptions options;
-    tensorflow::ConvertGraphDefToGraph(options, gDef, scope.graph());
+    LoadGraphFromDefinition(scope, gDef);
 }
-}
-}
+}  // namespace computation
+}  // namespace utils
