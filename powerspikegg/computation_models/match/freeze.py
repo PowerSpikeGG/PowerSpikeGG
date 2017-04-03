@@ -11,13 +11,14 @@ def freeze_graph(model_folder):
     input_checkpoint = checkpoint.model_checkpoint_path
     
     # We precise the file fullname of our freezed graph
-    absolute_model_folder = "/".join(input_checkpoint.split('/')[:-1])
-    output_graph = absolute_model_folder + "/frozen_model.pb"
+    #absolute_model_folder = "/".join(input_checkpoint.split('/')[:-1])
+    #output_graph = absolute_model_folder + "/frozen_model.pb"
+    output_graph = os.path.join(args.output_folder, args.output_graph_name)
 
     # Before exporting our graph, we need to precise what is our output node
     # This is how TF decides what part of the Graph he has to keep and what part it can dump
     # NOTE: this variable is plural, because you can have multiple output nodes
-    output_node_names = "logits"
+    output_node_names = args.output_node_name
 
     # We clear devices to allow TensorFlow to control on which device it will load operations
     clear_devices = True
@@ -48,7 +49,10 @@ def freeze_graph(model_folder):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model_folder", type=str, help="Model folder to export")
+    parser.add_argument("--model_folder", type=str, default="/tmp/model", help="Model folder to export")
+    parser.add_argument("--output_folder", type=str, default="/tmp")
+    parser.add_argument("--output_graph_name", type=str, default="frozen_model.pb")
+    parser.add_argument("--output_node_name", type=str, default="logits")
     args = parser.parse_args()
 
     freeze_graph(args.model_folder)

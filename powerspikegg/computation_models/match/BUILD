@@ -8,3 +8,8 @@ py_library(
         name = "graph",
         srcs = ["graph.py"],
 )
+
+py_binary(
+        name = "freeze",
+        srcs = ["freeze.py"],
+)
