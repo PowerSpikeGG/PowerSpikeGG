@@ -1,4 +1,5 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
+load("@bazel_tools//tools/build_defs/docker:docker.bzl", "docker_build")
 
 go_library(
     name = "go_default_library",
@@ -21,6 +22,16 @@ go_library(
 go_binary(
     name = "go_gateway",
     library = ":go_default_library",
+    visibility = ["//visibility:public"],
+)
+
+docker_build(
+    name = "docker",
+    base = "@docker_debian//:image",
+    directory = "/bin",
+    entrypoint = ["/bin/go_gateway"],
+    files = [":go_gateway"],
+    ports = ["8080"],
     visibility = ["//visibility:public"],
 )
 
