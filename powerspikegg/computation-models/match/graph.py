@@ -50,7 +50,7 @@ def inference(data, hidden1_units, hidden2_units):
                          name='biases')
     hidden2 = tf.nn.relu(tf.matmul(hidden1, weights) + biases)
   # Linear
-  with tf.name_scope('softmax_linear'):
+  with tf.name_scope('result_computation'):
     weights = tf.Variable(
         tf.truncated_normal([hidden2_units, 1],
                             stddev=1.0 / math.sqrt(float(hidden2_units))),
