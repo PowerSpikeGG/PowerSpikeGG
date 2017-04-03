@@ -207,12 +207,6 @@ class SearchTest(unittest.TestCase):
             self.collection, query)
         self.assertEquals(len(deque(generator)), 1)
 
-    def test_avg_empty_query_should_fail(self):
-        """Test that an empty query should fail on the average aggregator."""
-        with self.assertRaises(AssertionError):
-            aggregator.AverageStatisticsOnQuery(
-                self.collection, service_pb2.Query())
-
     def assertDictEqualWithDebug(self, actual, expected):
         """Fails and give debug informations if dictionaries are not equals."""
         for i, key in enumerate(expected):
