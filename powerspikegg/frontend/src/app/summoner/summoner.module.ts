@@ -9,7 +9,8 @@ import { SpinnerComponent } from '../spinner/spinner.component';
 import { SummonerService } from './summoner.service';
 import { SideNavComponent } from './sidenav/sidenav.component';
 import { MatchesComponent } from './matches/matches.component';
-import { AnalysisComponent } from './matches/analysis/analysis.component';
+import { AnalysisComponent } from './matches/match/analysis/analysis.component';
+import { MatchComponent } from './matches/match/match.component';
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import { AnalysisComponent } from './matches/analysis/analysis.component';
     SpinnerComponent,
     SideNavComponent,
     MatchesComponent,
-    AnalysisComponent
+    AnalysisComponent,
+    MatchComponent
   ],
   providers: [SummonerService],
 })

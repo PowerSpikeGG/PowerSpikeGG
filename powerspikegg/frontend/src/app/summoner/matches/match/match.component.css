@@ -38,6 +38,14 @@
   transition: all 0.3s;
 }
 
+.victory .analysis-displayed {
+  border-bottom: 2px solid #2980b9;
+}
+
+.defeat .analysis-displayed {
+  border-bottom: 2px solid #e74c2c;
+}
+
 /*----------------------------------------------*/
 
 .match-data .result {
@@ -54,6 +62,7 @@
 
 /*----------------------------------------------*/
 
+.match-data .champion,
 .match-data .champion img {
   height: 100%;
 }

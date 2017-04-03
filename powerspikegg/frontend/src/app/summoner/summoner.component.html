@@ -1,8 +1,8 @@
 <app-spinner *ngIf="showSpinner"></app-spinner>
 
-<md-sidenav-container>
-  <div class="container" fxLayout.lt-xl="row">
-    <app-sidenav fxFlex.lt-xl="20"></app-sidenav>
-    <app-matches fxFlex.lt-xl="80"></app-matches>
-  </div>
-</md-sidenav-container>
+<app-sidenav></app-sidenav>
+
+<div class="summoner-container" fxLayout.gt-sm="row">
+  <app-matches fxFlex.gt-sm="80" fxFlexOffset.gt-sm="20"></app-matches>
+</div>
+
