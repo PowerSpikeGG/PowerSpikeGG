@@ -1,4 +1,8 @@
-"""
+""" Generate a graph with a neural network to apply regression (the graph is not trained)
+    
+    Args:
+        model_dir: Directory to store the created graph
+        input_size: Size of the tensor used to store the input
 """
 
 import argparse

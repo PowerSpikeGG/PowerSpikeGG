@@ -28,8 +28,7 @@ int main() {
     }
 
     // Find a node named logits (for the output)
-    //tensorflow::Node* node = computation::utils::FindNodeWithNameInGraph(root.graph(), "logits");
-    tensorflow::Output output = computation::utils::GenerateOutputFromNode(root.graph(), "logits");//tensorflow::Output(node);
+    tensorflow::Output output = computation::utils::GenerateOutputFromNode(root.graph(), "logits");
 
     // Find a node named placeholder (for the input)
     tensorflow::Node* node2 = computation::utils::FindNodeWithNameInGraph(
