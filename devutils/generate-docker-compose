@@ -1,0 +1,32 @@
+#!/bin/bash
+
+##
+# name: generate-docker-compose
+# author: Axel Martin
+# description: Generator of the docker-compose.yml file
+#
+
+RIOT_API_TOKEN_PATH="config/development/riot-api-token.txt"
+
+set -e
+
+# Ensure we are in the bazel workspace
+cd "$(bazel info workspace)"
+[ ! -f WORKSPACE ] && echo "WORKSPACE file not found. Aborting..." && exit 1
+
+# Recover Riot API token
+if [ ! -f "$RIOT_API_TOKEN_PATH" ]; then
+    exit_error "Missing Riot API token. Expected to be seen in $RIOT_API_TOKEN_PATH"
+fi
+RIOT_API_TOKEN=$(cat $RIOT_API_TOKEN_PATH)
+
+# Build the Docker images and add them to the local repository
+bazel run //powerspikegg:fetcher
+bazel run //powerspikegg:mongod
+bazel run //powerspikegg:webserver
+bazel run //powerspikegg:server
+
+# Generate the docker-compose from the template
+envsubst < devutils/docker-compose.tmpl.yml > docker-compose.yml
+
+echo "Docker compose file generated at $(pwd)/docker-compose.yml"
