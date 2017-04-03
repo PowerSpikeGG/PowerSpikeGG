@@ -18,7 +18,12 @@ docker_build(
 
 docker_build(
     name = "mongod",
-    base = "//third_party/mongod:docker",
+    base = "//third_party/mongodb:docker",
+)
+
+docker_build(
+    name = "server",
+    base = "//powerspikegg/go_gateway:docker",
 )
 
 docker_build(
