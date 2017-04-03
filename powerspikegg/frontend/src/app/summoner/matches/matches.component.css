@@ -1,287 +1,143 @@
-.main-content {
-  margin-top: 25px;
+.victory .match-data {
+  background: #daf0ff;
 }
 
-.main-content .match {
-  height: 150px;
-  margin-bottom: 15px;
+.victory .match-data:hover {
+  border-bottom: 2px solid #2980b9;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -ms-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
 }
 
-.victory .champion,
-.victory .spells,
-.victory .game,
-.victory .teams,
-.victory .items,
-.victory .develop {
-  background: #afdfff;
-  box-sizing: border-box;
-  border-bottom: 2px solid #8cb3cc;
-  border-right: 2px solid #8cb3cc;
-  border-top: 2px solid #8cb3cc;
+.defeat .match-data {
+  background: #ffe9e6;
 }
 
-.defeat .champion,
-.defeat .spells,
-.defeat .game,
-.defeat .teams,
-.defeat .items,
-.defeat .develop {
-  background: #ff9f95;
-  box-sizing: border-box;
-  border-bottom: 2px solid #cc7f77;
-  border-right: 2px solid #cc7f77;
-  border-top: 2px solid #cc7f77;
+.defeat .match-data:hover {
+  border-bottom: 2px solid #e74c2c;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -ms-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
 }
 
-.match .champion {
-  border-left: 2px solid rgba(0, 0, 0, 0.2);
-  border-right: 2px solid rgba(0, 0, 0, 0.2);
-  height: 100%;
-}
-
-.match .champion img {
-  height: 100%;
-}
-
-.match .spells {
-  height:100%;
-  overflow: hidden;
-  float: left;
-}
-
-.match .spells .spell {
-  box-sizing: border-box;
-  height:50px; width: 50px;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.2);
-}
-
-.match .game {
-  float: left;
-  height:100%; width: 220px;
-  padding-left: 30px;
-  padding-right: 30px;
-}
-
-.match .game h1 {
-  font-size: 15px;
-  margin-bottom: 8px;
-  margin-top: 12px;
-}
-
-.victory .game h1 span {
-  color: #2980b9;
-}
-
-.defeat .game h1 span {
-  color: #e74c3c;
-}
-
-.match .game .duration,
-.match .game .date {
-  color: #424242;
-  font-size: 13px;
-  margin-top: 5px;
-  padding-left: 13px;
-  position: relative;
-}
-
-.match .game .duration i,
-.match .game .date i {
-  font-size: 15px;
-  left: -5px; top: -1px;
-  position: absolute;
-}
-
-.match .game .kda {
-  font-size: 20px;
-  margin-bottom: 3px;
-  margin-left: 25px;
-  margin-top: 15px;
-  position: relative;
-}
-
-.match .game .kda img {
-  position: absolute;
-  top: 1px; left: -28px;
-  width: 34px;
-}
-
-.match .game .kda span {
-  color: #e74c3c;
-}
-
-.victory .game .kda-ratio {
-  background: #2980b9;
-  border-radius: 4px;
-  color: #ffffff;
-  font-size: 12px;
-  margin-left: 24px;
-  padding: 4px 10px;
-}
-
-.defeat .game .kda-ratio {
-  background: #e74c3c;
-  border-radius: 4px;
-  color: #ffffff;
-  font-size: 12px;
-  margin-left: 24px;
-  padding: 4px 10px;
-}
-
-.match .teams {
-  float: left;
-  height: 100%;
-  padding-left: 30px;
-  padding-right: 30px;
-}
-
-.teams .summoners {
-  float: left;
-  margin-top: 13px;
-}
-
-.teams .summoners .summoner {
-  margin-top: -2px;
-  position: relative;
-  width: 150px;
-}
-
-.teams .summoners .summoner img {
-  margin-right: 8px;
-  width: 23px;
-}
-
-.teams .summoners .summoner a {
-  color: #000;
-  font-size: 13px;
-  overflow: hidden;
-  position: absolute;
-  text-decoration: none;
-  text-overflow: ellipsis;
-  top: 5px;
-  white-space: nowrap;
-  width: 108px;
-}
-
-.match .items {
-  float: left;
-  height:100%; width: 240px;
-  padding-left: 20px;
-  padding-right: 20px;
-  position: relative;
-}
-
-.match .items .level {
-  display: inline-block;
-  margin-left: 20px;
-  margin-top: 13px;
-  position: relative;
-}
-
-.match .items .level img {
-  position: absolute;
-  top: -3px; left: -24px;
-  width: 19px;
-}
-
-.match .items .minions {
-  display: inline-block;
-  margin-left: 40px;
-  margin-top: 13px;
-  position: relative;
-}
-
-.match .items .minions img {
-  position: absolute;
-  top: -5px; left: -25px;
-  width: 34px;
-}
-
-.match .items md-grid-list {
-  margin-top: 6px;
-  padding-bottom: 0!important;
-  width: 150px;
-}
-
-.match .items md-grid-tile {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-}
-
-.match .items .item img {
-  width: 48px;
-}
-
-.match .items .ward {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-  height: 48px; width: 48px;
-  overflow: hidden;
-  position: absolute;
-  top: 25px; right: -52px;
-}
-
-.match .items .ward img {
-  width: 48px;
-}
-
-.match .develop {
+.match-data {
+  border-bottom: 2px solid #dadada;
   cursor: pointer;
-  float: left;
-  height:100%; width: 90px;
-  overflow: hidden;
-  position: relative;
+  font-size: 15px;
+  height:80px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
 }
 
-.match:hover .develop:before {
-  opacity: 0.8;
-  -webkit-transition: all 0.5s;
-  -moz-transition: all 0.5s;
-  -ms-transition: all 0.5s;
-  -o-transition: all 0.5s;
-  transition: all 0.5s;
+/*----------------------------------------------*/
+
+.match-data .result {
+  width: 30px;
 }
 
-.match .develop:before {
-  content: "";
-  opacity: 1;
-  position: absolute;
-  top: 0; bottom: 0; left: 0; right: 0;
-  z-index: 1;
-  -webkit-transition: all 0.5s;
-  -moz-transition: all 0.5s;
-  -ms-transition: all 0.5s;
-  -o-transition: all 0.5s;
-  transition: all 0.5s;
-}
-
-.victory .develop:before {
+.victory .result {
   background: #2980b9;
 }
 
-.defeat .develop:before {
+.defeat .result {
   background: #e74c3c;
 }
 
-.victory:hover .develop:before {
-  background: #2980b9;
+/*----------------------------------------------*/
+
+.match-data .champion img {
+  height: 100%;
 }
 
-.defeat:hover .develop:before {
-  background: #ff5a49;
+/*----------------------------------------------*/
+
+.match-data .time {
+  border-right: 2px solid rgba(0, 0, 0, 0.08);
+  padding-left: 25px;
+  padding-right: 2%;
+  padding-top: 10px;
+  width: 50px;
 }
 
-.match .develop i {
-  color: #fff;
-  font-size: 45px;
-  margin-left: 21px;
-  margin-top: 50px;
-  position: relative;
-  z-index: 20;
+.match-data .time .date {
+  padding-top: 8px;
 }
 
-.match .develop video {
-  position: absolute;
+.match-data .time .duration {
+  padding-top: 2px;
+}
+
+.match-data .time .duration span {
+  color: #929292;
+}
+
+/*----------------------------------------------*/
+
+.match-data .kda {
+  border-right: 2px solid rgba(0, 0, 0, 0.08);
+  line-height: 70px;
   text-align: center;
-  top: -130px; left: -273px; right: 0;
 }
+
+.match-data .kda .score {
+  display: inline-block;
+  padding-right: 5px;
+}
+
+.match-data .kda .ratio {
+  background: #e74c3c;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 12px;
+  padding: 3px 10px;
+}
+
+/*----------------------------------------------*/
+
+.match-data .farm {
+  border-right: 2px solid rgba(0, 0, 0, 0.08);
+  line-height: 70px;
+  text-align: center;
+}
+
+.match-data .farm span {
+  color: #929292;
+}
+
+/*----------------------------------------------*/
+
+.match-data .role {
+  border-right: 2px solid rgba(0, 0, 0, 0.08);
+  line-height: 70px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.match-data .role img {
+  padding-right: 5px;
+  vertical-align: middle;
+  width: 25px;
+}
+
+/*----------------------------------------------*/
+
+.match-data .lvl {
+  border-right: 2px solid rgba(0, 0, 0, 0.08);
+  line-height: 70px;
+  text-align: center;
+}
+
+.match-data .lvl span {
+  color: #929292;
+}
+
+/*----------------------------------------------*/
