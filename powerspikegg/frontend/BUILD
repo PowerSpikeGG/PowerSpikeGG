@@ -24,6 +24,7 @@ docker_build(
     name = "docker",
     base = "@docker_nginx//:image",
     directory = "/var/www",
+    ports = ["80"],
     tars = [":frontend"],
     visibility = ["//visibility:public"],
 )
