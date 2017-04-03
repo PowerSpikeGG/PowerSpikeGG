@@ -133,6 +133,22 @@ class ConverterEndToEndTest(unittest.TestCase):
         self.assertEqual(
             participant.summoner.region,
             constants_pb2.Region.Value(SAMPLES["match"]["region"]))
+        self.assertEqual(
+            participant.summoner.league,
+            constants_pb2.League.Value(
+                json_participant["highestAchievedSeasonTier"]))
+        self.assertEqual(
+            participant.champion.id, json_participant["championId"])
+
+        if json_participant["timeline"]["lane"] == "BOTTOM":
+            if json_participant["timeline"]["role"] == "DUO_CARRY":
+                self.assertEqual(participant.role, constants_pb2.ADCARRY)
+            else:
+                self.assertEqual(participant.role, constants_pb2.SUPPORT)
+        else:
+            self.assertEqual(participant.role, constants_pb2.Role.Value(
+                json_participant["timeline"]["lane"]))
+        # TODO(funkysayu) test the champion name once it is supported.
         # TODO(funkysayu) test the summoner spells once it is supported.
         # TODO(funkysayu) test items once it is supported.
 

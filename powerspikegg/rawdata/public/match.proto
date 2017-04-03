@@ -101,6 +101,12 @@ message Participant {
 
     // Player statistics at the end of the game.
     PlayerStatistics statistics = 9;
+
+    // Champion played in game
+    Champion champion = 10;
+
+    // Role played (top, jungle...)
+    Role role = 11;
 }
 
 // Player statistics at the end of the game.

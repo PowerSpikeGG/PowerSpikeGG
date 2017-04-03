@@ -36,6 +36,17 @@ class ConstantSolver():
         # TODO(funkysayu) fetch the summoner spell name.
         return constants_pb2.SummonerSpell(id=spell_id)
 
+    def get_champion_by_id(self, champion_id):
+        """Get a champion from its ID.
+
+        Parameters:
+            champion_id: champion ID as registered in the Riot API.
+        Returns:
+            A Champion message containing the ID and the name of the champion.
+        """
+        # TODO(funkysayu): fetch the champion name.
+        return constants_pb2.Champion(id=champion_id)
+
 
 class JSONConverter():
     """Converts JSON data fetched from the Riot API to protocol buffer.
@@ -146,14 +157,32 @@ class JSONConverter():
         for participant_json in json_entry["participants"]:
             stats = self.convert_player_statistics(participant_json["stats"])
 
+            # TODO(funkysayu): The current assigned league is the highest
+            # achieved league of the player. This should be the current league.
+            summoner = identities[participant_json["participantId"]]
+            summoner.league = constants_pb2.League.Value(
+                participant_json["highestAchievedSeasonTier"])
+
+            if participant_json["timeline"]["lane"] == "BOTTOM":
+                if participant_json["timeline"]["role"] == "DUO_CARRY":
+                    role = constants_pb2.ADCARRY
+                else:
+                    role = constants_pb2.SUPPORT
+            else:
+                role = constants_pb2.Role.Value(
+                    participant_json["timeline"]["lane"])
+
             participant = match_pb2.Participant(
                 id=participant_json["participantId"],
-                summoner=identities[participant_json["participantId"]],
+                summoner=summoner,
                 summoner_spell_1=self.game_constant.get_summoner_spell_by_id(
                     participant_json["spell1Id"]),
                 summoner_spell_2=self.game_constant.get_summoner_spell_by_id(
                     participant_json["spell2Id"]),
                 statistics=stats,
+                champion=self.game_constant.get_champion_by_id(
+                    participant_json["championId"]),
+                role=role,
             )
 
             teams.setdefault(participant_json["teamId"], []).append(
