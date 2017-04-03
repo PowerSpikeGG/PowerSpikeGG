@@ -7,12 +7,13 @@
 
 import argparse
 
-from graph import generate_graph
+from graph import GraphBuilder
 
 FLAGS = None
 
 def main():
-    generate_graph(FLAGS.model_dir, FLAGS.input_size)
+    builder = GraphBuilder(FLAGS.input_size)
+    builder.generate_graph(FLAGS.model_dir)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
