@@ -43,7 +43,7 @@ class MongoDBWatcher():
 
     @classmethod
     def register_monitorable_collection(cls, database, collection):
-        """Registers a collection name into the database."""
+        """Registers a collection to monitor."""
         counter = mongodb_counters.labels(
             database=database, collection=collection)
         cls.watched_collections[(database, collection)] = counter
@@ -61,7 +61,6 @@ class MongoDBWatcher():
         mongodb_state.set(1)
 
         for (db, collection), counter in self.watched_collections.items():
-            print(client[db][collection].count())
             counter.set(client[db][collection].count())
 
     def get_client(self):
