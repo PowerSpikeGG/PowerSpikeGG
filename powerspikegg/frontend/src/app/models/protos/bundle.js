@@ -489,6 +489,7 @@ $root.game = (function() {
              * @type {Object}
              * @property {number} [id] SummonerSpell id.
              * @property {string} [name] SummonerSpell name.
+             * @property {string} [key] SummonerSpell key.
              */
 
             /**
@@ -516,6 +517,12 @@ $root.game = (function() {
             SummonerSpell.prototype.name = "";
 
             /**
+             * SummonerSpell key.
+             * @type {string|undefined}
+             */
+            SummonerSpell.prototype.key = "";
+
+            /**
              * Creates a new SummonerSpell instance using the specified properties.
              * @param {game.leagueoflegends.SummonerSpell$Properties=} [properties] Properties to set
              * @returns {game.leagueoflegends.SummonerSpell} SummonerSpell instance
@@ -537,6 +544,8 @@ $root.game = (function() {
                     writer.uint32(/* id 1, wireType 0 =*/8).int32(message.id);
                 if (message.name != null && message.hasOwnProperty("name"))
                     writer.uint32(/* id 2, wireType 2 =*/18).string(message.name);
+                if (message.key != null && message.hasOwnProperty("key"))
+                    writer.uint32(/* id 3, wireType 2 =*/26).string(message.key);
                 return writer;
             };
 
@@ -570,6 +579,9 @@ $root.game = (function() {
                         break;
                     case 2:
                         message.name = reader.string();
+                        break;
+                    case 3:
+                        message.key = reader.string();
                         break;
                     default:
                         reader.skipType(tag & 7);
@@ -606,6 +618,9 @@ $root.game = (function() {
                 if (message.name != null)
                     if (!$util.isString(message.name))
                         return "name: string expected";
+                if (message.key != null)
+                    if (!$util.isString(message.key))
+                        return "key: string expected";
                 return null;
             };
 
@@ -622,6 +637,8 @@ $root.game = (function() {
                     message.id = object.id | 0;
                 if (object.name != null)
                     message.name = String(object.name);
+                if (object.key != null)
+                    message.key = String(object.key);
                 return message;
             };
 
@@ -647,11 +664,14 @@ $root.game = (function() {
                 if (options.defaults) {
                     object.id = 0;
                     object.name = "";
+                    object.key = "";
                 }
                 if (message.id != null && message.hasOwnProperty("id"))
                     object.id = message.id;
                 if (message.name != null && message.hasOwnProperty("name"))
                     object.name = message.name;
+                if (message.key != null && message.hasOwnProperty("key"))
+                    object.key = message.key;
                 return object;
             };
 
@@ -877,6 +897,7 @@ $root.game = (function() {
              * @type {Object}
              * @property {number} [id] Champion id.
              * @property {string} [name] Champion name.
+             * @property {string} [key] Champion key.
              */
 
             /**
@@ -904,6 +925,12 @@ $root.game = (function() {
             Champion.prototype.name = "";
 
             /**
+             * Champion key.
+             * @type {string|undefined}
+             */
+            Champion.prototype.key = "";
+
+            /**
              * Creates a new Champion instance using the specified properties.
              * @param {game.leagueoflegends.Champion$Properties=} [properties] Properties to set
              * @returns {game.leagueoflegends.Champion} Champion instance
@@ -925,6 +952,8 @@ $root.game = (function() {
                     writer.uint32(/* id 1, wireType 0 =*/8).int32(message.id);
                 if (message.name != null && message.hasOwnProperty("name"))
                     writer.uint32(/* id 2, wireType 2 =*/18).string(message.name);
+                if (message.key != null && message.hasOwnProperty("key"))
+                    writer.uint32(/* id 3, wireType 2 =*/26).string(message.key);
                 return writer;
             };
 
@@ -958,6 +987,9 @@ $root.game = (function() {
                         break;
                     case 2:
                         message.name = reader.string();
+                        break;
+                    case 3:
+                        message.key = reader.string();
                         break;
                     default:
                         reader.skipType(tag & 7);
@@ -994,6 +1026,9 @@ $root.game = (function() {
                 if (message.name != null)
                     if (!$util.isString(message.name))
                         return "name: string expected";
+                if (message.key != null)
+                    if (!$util.isString(message.key))
+                        return "key: string expected";
                 return null;
             };
 
@@ -1010,6 +1045,8 @@ $root.game = (function() {
                     message.id = object.id | 0;
                 if (object.name != null)
                     message.name = String(object.name);
+                if (object.key != null)
+                    message.key = String(object.key);
                 return message;
             };
 
@@ -1035,11 +1072,14 @@ $root.game = (function() {
                 if (options.defaults) {
                     object.id = 0;
                     object.name = "";
+                    object.key = "";
                 }
                 if (message.id != null && message.hasOwnProperty("id"))
                     object.id = message.id;
                 if (message.name != null && message.hasOwnProperty("name"))
                     object.name = message.name;
+                if (message.key != null && message.hasOwnProperty("key"))
+                    object.key = message.key;
                 return object;
             };
 
