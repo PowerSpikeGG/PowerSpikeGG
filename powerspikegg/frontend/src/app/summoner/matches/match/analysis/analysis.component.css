@@ -3,6 +3,13 @@
   width: 100%;
 }
 
+.radar-chart-container {
+  border-right: 2px solid #dadada;
+  display: block!important;
+  padding-bottom: 70px;
+  padding-top: 30px;
+}
+
 .game-table h1 {
   background: #2980b9;
   border-radius: 5px;
