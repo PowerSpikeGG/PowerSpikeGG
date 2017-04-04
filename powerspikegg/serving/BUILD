@@ -1,7 +1,18 @@
 package(default_visibility = ["//visibility:public"])
 
+load("@bazel_tools//tools/build_defs/docker:docker.bzl", "docker_build")
 load("@protobuf//:protobuf.bzl", "cc_proto_library")
 load("//powerspikegg:powerspikegg.bzl", "psgg_proto_library")
+
+docker_build(
+    name = "docker",
+    base = "@docker_debian//:image",
+    directory = "/bin",
+    entrypoint = ["/bin/main"],
+    files = [":main"],
+    ports = ["50051"],
+    visibility = ["//visibility:public"],
+)
 
 cc_binary(
     name = "main",
@@ -17,10 +28,21 @@ cc_library(
 )
 
 cc_library(
+    name = "converter",
+    srcs = ["src/converter.cc"],
+    hdrs = ["src/converter.h"],
+    deps = [
+        ":match_computation_cc",
+        "//powerspikegg/rawdata/public:leagueoflegends_cc",
+    ],
+)
+
+cc_library(
     name = "computation_service",
     srcs = ["src/match_computation.cc"],
     hdrs = ["src/match_computation.h"],
     deps = [
+        ":converter",
         ":match_computation_cc",
         "//external:gflags",
         "//powerspikegg/computation_models/utils",
@@ -46,7 +68,7 @@ cc_test(
     ],
     linkstatic = 1,
     deps = [
-        ":match_computation_cc",
+        ":converter",
         ":server",
         "@gtest//:lib",
     ],
