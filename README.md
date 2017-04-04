@@ -39,5 +39,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 - Gabrielle Devaux (contributor)
 - Rudy Ménard (contributor)
 
- [devstackdoc][docs/dev-stack.md]
- [contribdoc][docs/contributors/00-Contributors.md]
+[devstackdoc]: docs/dev-stack.md
+[contribdoc]: docs/contributors/00-Contributors.md
