@@ -11,6 +11,14 @@ source "$(dirname "${BASH_SOURCE[0]}")/../lib/bash/logging.bash"
 source "$(dirname "${BASH_SOURCE[0]}")/../lib/bash/prompt.bash"
 
 
+PreCommit::CPPChecks () {
+    local filepath="$1"
+
+    which cpplint > /dev/null || Log::Failure "cpplint not found. Install it with pip install cpplint."
+
+    cpplint $filepath || Log::Error "invalid C++ formating"
+}
+
 # Rules checking Go code validity
 PreCommit::GoChecks () {
     local filepath="$1"
@@ -94,6 +102,8 @@ main () {
         Log::ResetErrorCounter
         if [ -f "$filepath" ]; then
             case "$filepath" in
+                *.cpp|*.cc|*.h|*.hpp) PreCommit::CPPChecks "$filepath";;
+                *.h) PreCommit::CPPChecks "$filepath";;
                 *.go) PreCommit::GoChecks "$filepath";;
                 *.py) PreCommit::PythonChecks "$filepath";;
                 *.ts) PreCommit::TypeScriptChecks "$filepath";;
