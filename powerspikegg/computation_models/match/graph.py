@@ -75,7 +75,7 @@ class GraphBuilder:
             softmax_linear: Output tensor with the computed logits.
         """
         logits = self.createNetwork(data, [50, 50, 50, 50, 50, 1])
-        return logits
+        return tf.identity(logits, name="logits")
 
     def loss(self, logits, labels):
         """Calculates the loss from the logits and the labels.
