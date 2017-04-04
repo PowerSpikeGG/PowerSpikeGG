@@ -50,6 +50,7 @@ and bring the docker composed stack.
 
 [bazel]: https://bazel.build/
 [docker]: https://www.docker.com/
+[docker-compose]: https://docs.docker.com/compose/
 [npm]: https://www.npmjs.com/
-[python-pip]: https://pip.pypa.io/en/stable/
+[pip]: https://pip.pypa.io/en/stable/
 

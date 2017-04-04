@@ -40,4 +40,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 - Rudy Ménard (contributor)
 
 [devstackdoc]: docs/dev-stack.md
-[contribdoc]: docs/contributors/00-Contributors.md
+[contribdoc]: docs/contributors/00-Contributing.md
