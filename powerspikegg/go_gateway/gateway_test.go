@@ -32,7 +32,7 @@ type mockMatchFetcherServer struct {
 	// matchResponse contains the response to send back to the client for a summoner (stream of match)
 	summonerResponse []*lolpb.MatchReference
 	// matchResaggregationResponseponse contains the response to send back to the client for an aggregation request
-	aggregationResponse []*fetcherpb.AggregatedStatistics
+	aggregationResponse *fetcherpb.AggregatedStatistics
 
 	// err contains an eventual error to throw back to the client
 	err error
@@ -121,7 +121,7 @@ func TestGateway(t *testing.T) {
 					Id: 3122561984,
 				},
 			},
-			expectedResponse: "{\"results\": [{\"id\":3.122561986e+09,\"timestamp\":0,\"version\":\"\",\"plateformId\":\"\",\"region\":\"BR\",\"queueType\":\"TEAM_BUILDER_RANKED_SOLO\",\"season\":\"SEASON2017\"}]}",
+			expectedResponse: "{\"results\": [{\"id\":3.122561986e+09,\"timestamp\":0,\"version\":\"\",\"plateformId\":\"\",\"region\":\"BR\",\"queueType\":\"TEAM_BUILDER_RANKED_SOLO\",\"season\":\"SEASON2017\"},{\"id\":3.122561984e+09,\"timestamp\":0,\"version\":\"\",\"plateformId\":\"\",\"region\":\"BR\",\"queueType\":\"TEAM_BUILDER_RANKED_SOLO\",\"season\":\"SEASON2017\"}]}",
 			expectedStatus:   http.StatusOK,
 		},
 		// TODO: add some failing tests
@@ -153,18 +153,20 @@ func TestGateway(t *testing.T) {
 		expectedResponse string
 		expectedStatus   int
 	}{
-		name:          "simple aggregation query",
-		serverRequest: "/api/aggregation/SILVER/120/23510386/EUW",
-		serverResponse: &fetcherpb.AggregatedStatistics{
-			MatchPool: 3,
-			Stats: &lolpb.PlayerStatistics{
-				Kills:   23,
-				Deaths:  3,
-				Assists: 6,
+		{
+			name:          "simple aggregation query",
+			serverRequest: "/api/aggregation/SILVER/120/23510386/EUW",
+			serverResponse: &fetcherpb.AggregatedStatistics{
+				MatchPool: 3,
+				Stats: &lolpb.PlayerStatistics{
+					Kills:   23,
+					Deaths:  3,
+					Assists: 6,
+				},
 			},
+			expectedResponse: "{\"matchPool\":3,\"stats\":{\"kills\":23,\"deaths\":3,\"assists\":6,\"championLevel\":0,\"totalHeal\":0,\"largestCriticalStrike\":0,\"goldEarned\":0,\"goldSpent\":0,\"minionsKilled\":0,\"neutralMinionsKilled\":0,\"neutralMinionsKilledEnnemyJungle\":0,\"neutralMinionsKilledTeamJungle\":0,\"sightWardsBought\":0,\"visionWardsBought\":0,\"wardsPlaced\":0,\"wardsKilled\":0,\"doubleKills\":0,\"tripleKills\":0,\"quadraKills\":0,\"pentaKills\":0,\"killingSprees\":0,\"largestKillingSpree\":0,\"largestMultiKill\":0,\"inhibitorKills\":0,\"towerKills\":0,\"firstBloodAssist\":false,\"firstBloodKill\":false,\"firstInhibitorKill\":false,\"firstTowerAssist\":false,\"firstTowerKill\":false,\"totalCrowdControl\":0,\"totalUnitsHealed\":0}}", // TODO: verify
+			expectedStatus:   http.StatusOK,
 		},
-		expectedResponse: "{\"matchPool\":3,\"stats\":{\"kills\":23,\"deaths\":3,\"assists\":6}}", // TODO: verify
-		expectedStatus:   http.StatusOK,
 	}
 
 	matchFetcherServer, err := newMockMatchFetcherServer()
