@@ -27,7 +27,7 @@ class GraphTrainer:
         self.placeholder = tf.get_collection('placeholder')[0]
         self.eval_op = tf.get_collection('eval_op')[0]
 
-    def train(self, data_fetch_fn, iteration):
+    def train(self, data, answer):
         """ Train the variable of a graph using the provided data
 
             Args:
@@ -42,12 +42,10 @@ class GraphTrainer:
             Return: None
 
         """
-        for step in range(iteration):
-            data_and_answer = data_fetch_fn()
-            self.sess.run(self.train_op, feed_dict={
-                    self.placeholder: data_and_answer[0],
-                    self.answer: data_and_answer[1]
-            })
+        self.sess.run(self.train_op, feed_dict={
+                    self.placeholder: data,
+                    self.answer: answer
+        })
 
     def evaluate(self, inputs, answers):
         """ Evaluate the performance of a model on the provided data
