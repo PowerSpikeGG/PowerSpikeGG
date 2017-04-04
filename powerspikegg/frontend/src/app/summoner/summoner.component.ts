@@ -24,8 +24,8 @@ export class SummonerComponent implements OnInit {
     this.route.params
       .subscribe(params => {
         this.getSummonerDataByName({
-          'name': params.name,
-          'region': params.region
+          'name': params['name'],
+          'region': params['region']
         });
       })
   }
