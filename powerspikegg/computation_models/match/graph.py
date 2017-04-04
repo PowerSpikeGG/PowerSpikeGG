@@ -137,14 +137,15 @@ class GraphBuilder:
         with tf.Graph().as_default():
 
             # Tensor containing the input values
-            input = tf.placeholder(tf.float32, shape=(None, self.input_size),
-                                   name="placeholder")
+            placeholder = tf.placeholder(tf.float32,
+                                         shape=(None, self.input_size),
+                                         name="placeholder")
 
             # Tensor containing the correct answer for the input
             answer = tf.placeholder(tf.float32, shape=(None, 1), name="answer")
 
             # Result of the computation of the neural network
-            logits = self.inference(input, 5, 5)
+            logits = self.inference(placeholder, 5, 5)
 
             # Squared sum of the difference between the predicted value
             # and the answers
@@ -166,6 +167,14 @@ class GraphBuilder:
             # Save the state of the graph and the variables
             saver = tf.train.Saver()
 
+            # Add variables to collections to load them later
+            tf.add_to_collection('placeholder', placeholder)
+            tf.add_to_collection('answer', answer)
+            tf.add_to_collection('logits', logits)
+            tf.add_to_collection('loss_op', loss_op)
+            tf.add_to_collection('train_op', train_op)
+            tf.add_to_collection('eval_op', eval_op)
+
             # Create a session to execute the graph
             with tf.Session() as sess:
 
@@ -179,4 +188,5 @@ class GraphBuilder:
                 # Save the model
                 checkpoint_file = os.path.join(model_directory, "model.ckpt")
 
-                saver.save(sess, checkpoint_file, 0)
+                saver.save(sess, checkpoint_file)
+                saver.export_meta_graph(checkpoint_file + '.meta')
