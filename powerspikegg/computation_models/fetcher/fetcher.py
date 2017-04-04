@@ -3,11 +3,19 @@
 Fetch random sample from the Riot fetcher to train TensorFlow models
 
 """
+
+import gflags
 import grpc
 import numpy
 
 from powerspikegg.rawdata.fetcher import service_pb2
 from powerspikegg.rawdata.public import constants_pb2
+
+
+FLAGS = gflags.FLAGS
+
+FLAGS.DEFINE_string("fetcher_address", "127.0.0.1:50001",
+                    "Address of the fetcher.")
 
 
 class ComputationFetcher:
@@ -22,7 +30,8 @@ class ComputationFetcher:
         Parameters:
             grpc_address rawdata fetcher gRPC server address
         """
-        self.channel = grpc.insecure_channel(grpc_address)
+        if self.channel is None:
+            ComputationFetcher.channel = grpc.insecure_channel(grpc_address)
         self.stub = service_pb2.MatchFetcherStub(self.channel)
 
     def fetch_random_sample(self, sample_size, league=None):
@@ -94,7 +103,7 @@ def fetch_and_sanitize(fetcher_address, sample_size):
     Returns:
         sample_size * 5 labelled statistics
     """
-    fetcher = ComputationFetcher(fetcher_address)
+    fetcher = ComputationFetcher(FLAGS.fetcher_address)
 
     for match_pb in fetcher.fetch_random_sample(sample_size):
         for participant_stats in _sanitize_match(match_pb):
