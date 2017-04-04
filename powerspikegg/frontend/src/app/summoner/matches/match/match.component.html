@@ -1,22 +1,22 @@
-<div class="match victory" fxLayout.gt-sm="column"> <!-- TODO: victory or defeat class -->
+<div class="match victory" fxLayout="column"> <!-- TODO: victory or defeat class -->
 
   <div class="match-data"
        (click)="toggleMatchDisplay()"
        [ngClass]="{'analysis-displayed':displayMatchAnalysis}"
-       fxLayout.gt-sm="row">
+       fxLayout="row">
     <div class="result"></div>
     <div class="champion"><img src="//ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/{{participant.champion.key}}.png" alt=""></div>
     <div class="time">
       <div class="date">{{match.timestamp | date: "dd/MM"}}</div>
       <div class="duration"> {{match.detail.duration | matchDuration}} <span>m</span></div>
     </div>
-    <div class="kda" fxFlex.gt-sm>
+    <div class="kda" fxFlex>
       <div class="score">{{participant.statistics.kills}} / {{participant.statistics.assists}} / {{participant.statistics.deaths}}</div>
       <span class="ratio">NOPE KDA</span> <!-- TODO: KDA compute and color changing -->
     </div>
-    <div class="farm" fxFlex.gt-sm>{{participant.statistics.minionsKilled + participant.statistics.neutralMinionsKilled}} <span>CS</span></div>
-    <div class="role" fxFlex.gt-sm><img src="../../../assets/img/{{participant.role}}.png">{{participant.role}}</div>
-    <div class="lvl" fxFlex.gt-sm><span>LVL</span> {{participant.statistics.championLevel}}</div>
+    <div class="farm" fxFlex>{{participant.statistics.minionsKilled + participant.statistics.neutralMinionsKilled}} <span>CS</span></div>
+    <div class="role" fxFlex><img src="../../../assets/img/{{participant.role}}.png">{{participant.role}}</div>
+    <div class="lvl" fxFlex><span>LVL</span> {{participant.statistics.championLevel}}</div>
   </div>
 
   <app-analysis *ngIf="displayMatchAnalysis" [participant]="participant"></app-analysis>
