@@ -5,7 +5,6 @@ import Summoner = game.leagueoflegends.Summoner;
 import { GatewayService } from '../services/gateway.service';
 import { SummonerQuery } from '../models/gateway-queries';
 
-
 @Component({
   selector: 'app-summoner',
   templateUrl: './summoner.component.html',
@@ -25,8 +24,8 @@ export class SummonerComponent implements OnInit {
     this.route.params
       .subscribe(params => {
         this.getSummonerDataByName({
-          "name": params['name'],
-          "region": params['region']
+          'name': params.name,
+          'region': params.region
         });
       })
   }
