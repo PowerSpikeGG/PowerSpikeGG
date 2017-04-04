@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { MaterialModule } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { FlexLayoutModule } from "@angular/flex-layout";
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { ChartsModule } from 'ng2-charts';
 
 import { SummonerComponent }   from './summoner.component';
@@ -11,7 +11,7 @@ import { SideNavComponent } from './sidenav/sidenav.component';
 import { MatchesComponent } from './matches/matches.component';
 import { AnalysisComponent } from './matches/match/analysis/analysis.component';
 import { MatchComponent } from './matches/match/match.component';
-import { GatewayService } from "app/services/gateway.service";
+import { GatewayService } from 'app/services/gateway.service';
 import { MatchDurationPipe } from './matches/match/match-duration.pipe';
 
 @NgModule({
@@ -20,7 +20,7 @@ import { MatchDurationPipe } from './matches/match/match-duration.pipe';
     FormsModule,
     MaterialModule,
     FlexLayoutModule,
-    ChartsModule
+    ChartsModule,
   ],
   exports: [],
   declarations: [
@@ -30,7 +30,7 @@ import { MatchDurationPipe } from './matches/match/match-duration.pipe';
     MatchesComponent,
     AnalysisComponent,
     MatchComponent,
-    MatchDurationPipe
+    MatchDurationPipe,
   ],
   providers: [GatewayService],
 })
