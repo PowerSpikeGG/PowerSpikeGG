@@ -61,7 +61,9 @@ func (gws *gatewayServer) summonerHandler(w http.ResponseWriter, r *http.Request
 			break
 		}
 
-		marshaler := &jsonpb.Marshaler{}
+		marshaler := &jsonpb.Marshaler{
+			EmitDefaults: true,
+		}
 		json, err := marshaler.MarshalToString(match)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("%s: marshaling error: %v", match, err), http.StatusInternalServerError)
