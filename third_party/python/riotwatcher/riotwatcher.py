@@ -317,8 +317,8 @@ class RiotWatcher(object):
     @staticmethod
     def sanitized_name(name):
         if sys.version_info > (3, 0):
-            return name.replace(u' ', u'').lower()
-        return name.decode("utf-8").replace(u' ', u'').lower()
+            return name
+        return name.decode("utf-8")
 
     # champion-v1.2
     def _champion_request(self, end_url, region, **kwargs):
@@ -558,12 +558,16 @@ class RiotWatcher(object):
             ranked_queues = u','.join(ranked_queues)
         if season is not None and not isinstance(season, str):
             season = u','.join(season)
+
+        # TODO(funkysayu): There's a bug on the Riot API endpoint, where
+        # 'seasons' parameter is badly handled. To fix this, we currently
+        # use 'season' parameter instead of its plural.
         return self._match_list_request(
             u'{summoner_id}'.format(summoner_id=summoner_id),
             region,
             championIds=champion_ids,
             rankedQueues=ranked_queues,
-            seasons=season,
+            season=season,
             beginTime=begin_time,
             endTime=end_time,
             beginIndex=begin_index,
