@@ -5,20 +5,20 @@
        [ngClass]="{'analysis-displayed':displayMatchAnalysis}"
        fxLayout.gt-sm="row">
     <div class="result"></div>
-    <div class="champion"><img src="//ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/Velkoz.png" alt=""></div>
+    <div class="champion"><img src="//ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/id/{{participant.champion.id}}.png" alt=""></div>
     <div class="time">
-      <div class="date">02/04</div>
-      <div class="duration">35 <span>m</span></div>
+      <div class="date">{{match.timestamp | date: "dd/MM"}}</div>
+      <div class="duration"> {{match.detail.duration | matchDuration}} <span>m</span></div>
     </div>
     <div class="kda" fxFlex.gt-sm>
-      <div class="score">5 / 0 / 5</div>
-      <span class="ratio">3.50 KDA</span>
+      <div class="score">{{participant.statistics.kills}} / {{participant.statistics.assists}} / {{participant.statistics.deaths}}</div>
+      <span class="ratio">NOPE KDA</span> <!-- TODO: KDA compute and color changing -->
     </div>
-    <div class="farm" fxFlex.gt-sm>230 <span>CS</span></div>
-    <div class="role" fxFlex.gt-sm><img src="../../../assets/img/mage.png">MID</div>
-    <div class="lvl" fxFlex.gt-sm><span>LVL</span> 18</div>
+    <div class="farm" fxFlex.gt-sm>{{participant.statistics.minionsKilled + participant.statistics.neutralMinionsKilled}} <span>CS</span></div>
+    <div class="role" fxFlex.gt-sm><img src="../../../assets/img/{{participant.role}}.png">{{participant.role}}</div>
+    <div class="lvl" fxFlex.gt-sm><span>LVL</span> {{participant.statistics.championLevel}}</div>
   </div>
 
-  <app-analysis *ngIf="displayMatchAnalysis"></app-analysis>
+  <app-analysis *ngIf="displayMatchAnalysis" [participant]="participant"></app-analysis>
 
 </div>

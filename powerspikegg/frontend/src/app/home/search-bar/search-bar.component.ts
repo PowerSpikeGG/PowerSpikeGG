@@ -9,8 +9,10 @@ import { Router } from '@angular/router';
 export class SearchBarComponent implements OnInit {
 
   private summonerName: string;
+  private region: string;
 
   constructor(private router: Router) {
+    this.region = "EUW" // TODO: remove this and link with location picker
   }
 
   ngOnInit() {
@@ -18,7 +20,7 @@ export class SearchBarComponent implements OnInit {
 
   sendSummonerRequest() {
     if (this.summonerName) {
-      this.router.navigateByUrl('/summoner/' + this.summonerName);
+      this.router.navigateByUrl('/summoner/' + this.summonerName + '/' + this.region);
     }
   }
 

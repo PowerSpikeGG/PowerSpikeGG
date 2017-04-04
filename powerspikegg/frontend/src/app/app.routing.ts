@@ -8,7 +8,7 @@ import { SummonerComponent } from './summoner/summoner.component';
 const appRoutes: Routes = [
   {path: '', redirectTo: '/home', pathMatch: 'full'},
   {path: 'home', component: HomeComponent},
-  {path: 'summoner/:name', component: SummonerComponent},
+  {path: 'summoner/:name/:region', component: SummonerComponent},
   {path: '**', component: PageNotFoundComponent}
 ];
 
