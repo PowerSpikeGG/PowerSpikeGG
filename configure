@@ -1,0 +1,37 @@
+#!/bin/bash
+
+##
+# name: configure
+# author: Axel Martin (for PowerSpikeGG)
+# brief: Configure the dependencies of PowerSpikeGG.
+#
+
+source "$(dirname "${BASH_SOURCE[0]}")/devutils/lib/bash/logging.bash"
+
+
+main () {
+    cd "$(dirname "${BASH_SOURCE[0]}")"
+    [ ! -f "WORKSPACE" ] && Log::Fatal "unable to find the workspace directory."
+
+    # Fetch and configure dependencies
+    git submodule update
+    if [ ! -f "third_party/tensorflow/.configured" ]; then
+        Log::Notice "Starting the Tensorflow configuration"
+        cd third_party/tensorflow
+        ./configure
+    else
+        Log::Notice "Skipping Tensorflow configuration. If you want to run it"
+        Log::Notice "again, run: rm third_party/tensorflow/.configured"
+    fi
+    Log::Success "Done configuring tensorflow"
+
+    # Install python dependencies
+    # TODO(funkysayu): Take a look if we can remove those.
+    Log::Notice "Installing third-party dependencies"
+    pip install --user numpy tensorflow grpcio
+    Log::Success "Done installing third party dependencies"
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main "$@"
+fi

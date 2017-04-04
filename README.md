@@ -4,6 +4,13 @@ PowerSpikeGG (a.k.a powerspike.gg) is a project helping League of Legends
 player to improve their skill, by highlighting pro and cons in their
 gameplay and eventually providing helpful tips to improve.
 
+## Development
+
+If you want to contribute, please refere to the
+[contribution documentation][contribdoc].
+If you want to bring the development stack alive, please refere to the
+[development stack documentation][devstackdoc].
+
 ## License
 
 PowerSpikeGG, webapp to help the MOBA players to improve their skill
@@ -31,3 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 - Pierre-Baptiste Bouillon (co-founder)
 - Gabrielle Devaux (contributor)
 - Rudy Ménard (contributor)
+
+[devstackdoc][docs/dev-stack.md]
+[contribdoc][docs/contributors/00-Contributors.md]
