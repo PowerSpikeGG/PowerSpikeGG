@@ -103,7 +103,6 @@ main () {
         if [ -f "$filepath" ]; then
             case "$filepath" in
                 *.cpp|*.cc|*.h|*.hpp) PreCommit::CPPChecks "$filepath";;
-                *.h) PreCommit::CPPChecks "$filepath";;
                 *.go) PreCommit::GoChecks "$filepath";;
                 *.py) PreCommit::PythonChecks "$filepath";;
                 *.ts) PreCommit::TypeScriptChecks "$filepath";;
