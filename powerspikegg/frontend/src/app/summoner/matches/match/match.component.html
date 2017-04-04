@@ -1,11 +1,11 @@
-<div class="match victory" fxLayout.gt-sm="column">
+<div class="match victory" fxLayout.gt-sm="column"> <!-- TODO: victory or defeat class -->
 
   <div class="match-data"
        (click)="toggleMatchDisplay()"
        [ngClass]="{'analysis-displayed':displayMatchAnalysis}"
        fxLayout.gt-sm="row">
     <div class="result"></div>
-    <div class="champion"><img src="//ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/id/{{participant.champion.id}}.png" alt=""></div>
+    <div class="champion"><img src="//ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/{{participant.champion.key}}.png" alt=""></div>
     <div class="time">
       <div class="date">{{match.timestamp | date: "dd/MM"}}</div>
       <div class="duration"> {{match.detail.duration | matchDuration}} <span>m</span></div>

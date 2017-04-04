@@ -264,6 +264,7 @@ export namespace game {
         type SummonerSpell$Properties = {
             id?: number;
             name?: string;
+            key?: string;
         };
 
         /**
@@ -293,6 +294,12 @@ export namespace game {
              * @type {string|undefined}
              */
             public name?: string;
+
+            /**
+             * SummonerSpell key.
+             * @type {string|undefined}
+             */
+            public key?: string;
 
             /**
              * Creates a new SummonerSpell instance using the specified properties.
@@ -504,6 +511,7 @@ export namespace game {
         type Champion$Properties = {
             id?: number;
             name?: string;
+            key?: string;
         };
 
         /**
@@ -533,6 +541,12 @@ export namespace game {
              * @type {string|undefined}
              */
             public name?: string;
+
+            /**
+             * Champion key.
+             * @type {string|undefined}
+             */
+            public key?: string;
 
             /**
              * Creates a new Champion instance using the specified properties.

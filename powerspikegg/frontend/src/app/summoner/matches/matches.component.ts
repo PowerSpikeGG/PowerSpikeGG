@@ -9,19 +9,19 @@ import Region = game.leagueoflegends.Region;
 
 @Component({
   selector: 'app-matches',
-  templateUrl: './matches.component.html'
+  templateUrl: './matches.component.html',
 })
 export class MatchesComponent implements OnInit {
 
-  private matches: MatchReference[];
   @Input() summoner: Summoner;
+  private matches: MatchReference[];
 
   constructor(private gatewayService: GatewayService, private snackBar: MdSnackBar) { }
 
   ngOnInit() {
     this.gatewayService.getSummonerMatches({name: this.summoner.name, region: this.summoner.region.toString()}).subscribe(
       (matches) => this.matches = matches.filter(match => match.detail.duration >= 60 * 4), // filtering remakes
-      (error) =>  this.snackBar.open('[ERROR] Cannot retrieve matches of ' + this.summoner.name + '.', 'Ok')
+      (error) =>  this.snackBar.open('[ERROR] Cannot retrieve matches of ' + this.summoner.name + '.', 'Ok'),
     );
   }
 
