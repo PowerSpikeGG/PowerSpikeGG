@@ -26,5 +26,5 @@ def main():
 
 
 if __name__ == '__main__':
-    FLAGS([sys.argv])
+    FLAGS(sys.argv)
     main()
