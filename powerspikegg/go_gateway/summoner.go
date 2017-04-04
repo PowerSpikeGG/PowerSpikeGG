@@ -73,5 +73,5 @@ func (gws *gatewayServer) summonerHandler(w http.ResponseWriter, r *http.Request
 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
-	fmt.Fprintf(w, "{result: [%s]}", strings.Join(summonerMatches[:], ","))
+	fmt.Fprintf(w, "{\"results\": [%s]}", strings.Join(summonerMatches[:], ","))
 }
