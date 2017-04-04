@@ -1,10 +1,16 @@
 """ Train an existing graph """
 
-import argparse
+import gflags
+import sys
 
 from train import GraphTrainer
 
-FLAGS = None
+gflags.DEFINE_string("model_path", "/tmp/model/model.ckpt",
+                     "Path to the model definition")
+gflags.DEFINE_integer("iteration", 100,
+                      "Number of training iterations")
+
+FLAGS = gflags.FLAGS
 
 
 def main():
@@ -22,17 +28,7 @@ def main():
     print(score)
     trainer.save()
 
+
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-            '--model_path',
-            type=str,
-            default='/tmp/model/model.ckpt',
-    )
-    parser.add_argument(
-            '--iteration',
-            type=int,
-            default=100
-    )
-    FLAGS, unparsed = parser.parse_known_args()
+    FLAGS([sys.argv])
     main()
