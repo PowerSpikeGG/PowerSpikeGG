@@ -22,7 +22,10 @@ cc_library(
     hdrs = ["src/match_computation.h"],
     deps = [
         ":match_computation_cc",
+        "//external:gflags",
+        "//powerspikegg/computation_models/utils",
         "@grpc//:grpc++",
+        "@org_tensorflow//tensorflow/cc:cc_ops",
     ],
 )
 

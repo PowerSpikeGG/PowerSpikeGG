@@ -72,6 +72,11 @@ new_git_repository(
     tag = "release-1.8.0",
 )
 
+bind(
+    name = "gflags",
+    actual = "@com_github_gflags_gflags//:gflags",
+)
+
 #
 # Rules closure is a dependency of tensorflow, therefore this rule must be present and loaded,
 # however do not execute it in the current WORKSPACE as it is not compatible with scala and java rules
