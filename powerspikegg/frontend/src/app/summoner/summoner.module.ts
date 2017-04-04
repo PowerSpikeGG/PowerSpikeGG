@@ -3,6 +3,7 @@ import { MaterialModule } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from "@angular/flex-layout";
+import { ChartsModule } from 'ng2-charts';
 
 import { SummonerComponent }   from './summoner.component';
 import { SpinnerComponent } from '../spinner/spinner.component';
@@ -17,7 +18,8 @@ import { MatchComponent } from './matches/match/match.component';
     BrowserModule,
     FormsModule,
     MaterialModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    ChartsModule
   ],
   exports: [],
   declarations: [
