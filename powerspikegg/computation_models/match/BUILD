@@ -13,6 +13,7 @@ py_binary(
     srcs = ["train_graph.py"],
     deps = [
         ":train",
+        "//powerspikegg/computation_models/fetcher",
         "@pydep_gflags//:library",
     ],
 )

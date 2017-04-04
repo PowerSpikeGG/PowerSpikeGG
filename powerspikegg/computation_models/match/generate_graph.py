@@ -14,7 +14,7 @@ from powerspikegg.computation_models.match.graph import GraphBuilder
 
 gflags.DEFINE_string("model_dir", "/tmp/model",
                      "Output directory of the model")
-gflags.DEFINE_integer("input_size", 2,
+gflags.DEFINE_integer("input_size", 8,
                       "Size of the input (the given vector to the model)")
 
 FLAGS = gflags.FLAGS

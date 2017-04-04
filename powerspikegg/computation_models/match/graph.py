@@ -25,6 +25,44 @@ class GraphBuilder:
     def __init__(self, input_size):
         self.input_size = input_size
 
+    def add_hidden_layer(self, data, input_size, output_size, name,
+                         keep_probability, is_training):
+        with tf.name_scope(name):
+            weights = tf.Variable(
+                tf.truncated_normal([input_size, output_size],
+                                    stddev=0.1), name="weights")
+            tf.summary.histogram('weights', weights)
+            biases = tf.Variable(tf.zeros([output_size]), name="biases")
+            mult = tf.matmul(data, weights) + biases
+
+            # Activation
+            hidden1 = tf.nn.relu(mult)
+
+            # Batch normalization
+            norm = tf.contrib.layers.batch_norm(hidden1, 0.9,
+                                                is_training=is_training,
+                                                updates_collections=None)
+
+            # Droupout
+            dropped = tf.nn.dropout(norm, keep_probability)
+
+            return norm
+
+    def createNetwork(self, data, layers, keep_probability=1,
+                      is_training=True):
+        current = 1
+        hidden = tf.contrib.layers.batch_norm(data, 0.9,
+                                              is_training=is_training,
+                                              updates_collections=None)
+        last_size = self.input_size
+        for layer_size in layers:
+            hidden = self.add_hidden_layer(hidden, last_size, layer_size,
+                                           "hidden" + str(current),
+                                           keep_probability, is_training)
+            last_size = layer_size
+            current = current + 1
+        return hidden
+
     def inference(self, data, hidden1_units, hidden2_units):
         """Build the model up to where it may be used for inference.
 
@@ -36,38 +74,8 @@ class GraphBuilder:
         Returns:
             softmax_linear: Output tensor with the computed logits.
         """
-        with tf.name_scope('hidden1'):
-            weights = tf.Variable(
-                tf.truncated_normal([self.input_size, hidden1_units],
-                                    stddev=1.0 / math.sqrt(
-                                        float(self.input_size))),
-                name='weights')
-            biases = tf.Variable(tf.zeros([hidden1_units]),
-                                 name='biases')
-            hidden1 = tf.nn.relu(tf.matmul(data, weights) + biases)
-
-        with tf.name_scope('hidden2'):
-            weights = tf.Variable(
-                tf.truncated_normal([hidden1_units, hidden2_units],
-                                    stddev=1.0 / math.sqrt(
-                                        float(hidden1_units))),
-                name='weights')
-            biases = tf.Variable(tf.zeros([hidden2_units]),
-                                 name='biases')
-            hidden2 = tf.nn.relu(tf.matmul(hidden1, weights) + biases)
-
-        with tf.name_scope('result_computation'):
-            weights = tf.Variable(
-                tf.truncated_normal([hidden2_units, 1],
-                                    stddev=1.0 / math.sqrt(
-                                        float(hidden2_units))),
-                name='weights')
-            biases = tf.Variable(tf.zeros([1]),
-                                 name='biases')
-            logits = tf.add(tf.matmul(hidden2, weights), biases)
-        named_logits = tf.identity(logits, name="logits")
-
-        return named_logits
+        logits = self.createNetwork(data, [50, 50, 50, 50, 50, 1])
+        return logits
 
     def loss(self, logits, labels):
         """Calculates the loss from the logits and the labels.
@@ -101,7 +109,7 @@ class GraphBuilder:
         # Add a scalar summary for the snapshot loss.
         tf.summary.scalar('loss', loss)
         # Create the gradient descent optimizer with the given learning rate.
-        optimizer = tf.train.GradientDescentOptimizer(learning_rate)
+        optimizer = tf.train.AdamOptimizer(learning_rate)
         # Create a variable to track the global step.
         global_step = tf.Variable(0, name='global_step', trainable=False)
         # Use the optimizer to apply the gradients that minimize the loss
@@ -130,8 +138,8 @@ class GraphBuilder:
         return tf.reduce_sum(correct)
 
     def generate_graph(self, model_directory):
-        """Create a new graph from inference and training operator and export the model
-        with an empty checkpoint
+        """Create a new graph from inference and training operator and
+        export the model with an empty checkpoint
         """
 
         with tf.Graph().as_default():
@@ -145,7 +153,7 @@ class GraphBuilder:
             answer = tf.placeholder(tf.float32, shape=(None, 1), name="answer")
 
             # Result of the computation of the neural network
-            logits = self.inference(placeholder, 5, 5)
+            logits = self.inference(placeholder, 64, 32)
 
             # Squared sum of the difference between the predicted value
             # and the answers
