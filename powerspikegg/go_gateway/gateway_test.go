@@ -95,7 +95,7 @@ func TestGateway(t *testing.T) {
 				// TODO(archangel): add a test with multiple match references returned for summoner requests.
 				Id: 3122561986,
 			},
-			expectedResponse: "{\"results\": [{\"id\":3.122561986e+09}]}",
+			expectedResponse: "{\"results\": [{\"id\":3.122561986e+09,\"timestamp\":0,\"version\":\"\",\"plateformId\":\"\",\"region\":\"BR\",\"queueType\":\"TEAM_BUILDER_RANKED_SOLO\",\"season\":\"SEASON2017\"}]}",
 			expectedStatus:   http.StatusOK,
 		},
 		{
@@ -104,7 +104,7 @@ func TestGateway(t *testing.T) {
 			serverResponse: &lolpb.MatchReference{
 				Id: 3122561986,
 			},
-			expectedResponse: "{\"id\":3.122561986e+09}",
+			expectedResponse: "{\"id\":3.122561986e+09,\"timestamp\":0,\"version\":\"\",\"plateformId\":\"\",\"region\":\"BR\",\"queueType\":\"TEAM_BUILDER_RANKED_SOLO\",\"season\":\"SEASON2017\"}",
 			expectedStatus:   http.StatusOK,
 		},
 	}

@@ -56,7 +56,9 @@ func (gws *gatewayServer) matchHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	marshaler := &jsonpb.Marshaler{}
+	marshaler := &jsonpb.Marshaler{
+		EmitDefaults: true,
+	}
 	json, err := marshaler.MarshalToString(response)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("%s: marshaling error: %v", response, err), http.StatusInternalServerError)
