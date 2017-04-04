@@ -14,14 +14,13 @@ from powerspikegg.rawdata.public import constants_pb2
 
 FLAGS = gflags.FLAGS
 
-FLAGS.DEFINE_string("fetcher_address", "127.0.0.1:50001",
-                    "Address of the fetcher.")
+gflags.DEFINE_string("fetcher_address", "127.0.0.1:50001",
+                     "Address of the fetcher.")
 
 
 class ComputationFetcher:
     """Utility to fetch the matches."""
 
-    channel = None
     stub = None
 
     def __init__(self, grpc_address):
@@ -30,9 +29,9 @@ class ComputationFetcher:
         Parameters:
             grpc_address rawdata fetcher gRPC server address
         """
-        if self.channel is None:
-            ComputationFetcher.channel = grpc.insecure_channel(grpc_address)
-        self.stub = service_pb2.MatchFetcherStub(self.channel)
+        if self.stub is None:
+            ComputationFetcher.stub = service_pb2.MatchFetcherStub(
+                grpc.insecure_channel(grpc_address))
 
     def fetch_random_sample(self, sample_size, league=None):
         """Fetch a random sample from the rawdata fetcher cache.
@@ -92,12 +91,13 @@ def _prepare_data(labelled_stats):
 
 def _sanitize_match(match_pb):
     """Returns a list of tensorflow friendly statistics per players."""
-    teams = match.detail.teams
+    teams = match_pb.detail.teams
     winners = teams[0] if teams[0].winner else teams[1]
-    return [_prepare_data(_map_stats(p)) for p in winners.participants]
+    return [_prepare_data(_map_stats(p.statistics))
+            for p in winners.participants]
 
 
-def fetch_and_sanitize(fetcher_address, sample_size):
+def fetch_and_sanitize(sample_size):
     """Fetch and sanitize random matches.
 
     Returns:

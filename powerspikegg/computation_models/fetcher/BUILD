@@ -10,3 +10,16 @@ py_library(
         "@pydep_gflags//:library",
     ],
 )
+
+py_test(
+    name = "fetcher_test",
+    srcs = [
+        "fetcher_test.py",
+        "//powerspikegg/rawdata/fetcher:service_py",
+        "//powerspikegg/rawdata/public:leagueoflegends_py",
+    ],
+    deps = [
+        ":fetcher",
+        "@pydep_mock//:library",
+    ],
+)
