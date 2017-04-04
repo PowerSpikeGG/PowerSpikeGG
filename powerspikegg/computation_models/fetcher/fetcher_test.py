@@ -41,7 +41,7 @@ def _create_mock_match():
 
 
 labels = ["kills", "deaths", "assists", "minions_killed",
-          "neutral_minions_killed", "total_damages.total",
+          "neutral_minions_killed", "total_damages",
           "total_heal", "wards_placed", "tower_kills"]
 
 
