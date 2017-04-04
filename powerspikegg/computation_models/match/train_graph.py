@@ -27,7 +27,7 @@ def main():
         trainer.train(
                 data=data,
                 answer=[[exp] for exp in expected],
-                iteration=20
+                iteration=1
         )
         res, score, placeholder, answer = trainer.evaluate(
                 inputs=data,
@@ -36,9 +36,8 @@ def main():
         print("--------------")
         print("result")
         print(res)
-        print(score)
-        print("data")
         print(answer)
+        print(score)
         print(" ")
     trainer.save()
 
