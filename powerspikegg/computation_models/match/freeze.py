@@ -1,10 +1,19 @@
+import gflags
 import os
-import argparse
-
 import tensorflow as tf
+
 from tensorflow.python.framework import graph_util
 
-dir = os.path.dirname(os.path.realpath(__file__))
+gflags.DEFINE_string("model_folder", "/tmp/model",
+                     "Model folder to export")
+gflags.DEFINE_string("output_folder", "/tmp",
+                     "Folder on which the frozen model will be exported.")
+gflags.DEFINE_string("output_graph_name", "frozen_model.pb",
+                     "Name of the exported file.")
+gflags.DEFINE_string("output_node_name", "logits",
+                     "Name of the node executed.")
+
+FLAGS = gflags.FLAGS
 
 
 def freeze_graph(model_folder):
@@ -13,14 +22,14 @@ def freeze_graph(model_folder):
     input_checkpoint = checkpoint.model_checkpoint_path
 
     # We precise the file fullname of our freezed graph
-    output_graph = os.path.join(args.output_folder,
-                                args.output_graph_name)
+    output_graph = os.path.join(FLAGS.output_folder,
+                                FLAGS.output_graph_name)
 
     # Before exporting our graph, we need to precise what is our output node
     # This is how TF decides what part of the Graph he has to keep
     # and what part it can dump
     # NOTE: this variable is plural, because you can have multiple output nodes
-    output_node_names = args.output_node_name
+    output_node_names = FLAGS.output_node_name
 
     # We clear devices to allow TensorFlow to control on which device it will
     # load operations
@@ -53,13 +62,5 @@ def freeze_graph(model_folder):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--model_folder", type=str, default="/tmp/model",
-                        help="Model folder to export")
-    parser.add_argument("--output_folder", type=str, default="/tmp")
-    parser.add_argument("--output_graph_name", type=str,
-                        default="frozen_model.pb")
-    parser.add_argument("--output_node_name", type=str, default="logits")
-    args = parser.parse_args()
-
-    freeze_graph(args.model_folder)
+    FLAGS(sys.argv)
+    freeze_graph(FLAGS.model_folder)
