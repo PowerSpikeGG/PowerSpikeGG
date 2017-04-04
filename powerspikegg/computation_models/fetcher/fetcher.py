@@ -16,6 +16,12 @@ FLAGS = gflags.FLAGS
 
 gflags.DEFINE_string("fetcher_address", "127.0.0.1:50001",
                      "Address of the fetcher.")
+gflags.DEFINE_enum("restrict_league", None, constants_pb2.League.keys(),
+                   "Restrict fetched matches/stats per league. If not "
+                   "provided, any league is fetched.")
+gflags.DEFINE_integer("restrict_champion", 0,
+                      "Restrict fetched matches/stats per champion id. If not "
+                      "provided, any champion is fetched.")
 
 
 class ComputationFetcher:
@@ -89,12 +95,27 @@ def _prepare_data(labelled_stats):
     return result
 
 
+def _is_valid_participant(participant_pb):
+    if FLAGS.restrict_league is not None:
+        expected_league = constants_pb2.League.Value(FLAGS.restrict_league)
+        if expected_league != participant_pb.summoner.league:
+            return False
+
+    if (FLAGS.restrict_champion and
+            FLAGS.restrict_champion != participant_pb.champion.id):
+        return False
+
+    return True
+
+
 def _sanitize_match(match_pb):
     """Returns a list of tensorflow friendly statistics per players."""
     teams = match_pb.detail.teams
     winners = teams[0] if teams[0].winner else teams[1]
-    return [_prepare_data(_map_stats(p.statistics))
-            for p in winners.participants]
+
+    for participant_pb in winners.participants:
+        if _is_valid_participant(participant_pb):
+            yield _prepare_data(_map_stats(participant_pb.statistics))
 
 
 def fetch_and_sanitize(sample_size):
