@@ -29,7 +29,7 @@ class GraphTrainer:
         self.placeholder = tf.get_collection('placeholder')[0]
         self.eval_op = tf.get_collection('eval_op')[0]
 
-    def train(self, data, answer):
+    def train(self, data, answer, iteration=1):
         """ Train the variable of a graph using the provided data
 
             Args:
@@ -44,10 +44,11 @@ class GraphTrainer:
             Return: None
 
         """
-        self.sess.run(self.train_op, feed_dict={
-                    self.placeholder: data,
-                    self.answer: answer
-        })
+        for _ in range(iteration):
+            self.sess.run(self.train_op, feed_dict={
+                        self.placeholder: data,
+                        self.answer: answer
+            })
 
     def evaluate(self, inputs, answers):
         """ Evaluate the performance of a model on the provided data
@@ -61,7 +62,8 @@ class GraphTrainer:
             Return: An array of tuple containing the computed value
                     and the difference with the target
         """
-        res = self.sess.run([self.logits, self.eval_op], feed_dict={
+        res = self.sess.run([self.logits, self.eval_op,
+                             self.placeholder, self.answer], feed_dict={
                 self.placeholder: inputs,
                 self.answer: answers
             })

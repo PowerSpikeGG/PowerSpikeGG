@@ -4,10 +4,11 @@ import gflags
 import sys
 
 from powerspikegg.computation_models.match.train import GraphTrainer
+from powerspikegg.computation_models.fetcher import fetcher
 
 gflags.DEFINE_string("model_path", "/tmp/model/model.ckpt",
                      "Path to the model definition")
-gflags.DEFINE_integer("iteration", 100,
+gflags.DEFINE_integer("iteration", 1,
                       "Number of training iterations")
 
 FLAGS = gflags.FLAGS
@@ -15,17 +16,28 @@ FLAGS = gflags.FLAGS
 
 def main():
     trainer = GraphTrainer(FLAGS.model_path)
-    result, score = trainer.evaluate([[2, 2]], [[4]])
-    print(result)
-    print(score)
     for step in range(FLAGS.iteration):
+        stats = [(stat["data"], stat["expected"]) for stat in
+                 fetcher.fetch_and_sanitize(2) if stat["label"] == "kills"]
+        data, expected = zip(*stats)
+        print(data)
         trainer.train(
-                data=[[1, 2], [1, 3], [2, 3]],
-                answer=[[3], [4], [5]]
+                data=data,
+                answer=[[exp] for exp in expected],
+                iteration=20
         )
-    result, score = trainer.evaluate([[2, 2]], [[4]])
-    print(result)
-    print(score)
+        res, score, placeholder, answer = trainer.evaluate(
+                inputs=data,
+                answers=[[exp] for exp in expected]
+        )
+        print("--------------")
+        print("result")
+        print(res)
+        print(score)
+        print("data")
+        print(placeholder)
+        print(answer)
+        print(" ")
     trainer.save()
 
 
