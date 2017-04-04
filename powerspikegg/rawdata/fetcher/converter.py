@@ -24,6 +24,17 @@ class ConstantSolver():
         """
         self.api_handler = api_handler
 
+        # TODO(funkysayu): Add tests for this hotfix
+        # Create the champion correspondance map
+        raw_champions = self.api_handler.static_get_champion_list()["data"]
+        self.champions = dict(
+            (c["id"], (c["name"], c["key"])) for c in raw_champions.values())
+
+        # Create the summoner spells correspondance map
+        raw_spells = self.api_handler.static_get_summoner_spell_list()["data"]
+        self.spells = dict(
+            (s["id"], (s["name"], s["key"])) for s in raw_spells.values())
+
     def get_summoner_spell_by_id(self, spell_id):
         """Get a summoner spell from its ID.
 
@@ -33,8 +44,11 @@ class ConstantSolver():
             A SummonerSpell message containing the ID and the name of the
             summoner spell.
         """
-        # TODO(funkysayu) fetch the summoner spell name.
-        return constants_pb2.SummonerSpell(id=spell_id)
+        name, key = self.spells.get(spell_id, (None, None))
+        return constants_pb2.SummonerSpell(
+            id=spell_id,
+            name=name,
+            key=key)
 
     def get_champion_by_id(self, champion_id):
         """Get a champion from its ID.
@@ -44,8 +58,11 @@ class ConstantSolver():
         Returns:
             A Champion message containing the ID and the name of the champion.
         """
-        # TODO(funkysayu): fetch the champion name.
-        return constants_pb2.Champion(id=champion_id)
+        name, key = self.champions.get(champion_id, (None, None))
+        return constants_pb2.Champion(
+            id=champion_id,
+            name=name,
+            key=key)
 
 
 class JSONConverter():
