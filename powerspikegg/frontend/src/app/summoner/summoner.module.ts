@@ -13,6 +13,7 @@ import { AnalysisComponent } from './matches/match/analysis/analysis.component';
 import { MatchComponent } from './matches/match/match.component';
 import { GatewayService } from 'app/services/gateway.service';
 import { MatchDurationPipe } from './matches/match/match-duration.pipe';
+import { RadarChartComponent } from './matches/match/analysis/radar-chart/radar-chart.component';
 
 @NgModule({
   imports: [
@@ -31,6 +32,7 @@ import { MatchDurationPipe } from './matches/match/match-duration.pipe';
     AnalysisComponent,
     MatchComponent,
     MatchDurationPipe,
+    RadarChartComponent,
   ],
   providers: [GatewayService],
 })

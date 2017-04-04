@@ -1,0 +1,12 @@
+<div *ngIf="chartReady" class="radar-chart"
+     fxFlexOffset.gt-sm="20"
+     fxFlex.gt-sm="60">
+  <h1>Individual Performance</h1>
+  <canvas baseChart
+          [datasets]="radarChartData"
+          [labels]="radarChartLabels"
+          [chartType]="radarChartType"
+          [options]="radarChartOptions"
+          [colors]="radarChartColors">
+  </canvas>
+</div>

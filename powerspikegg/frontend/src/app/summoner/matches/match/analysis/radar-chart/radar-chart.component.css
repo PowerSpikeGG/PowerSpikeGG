@@ -1,0 +1,20 @@
+.radar-chart-container {
+    border-right: 2px solid #dadada;
+    display: block!important;
+    padding-bottom: 70px;
+    padding-top: 30px;
+}
+
+.radar-chart canvas {
+    width: 100%!important;
+}
+
+.radar-chart h1,
+.game-table h1 {
+    background: #2980b9;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 16px;
+    padding: 12px;
+    text-align: center;
+}
