@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
-
-import { SummonerService } from './summoner.service';
-import { SummonerData } from '../models/summonerData';
+import { ActivatedRoute } from '@angular/router';
+import { game } from '../models/protos/bundle';
+import Summoner = game.leagueoflegends.Summoner;
+import { GatewayService } from '../services/gateway.service';
+import { SummonerQuery } from '../models/gateway-queries';
 
 
 @Component({
@@ -13,30 +14,34 @@ import { SummonerData } from '../models/summonerData';
 export class SummonerComponent implements OnInit {
 
   private showSpinner: boolean;
-  private summonerData: SummonerData;
+  private summoner: Summoner;
 
-  constructor(private summonerService: SummonerService,
+  constructor(private gatewayService: GatewayService,
               private route: ActivatedRoute) {
   }
 
   ngOnInit() {
     this.showSpinner = true;
     this.route.params
-      .map((params: Params) => params['name'])
-      .subscribe(name => {
-        this.getSummonerDataByName(name);
+      .subscribe(params => {
+        this.getSummonerDataByName({
+          "name": params['name'],
+          "region": params['region']
+        });
       })
   }
 
-  getSummonerDataByName(summonerName: string) {
-    this.summonerService.getSummonerByName(summonerName).subscribe(
-      response => this.getSummonerDataByNameSuccess(response),
+  getSummonerDataByName(summonerQuery: SummonerQuery) {
+    this.gatewayService.getSummonerByName(summonerQuery).subscribe(
+      response => {
+        this.getSummonerDataByNameSuccess(response)
+      },
       error => this.errorHandler(error)
     )
   }
 
-  getSummonerDataByNameSuccess(response: any) {
-    this.summonerData = response;
+  getSummonerDataByNameSuccess(response: Summoner) {
+    this.summoner = response;
     this.showSpinner = false;
   }
 

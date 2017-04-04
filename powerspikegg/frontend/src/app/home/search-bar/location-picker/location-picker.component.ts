@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-location-picker',
@@ -6,6 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./location-picker.component.css']
 })
 export class LocationPickerComponent implements OnInit {
+
+  @Input() region: string;
+  // TODO: output variable to search-bar when modified
 
   constructor() {
   }

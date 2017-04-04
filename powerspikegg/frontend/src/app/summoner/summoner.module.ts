@@ -7,11 +7,12 @@ import { ChartsModule } from 'ng2-charts';
 
 import { SummonerComponent }   from './summoner.component';
 import { SpinnerComponent } from '../spinner/spinner.component';
-import { SummonerService } from './summoner.service';
 import { SideNavComponent } from './sidenav/sidenav.component';
 import { MatchesComponent } from './matches/matches.component';
 import { AnalysisComponent } from './matches/match/analysis/analysis.component';
 import { MatchComponent } from './matches/match/match.component';
+import { GatewayService } from "app/services/gateway.service";
+import { MatchDurationPipe } from './matches/match/match-duration.pipe';
 
 @NgModule({
   imports: [
@@ -28,9 +29,10 @@ import { MatchComponent } from './matches/match/match.component';
     SideNavComponent,
     MatchesComponent,
     AnalysisComponent,
-    MatchComponent
+    MatchComponent,
+    MatchDurationPipe
   ],
-  providers: [SummonerService],
+  providers: [GatewayService],
 })
 export class SummonerModule {
 }

@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { game } from '../../../../models/protos/bundle';
+import Participant = game.leagueoflegends.Participant;
+import PlayerStatistics = game.leagueoflegends.PlayerStatistics;
 
 @Component({
   selector: 'app-analysis',
@@ -7,25 +10,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AnalysisComponent implements OnInit {
 
-  private radarChartLabels = ['Kills', 'Deaths', 'Assists', 'CS', 'Jungle CS', 'Damage', 'Healing', 'Vision', 'First Tower'];
-
-  private radarChartData = [
-    {
-      data: [65, 59, 90, 81, 56, 55, 40, 40, 40],
-      label: 'Born To Stack',
-      radius: 5,
-      pointRadius: 5,
-      pointHoverRadius: 5
-    },
-    {
-      data: [28, 48, 40, 19, 96, 27, 100, 40, 40],
-      label: 'Your League Average',
-      radius: 5,
-      pointRadius: 5,
-      pointHoverRadius: 5,
-      fillColor: 'rgba(255, 99, 132,1)'
-    }
-  ];
+  @Input() participant: Participant;
+  private radarChartData;
 
   private radarChartColors = [
     {
@@ -59,12 +45,45 @@ export class AnalysisComponent implements OnInit {
       ticks: {
         display: false
       }
+    },
+    tooltips: {
+      enabled: false
     }
   };
+
+  private radarChartLabels = ['Kills', 'Deaths', 'Assists', 'CS', 'Jungle CS', 'Damage', 'Healing', 'Vision', 'First Tower'];
 
   constructor() { }
 
   ngOnInit() {
+    // FIXME: normalize data on 0 to 100 scale
+    this.radarChartData = [
+      {
+        data: [
+          this.participant.statistics.kills,
+          this.participant.statistics.deaths,
+          this.participant.statistics.assists,
+          this.participant.statistics.minionsKilled,
+          this.participant.statistics.neutralMinionsKilled,
+          this.participant.statistics.totalDamages,
+          this.participant.statistics.totalHeal,
+          this.participant.statistics.wardsPlaced,
+          80, // TODO(ArchangelX360): wait for addition timestamp of first tower taken
+        ],
+        label: this.participant.summoner.name,
+        radius: 5,
+        pointRadius: 5,
+        pointHoverRadius: 5
+      },
+      {
+        data: [28, 48, 40, 19, 96, 27, 100, 40, 80], // TODO(ArchangelX360): fill with aggregated data
+        label: this.participant.summoner.league,
+        radius: 5,
+        pointRadius: 5,
+        pointHoverRadius: 5,
+        fillColor: 'rgba(255, 99, 132,1)'
+      }
+    ];
   }
 
 }

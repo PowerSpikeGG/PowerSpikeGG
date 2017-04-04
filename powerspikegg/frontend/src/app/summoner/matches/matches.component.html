@@ -1,7 +1,3 @@
 <div fxLayout.gt-sm="column">
-  <app-match></app-match>
-  <app-match></app-match>
-  <app-match></app-match>
-  <app-match></app-match>
-  <app-match></app-match>
+  <app-match *ngFor="let match of matches" [match]="match" [summoner]="summoner"></app-match>
 </div>
