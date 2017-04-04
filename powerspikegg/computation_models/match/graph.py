@@ -149,6 +149,9 @@ class GraphBuilder:
                                          shape=(None, self.input_size),
                                          name="placeholder")
 
+            learning_rate = tf.placeholder_with_default(0.01, shape=(),
+                                                        name="learning_rate")
+
             # Tensor containing the correct answer for the input
             answer = tf.placeholder(tf.float32, shape=(None, 1), name="answer")
 
@@ -160,7 +163,7 @@ class GraphBuilder:
             loss_op = self.loss(logits, answer)
 
             # Operator to train the neural network
-            train_op = self.training(loss_op, 0.01)
+            train_op = self.training(loss_op, learning_rate)
 
             # Give an estimation of the difference between the predicted
             # values and the answer
@@ -177,6 +180,7 @@ class GraphBuilder:
 
             # Add variables to collections to load them later
             tf.add_to_collection('placeholder', placeholder)
+            tf.add_to_collection('learning_rate', learning_rate)
             tf.add_to_collection('answer', answer)
             tf.add_to_collection('logits', logits)
             tf.add_to_collection('loss_op', loss_op)

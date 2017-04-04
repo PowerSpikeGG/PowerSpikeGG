@@ -8,8 +8,9 @@ import tensorflow as tf
 class GraphTrainer:
     """ Load an existing graph and expose methods to train and evaluate it"""
 
-    def __init__(self, model_path):
+    def __init__(self, model_path, learning_rate=None):
         self.model_path = model_path
+        self.learning_rate = learning_rate
         self._load()
 
     def _load(self):
@@ -23,6 +24,7 @@ class GraphTrainer:
         self.saver.restore(self.sess, self.model_path)
 
         self.train_op = tf.get_collection('train_op')[0]
+        self.learning_rate_op = tf.get_collection('learning_rate')[0]
         self.logits = tf.get_collection('logits')[0]
         self.answer = tf.get_collection('answer')[0]
         self.loss_op = tf.get_collection('loss_op')[0]
@@ -45,10 +47,15 @@ class GraphTrainer:
 
         """
         for _ in range(iteration):
-            self.sess.run(self.train_op, feed_dict={
+            feed_dict = {
                         self.placeholder: data,
                         self.answer: answer
-            })
+            }
+            if self.learning_rate is not None:
+                feed_dict.update({
+                    self.learning_rate_op: self.learning_rate
+                })
+            self.sess.run(self.train_op, feed_dict=feed_dict)
 
     def evaluate(self, inputs, answers):
         """ Evaluate the performance of a model on the provided data

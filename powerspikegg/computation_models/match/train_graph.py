@@ -10,17 +10,20 @@ gflags.DEFINE_string("model_path", "/tmp/model/model.ckpt",
                      "Path to the model definition")
 gflags.DEFINE_integer("iteration", 1,
                       "Number of training iterations")
-
+gflags.DEFINE_string("field_name", "kills",
+                     "Name of the stats to use for training")
+gflags.DEFINE_float("learning_rate", 0.01,
+                    "Rate for the optimizer (Addagram)")
 FLAGS = gflags.FLAGS
 
 
 def main():
-    trainer = GraphTrainer(FLAGS.model_path)
+    trainer = GraphTrainer(FLAGS.model_path, FLAGS.learning_rate)
     for step in range(FLAGS.iteration):
         stats = [(stat["data"], stat["expected"]) for stat in
-                 fetcher.fetch_and_sanitize(2) if stat["label"] == "kills"]
+                 fetcher.fetch_and_sanitize(2)
+                 if stat["label"] == FLAGS.field_name]
         data, expected = zip(*stats)
-        print(data)
         trainer.train(
                 data=data,
                 answer=[[exp] for exp in expected],
@@ -35,7 +38,6 @@ def main():
         print(res)
         print(score)
         print("data")
-        print(placeholder)
         print(answer)
         print(" ")
     trainer.save()
