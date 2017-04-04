@@ -26,6 +26,7 @@
 
 .match-data {
   border-bottom: 2px solid #dadada;
+  box-shadow: 0 4px 7px #c3c3c3;
   cursor: pointer;
   font-size: 15px;
   height:80px;
