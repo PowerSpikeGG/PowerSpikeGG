@@ -3,7 +3,21 @@
 #include <iostream>
 #include <utility>
 
-MatchComputationImpl::MatchComputationImpl() {}
+#include "gflags/gflags.h"
+#include "powerspikegg/computation_models/utils/src/graph.h"
+
+DEFINE_string(graph_path, "/tmp/frozen_model.pb", "");
+
+MatchComputationImpl::MatchComputationImpl() : scope(tensorflow::Scope::NewRootScope()) {
+
+    computation::utils::LoadGraphFromFile(this->scope, FLAGS_graph_path);
+
+    // TODO(cassand) Remove once the all models are correctly loaded
+    // Print all nodes in the grap
+    for (tensorflow::Node* node : this->scope.graph()->nodes()) {
+        std::cout << node->name() << std::endl;
+    }
+}
 
 grpc::Status MatchComputationImpl::GetFeature(
         grpc::ServerContext* context,

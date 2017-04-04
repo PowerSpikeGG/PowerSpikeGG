@@ -5,6 +5,7 @@
 
 #include <memory>
 
+#include "tensorflow/cc/ops/standard_ops.h"
 #include "powerspikegg/serving/public/match_computation.grpc.pb.h"
 
 class MatchComputationImpl final : public serving::MatchComputation::Service {
@@ -24,6 +25,7 @@ class MatchComputationImpl final : public serving::MatchComputation::Service {
                             serving::MatchComputationFeature* feature);
 
  private:
+    tensorflow::Scope scope;
 };
 
 #endif  // POWERSPIKEGG_SERVING_SRC_MATCH_COMPUTATION_H_
