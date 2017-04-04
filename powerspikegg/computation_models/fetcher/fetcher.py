@@ -10,8 +10,9 @@ from powerspikegg.rawdata.fetcher import service_pb2
 from powerspikegg.rawdata.public import constants_pb2
 
 
-# TODO(ArchangelX360): DO TESTS
 class ComputationFetcher:
+    """Utility to fetch the matches."""
+
     channel = None
     stub = None
 
@@ -24,96 +25,78 @@ class ComputationFetcher:
         self.channel = grpc.insecure_channel(grpc_address)
         self.stub = service_pb2.MatchFetcherStub(self.channel)
 
-    def fetch_random_sample(self, summoner_id, region, sample_size):
+    def fetch_random_sample(self, sample_size, league=None):
+        """Fetch a random sample from the rawdata fetcher cache.
+
+        Parameters:
+            sample_size: Number of matches to fetch.
+            league: Optional restriction onto the league.
+        """
         query = service_pb2.Query(
-            summoner=constants_pb2.Summoner(
-                id=summoner_id, region=region),
             sample_size=sample_size,
             randomize_sample=True)
-        sample = self.stub.CacheQuery(query)
-        return sample
+        if league is not None:
+            query.league = league
+
+        return self.stub.CacheQuery(query)
 
 
-class ComputationSanitizer:
-
-    @staticmethod
-    def map_stats(stats):
-        return [
-            {
-                "label": "kills",
-                "value": stats.kills
-            },
-            {
-                "label": "deaths",
-                "value": stats.deaths
-            },
-            {
-                "label": "assists",
-                "value": stats.assists
-            },
-            {
-                "label": "minions_killed",
-                "value": stats.minions_killed},
-            {
-                "label": "neutral_minions_killed",
-                "value": stats.neutral_minions_killed
-            },
-            {
-                "label": "total_damages.total",
-                "value": stats.total_damages.total
-            },
-            {
-                "label": "total_heal",
-                "value": stats.total_heal
-            },
-            {
-                "label": "wards_placed",
-                "value": stats.wards_placed
-            },
-            {
-                "label": "tower_kills",
-                "value": stats.tower_kills
-            },
-        ]
-
-    @staticmethod
-    def sanitize_match(stats_label_value):
-        # creating complete double array of all values
-        double_array = []
-        for obj in stats_label_value:
-            double_array.append(obj["value"])
-
-        # removing specific label value from
-        # complete double array for each label
-        map = {}
-        for index, obj in enumerate(stats_label_value):
-            map[obj["label"]] = numpy.array(
-                [v for i, v in enumerate(double_array) if (i != index)])
-
-        return map
-
-    @staticmethod
-    def sanitize_match_of_summoner(summoner_id, match):
-        for team in match.detail.teams:
-            for p in team.participants:
-                if p.summoner.id == summoner_id:
-                    return ComputationSanitizer.sanitize_match(
-                        ComputationSanitizer.map_stats(p.statistics))
-
-        return None
+def _map_stats(stats_pb):
+    """Map the statistics to a dictionnary"""
+    return [
+        {"label": "kills", "value": stats_pb.kills},
+        {"label": "deaths", "value": stats_pb.deaths},
+        {"label": "assists", "value": stats_pb.assists},
+        {"label": "minions_killed", "value": stats_pb.minions_killed},
+        {"label": "neutral_minions_killed",
+            "value": stats_pb.neutral_minions_killed},
+        {"label": "total_damages.total",
+            "value": stats_pb.total_damages.total},
+        {"label": "total_heal", "value": stats_pb.total_heal},
+        {"label": "wards_placed", "value": stats_pb.wards_placed},
+        {"label": "tower_kills", "value": stats_pb.tower_kills},
+    ]
 
 
-def fetch_and_sanitize(grpc_port, summoner_id, region_str, sample_size):
-    """Fetch and sanitize random matches."""
+def _prepare_data(labelled_stats):
+    """Create a tensorflow friendly data structure.
 
-    region = constants_pb2.Region.Value(region_str)
+    Returns:
+        A list of labelled data, where all data contains their label (i.e.
+        kills), the expected value and a numpy array of all other stats.
+        Exemple:
+            [{'label': 'kill', 'expected': 10, 'data': [1, 2, 3, ...]}, ...]
+    """
+    raw_stats = [s["value"] for s in labelled_stats]
 
-    matrix = []
-    cf = ComputationFetcher("127.0.0.1:%d" % grpc_port)
-    for match in cf.fetch_random_sample(
-            summoner_id, region, sample_size):  # TODO: region
-        matrix.append(
-            ComputationSanitizer.sanitize_match_of_summoner(summoner_id, match)
-        )
+    result = []
+    for index, labelled_stat in enumerate(labelled_stats):
+        result.append(dict(
+            label=labelled_stat["label"],
+            expected=raw_stats[index],
+            data=numpy.array([v for i, v in enumerate(raw_stats)
+                              if i != index])
+        ))
 
-    return matrix
+    return result
+
+
+def _sanitize_match(match_pb):
+    """Returns a list of tensorflow friendly statistics per players."""
+    teams = match.detail.teams
+    winners = teams[0] if teams[0].winner else teams[1]
+    return [_prepare_data(_map_stats(p)) for p in winners.participants]
+
+
+def fetch_and_sanitize(fetcher_address, sample_size):
+    """Fetch and sanitize random matches.
+
+    Returns:
+        sample_size * 5 labelled statistics
+    """
+    fetcher = ComputationFetcher(fetcher_address)
+
+    for match_pb in fetcher.fetch_random_sample(sample_size):
+        for participant_stats in _sanitize_match(match_pb):
+            for labelled_stats in participant_stats:
+                yield labelled_stats
