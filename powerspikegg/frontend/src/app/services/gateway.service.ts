@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import { MATCH_API_URL, SUMMONER_API_URL } from '../config/gateway';
+import { AGGREGATION_API_URL, MATCH_API_URL, SUMMONER_API_URL } from '../config/gateway';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { MatchQuery, SummonerQuery } from '../models/gateway-queries';
-import { game } from '../models/protos/bundle';
+import { AggregationQuery, MatchQuery, SummonerQuery } from '../models/gateway-queries';
+import { fetcher, game } from '../models/protos/bundle';
 import MatchReference = game.leagueoflegends.MatchReference;
 import Summoner = game.leagueoflegends.Summoner;
 import { isUndefined } from 'util';
+import AggregatedStatistics = fetcher.rds.AggregatedStatistics;
 
 @Injectable()
 export class GatewayService {
@@ -25,15 +26,19 @@ export class GatewayService {
   }
 
   getSummonerMatches(query: SummonerQuery): Observable<MatchReference[]> {
-    return this.http.get(SUMMONER_API_URL + '/' + query.name + '/' + query.region)
+    const summonerName: string = GatewayService.sanitizeSummonerName(query.name);
+    const url = SUMMONER_API_URL + '/' + summonerName + '/' + query.region;
+    console.log('Calling: ' + url);
+    return this.http.get(url)
       .map(response => response.json().results || {})
       .catch(error => Observable.throw(error));
   }
 
   getSummonerByName(query: SummonerQuery): Observable<Summoner> {
     const summonerName: string = GatewayService.sanitizeSummonerName(query.name);
-    console.log('Calling: ' + SUMMONER_API_URL + '/' + summonerName + '/' + query.region);
-    return this.http.get(SUMMONER_API_URL + '/' + summonerName + '/' + query.region)
+    const url = SUMMONER_API_URL + '/' + summonerName + '/' + query.region;
+    console.log('Calling: ' + url);
+    return this.http.get(url)
       .flatMap(response => {
         const results =  response.json().results;
         if (results.length > 0) {
@@ -60,6 +65,14 @@ export class GatewayService {
     return Observable.throw('Summoner not found');
   }
 
-  // TODO(ArchangelX360): aggregation and computation request
+  getAverageStatistics(query: AggregationQuery): Observable<AggregatedStatistics> {
+    const url = AGGREGATION_API_URL + '/' + query.league + '/' + query.championID + '/' + query.summonerID +'/' + query.region;
+    console.log('Calling: ' + url);
+    return this.http.get(url)
+      .map(response => response.json() || {})
+      .catch(error => Observable.throw(error));
+  }
+
+  // TODO(ArchangelX360): computation request
 
 }

@@ -61,9 +61,9 @@ message TeamDetail {
     repeated int32 banned_champion_ids = 3;
 
     // Statistics related to the team
-    int32 baron_kills = 4;  // Number of time the team killed baron
-    int32 dragon_kills = 5;  // Number of time the team killed dragon
-    int32 tower_kills = 6;  // Number of tower destroyed by the team
+    double baron_kills = 4;  // Number of time the team killed baron
+    double dragon_kills = 5;  // Number of time the team killed dragon
+    double tower_kills = 6;  // Number of tower destroyed by the team
     bool first_baron = 7;  // Did the team get the first baron?
     bool first_dragon = 8;  // Did the team get the first dragon?
     bool first_blood = 9;  // Did the team get the first blood?
@@ -111,48 +111,48 @@ message Participant {
 
 // Player statistics at the end of the game.
 message PlayerStatistics {
-    int32 kills = 1;  // Number of kills
-    int32 deaths = 2;  // Number of deaths
-    int32 assists = 3;  // Number of assists
-    int32 champion_level = 4;  // Champion level achieved
+    double kills = 1;  // Number of kills
+    double deaths = 2;  // Number of deaths
+    double assists = 3;  // Number of assists
+    double champion_level = 4;  // Champion level achieved
 
     // Damage metrics
     DamageStatistic magic_damages = 5;
     DamageStatistic physical_damages = 6;
     DamageStatistic true_damages = 7;
     DamageStatistic total_damages = 8;
-    int32 total_heal = 9;
-    int32 largest_critical_strike = 10;
+    double total_heal = 9;
+    double largest_critical_strike = 10;
 
     // Gold and Minions
-    int32 gold_earned = 11;
-    int32 gold_spent = 12;
-    int32 minions_killed = 13;
-    int32 neutral_minions_killed = 14;
-    int32 neutral_minions_killed_ennemy_jungle = 15;
-    int32 neutral_minions_killed_team_jungle = 16;
+    double gold_earned = 11;
+    double gold_spent = 12;
+    double minions_killed = 13;
+    double neutral_minions_killed = 14;
+    double neutral_minions_killed_ennemy_jungle = 15;
+    double neutral_minions_killed_team_jungle = 16;
 
     // Vision
     // TODO(funkysayu) since it is not anymore available in the game shop, we
     //                 might remove this statistics soon.
-    int32 sight_wards_bought = 17;
-    int32 vision_wards_bought = 18;
-    int32 wards_placed = 19;
-    int32 wards_killed = 20;
+    double sight_wards_bought = 17;
+    double vision_wards_bought = 18;
+    double wards_placed = 19;
+    double wards_killed = 20;
 
     // Multi-kills
-    int32 double_kills = 21;
-    int32 triple_kills = 22;
-    int32 quadra_kills = 23;
-    int32 penta_kills = 24;
+    double double_kills = 21;
+    double triple_kills = 22;
+    double quadra_kills = 23;
+    double penta_kills = 24;
     reserved 25;
-    int32 killing_sprees = 26;  // The number of killing sprees
-    int32 largest_killing_spree = 27;
-    int32 largest_multi_kill = 28;
+    double killing_sprees = 26;  // The number of killing sprees
+    double largest_killing_spree = 27;
+    double largest_multi_kill = 28;
 
     // Objective assistance
-    int32 inhibitor_kills = 29;
-    int32 tower_kills = 30;
+    double inhibitor_kills = 29;
+    double tower_kills = 30;
 
     // Game flags.
     // NOTE: those flags are not specified by the aggregation pipeline.
@@ -163,13 +163,13 @@ message PlayerStatistics {
     bool first_tower_kill = 35;
 
     // Miscellaneous
-    int32 total_crowd_control = 36;
-    int32 total_units_healed = 37;
+    double total_crowd_control = 36;
+    double total_units_healed = 37;
 }
 
 // Damage related statistics.
 message DamageStatistic {
-    int32 total = 1;  // Total damage dealt
-    int32 to_champions = 2;  // Damage dealt to champions
-    int32 taken = 3;  // Damage taken
+    double total = 1;  // Total damage dealt
+    double to_champions = 2;  // Damage dealt to champions
+    double taken = 3;  // Damage taken
 }
