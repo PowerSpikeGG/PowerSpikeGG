@@ -20,7 +20,7 @@ export class MatchesComponent implements OnInit {
 
   ngOnInit() {
     this.gatewayService.getSummonerMatches({name: this.summoner.name, region: this.summoner.region.toString()}).subscribe(
-      (matches) => this.matches = matches,
+      (matches) => this.matches = matches.filter(match => match.detail.duration >= 60 * 4), // filtering remakes
       (error) =>  this.snackBar.open('[ERROR] Cannot retrieve matches of ' + this.summoner.name + '.', 'Ok')
     );
   }
