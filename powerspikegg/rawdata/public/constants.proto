@@ -88,6 +88,7 @@ message Summoner {
 message SummonerSpell {
     int32 id = 1;  // Summoner spell ID.
     string name = 2;  // Summoner spell name.
+    string key = 3;  // DDragon key to fetch the image.
 }
 
 // Item. Conversion to named entities is provided by the Riot API.
@@ -98,6 +99,7 @@ message Item {
 
 // Champion. Conversion to named entities is provided by the Riot API.
 message Champion {
-    int32 id = 1;
-    string name = 2;
+    int32 id = 1;  // Champion ID.
+    string name = 2;  // Champion name, as stated in the game.
+    string key = 3;  // DDragon key, to fetch the image.
 }
