@@ -10,7 +10,7 @@ Args:
 import gflags
 import sys
 
-from graph import GraphBuilder
+from powerspikegg.computation_models.match.graph import GraphBuilder
 
 gflags.DEFINE_string("model_dir", "/tmp/model",
                      "Output directory of the model")

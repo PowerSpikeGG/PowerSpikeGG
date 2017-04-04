@@ -3,7 +3,7 @@
 import gflags
 import sys
 
-from train import GraphTrainer
+from powerspikegg.computation_models.match.train import GraphTrainer
 
 gflags.DEFINE_string("model_path", "/tmp/model/model.ckpt",
                      "Path to the model definition")
