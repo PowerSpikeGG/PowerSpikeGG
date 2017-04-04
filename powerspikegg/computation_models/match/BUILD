@@ -3,6 +3,7 @@ py_binary(
     srcs = ["generate_graph.py"],
     deps = [
         ":graph",
+        "@org_tensorflow//tensorflow:tensorflow_py",
         "@pydep_gflags//:library",
     ],
 )
@@ -20,6 +21,7 @@ py_binary(
     name = "freeze",
     srcs = ["freeze.py"],
     deps = [
+        "@org_tensorflow//tensorflow:tensorflow_py",
         "@pydep_gflags//:library",
     ],
 )
