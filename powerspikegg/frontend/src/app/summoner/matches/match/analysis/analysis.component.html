@@ -1,3 +1,37 @@
-<div class="analysis-container" fxLayout.gt-sm="row">
+<div class="analysis-container"
+     fxLayout.gt-md="row"
+     fxLayout.md="column">
+
+  <div class="radar-chart-container"
+       fxFlex.gt-sm
+       fxLayout.gt-sm="row">
+    <div class="radar-chart"
+         fxFlexOffset.gt-sm="20"
+         fxFlex.gt-sm="60">
+      <h1>Individual Performance</h1>
+      <canvas baseChart
+              [datasets]="radarChartData"
+              [labels]="radarChartLabels"
+              [chartType]="radarChartType"
+              [options]="radarChartOptions"
+              [colors]="radarChartColors"
+              (chartHover)="chartHovered($event)"
+              (chartClick)="chartClicked($event)">
+      </canvas>
+    </div>
+  </div>
+
+  <div class="game-table-container"
+       fxFlex.gt-sm
+       fxLayout.gt-sm="row">
+
+    <div class="game-table"
+         fxFlexOffset.gt-sm="10"
+         fxFlex.gt-sm="80">
+      <h1>Team Performance</h1>
+
+    </div>
+
+  </div>
 
 </div>
