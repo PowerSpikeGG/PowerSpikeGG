@@ -95,7 +95,7 @@ func TestGateway(t *testing.T) {
 				// TODO(archangel): add a test with multiple match references returned for summoner requests.
 				Id: 3122561986,
 			},
-			expectedResponse: "{result: [{\"id\":3.122561986e+09}]}",
+			expectedResponse: "{\"results\": [{\"id\":3.122561986e+09}]}",
 			expectedStatus:   http.StatusOK,
 		},
 		{
