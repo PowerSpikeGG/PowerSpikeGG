@@ -1,5 +1,7 @@
 """Utility to train Tensorflow models"""
 
+import os
+
 import tensorflow as tf
 
 
@@ -70,3 +72,8 @@ class GraphTrainer:
             (note that the object become unusable afterward)
         """
         self.sess.close()
+
+    def save(self):
+        """ Save the model """
+        checkpoint_file = self.model_path
+        self.saver.save(self.sess, checkpoint_file)
