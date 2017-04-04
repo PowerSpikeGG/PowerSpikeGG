@@ -1,9 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { fetcher, game } from '../../../../../models/protos/bundle';
-import AggregatedStatistics = fetcher.rds.AggregatedStatistics;
-import { AggregationQuery } from '../../../../../models/gateway-queries';
 import { MdSnackBar } from '@angular/material';
+
+import { AggregationQuery } from '../../../../../models/gateway-queries';
+import { fetcher, game } from '../../../../../models/protos/bundle';
 import { GatewayService } from '../../../../../services/gateway.service';
+
+import AggregatedStatistics = fetcher.rds.AggregatedStatistics;
 import Participant = game.leagueoflegends.Participant;
 
 @Component({
