@@ -47,3 +47,9 @@ and bring the docker composed stack.
 
     cd $(bazel info workspace)
     docker-compose up
+
+[bazel]: https://bazel.build/
+[docker]: https://www.docker.com/
+[npm]: https://www.npmjs.com/
+[python-pip]: https://pip.pypa.io/en/stable/
+
