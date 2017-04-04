@@ -63,7 +63,7 @@ class GraphBuilder:
             current = current + 1
         return hidden
 
-    def inference(self, data, hidden1_units, hidden2_units):
+    def inference(self, data):
         """Build the model up to where it may be used for inference.
 
         Args:
@@ -156,7 +156,7 @@ class GraphBuilder:
             answer = tf.placeholder(tf.float32, shape=(None, 1), name="answer")
 
             # Result of the computation of the neural network
-            logits = self.inference(placeholder, 64, 32)
+            logits = self.inference(placeholder)
 
             # Squared sum of the difference between the predicted value
             # and the answers
