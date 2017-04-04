@@ -5,6 +5,12 @@ py_binary(
 )
 
 py_binary(
+    name = "train_graph",
+    srcs = ["train_graph.py"],
+    deps = [":train"],
+)
+
+py_binary(
     name = "freeze",
     srcs = ["freeze.py"],
 )
