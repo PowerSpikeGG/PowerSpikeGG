@@ -7,15 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AnalysisComponent implements OnInit {
 
-  constructor() { }
+  private radarChartLabels = ['Kills', 'Deaths', 'Assists', 'CS', 'Jungle CS', 'Damage', 'Healing', 'Vision', 'First Tower'];
 
-  ngOnInit() {
-  }
-
-// Radar
-  public radarChartLabels = ['Kills', 'Deaths', 'Assists', 'CS', 'Jungle CS', 'Damage', 'Healing', 'Vision', 'First Tower'];
-
-  public radarChartData = [
+  private radarChartData = [
     {
       data: [65, 59, 90, 81, 56, 55, 40, 40, 40],
       label: 'Born To Stack',
@@ -33,7 +27,7 @@ export class AnalysisComponent implements OnInit {
     }
   ];
 
-  public radarChartColors = [
+  private radarChartColors = [
     {
       backgroundColor: 'rgba(54, 162, 235, 0.3)',
       borderColor: '#36a2eb',
@@ -48,9 +42,9 @@ export class AnalysisComponent implements OnInit {
     }
   ];
 
-  public radarChartType = 'radar';
+  private radarChartType = 'radar';
 
-  public radarChartOptions = {
+  private radarChartOptions = {
     legend: {
       position: 'bottom',
       labels: {
@@ -68,12 +62,9 @@ export class AnalysisComponent implements OnInit {
     }
   };
 
-  // events
-  public chartClicked(e:any):void {
-    console.log(e);
+  constructor() { }
+
+  ngOnInit() {
   }
 
-  public chartHovered(e:any):void {
-    console.log(e);
-  }
 }
