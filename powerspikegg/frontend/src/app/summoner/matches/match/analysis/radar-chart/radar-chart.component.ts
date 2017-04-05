@@ -15,6 +15,7 @@ import Participant = game.leagueoflegends.Participant;
 })
 export class RadarChartComponent implements OnInit {
 
+  @Input() victory: boolean;
   @Input() participant: Participant;
   private radarChartData;
 
