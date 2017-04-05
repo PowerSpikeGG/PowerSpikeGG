@@ -16,6 +16,7 @@ import { MatchDurationPipe } from './matches/match/match-duration.pipe';
 import { RadarChartComponent } from './matches/match/analysis/radar-chart/radar-chart.component';
 import { GameTableComponent } from './matches/match/analysis/game-table/game-table.component';
 import { ThousandPipe } from './matches/match/analysis/game-table/thousand.pipe';
+import { KdaPipe } from './matches/match/kda.pipe';
 
 @NgModule({
   imports: [
@@ -37,6 +38,7 @@ import { ThousandPipe } from './matches/match/analysis/game-table/thousand.pipe'
     RadarChartComponent,
     GameTableComponent,
     ThousandPipe,
+    KdaPipe,
   ],
   providers: [GatewayService],
 })
