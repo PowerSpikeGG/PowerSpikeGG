@@ -5,6 +5,8 @@
 #include <stdlib.h>
 
 
+namespace serving {
+
 std::vector<double> ConvertStatToVector(
         const game::leagueoflegends::PlayerStatistics& stats) {
     std::vector<double> v {
@@ -38,3 +40,5 @@ std::vector<double> GetFormattedSummonerStats(
         }
     }
 }
+
+}  // namespace serving
