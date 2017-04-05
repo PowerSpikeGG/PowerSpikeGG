@@ -20,10 +20,13 @@ export class GatewayService {
     return name.replace(/ /g, '');
   }
 
-  constructor(private http: Http) { }
+  constructor(private http: Http) {
+  }
 
   getMatch(query: MatchQuery): Observable<MatchReference> {
-    return this.http.get(MATCH_API_URL + '/' + query.id + '/' + query.region)
+    const url = MATCH_API_URL + '/' + query.id + '/' + query.region
+    console.log('Calling: ' + url);
+    return this.http.get(url)
       .map(response => response.json() || {})
       .catch(error => Observable.throw(error));
   }
@@ -43,7 +46,7 @@ export class GatewayService {
     console.log('Calling: ' + url);
     return this.http.get(url)
       .flatMap(response => {
-        const results =  response.json().results;
+        const results = response.json().results;
         if (results.length > 0) {
           return this.getSummonerFromMatchReference(summonerName, results[0]);
         } else {
@@ -58,7 +61,7 @@ export class GatewayService {
   private getSummonerFromMatchReference(summonerName: string, m: MatchReference): Observable<Summoner> {
     // Finding the summoner asked Participant object
     const matchingParticipants = m.detail.teams.map(team => team.participants.find(p => {
-     return GatewayService.sanitizeSummonerName(p.summoner.name.toLocaleLowerCase()) === GatewayService.sanitizeSummonerName(summonerName.toLocaleLowerCase());
+      return GatewayService.sanitizeSummonerName(p.summoner.name.toLocaleLowerCase()) === GatewayService.sanitizeSummonerName(summonerName.toLocaleLowerCase());
     })).filter(sum => !isUndefined(sum));
     // TODO(ArchangelX360): better pipeline to directly return the correct participant
     if (matchingParticipants.length > 0) {
@@ -69,7 +72,7 @@ export class GatewayService {
   }
 
   getAverageStatistics(query: AggregationQuery): Observable<AggregatedStatistics> {
-    const url = AGGREGATION_API_URL + '/' + query.league + '/' + query.championID + '/' + query.summonerID +'/' + query.region;
+    const url = AGGREGATION_API_URL + '/' + query.league + '/' + query.championID + '/' + query.summonerID + '/' + query.region;
     console.log('Calling: ' + url);
     return this.http.get(url)
       .map(response => response.json() || {})
