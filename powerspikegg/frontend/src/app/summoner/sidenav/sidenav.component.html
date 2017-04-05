@@ -1,14 +1,16 @@
-<div class="sidenav">
-  <div class="summoner-icon">
-    <img src="//ddragon.leagueoflegends.com/cdn/6.24.1/img/profileicon/908.png">
-    <div class="border-circle">
-      <div class="level-circle">30</div> <!-- TODO: bind level number -->
+<div class="sidenav-container">
+  <div class="sidenav">
+    <div class="summoner-icon">
+      <img src="//ddragon.leagueoflegends.com/cdn/6.24.1/img/profileicon/908.png">
+      <div class="border-circle">
+        <div class="level-circle">30</div> <!-- TODO: bind level number -->
+      </div>
     </div>
+    <h1>{{summoner.name}}</h1>
+    <button md-raised-button class="renew-button">
+      <md-icon md-list-avatar>autorenew</md-icon>
+      Renew
+    </button>
+    <div class="divider"></div>
   </div>
-  <h1>{{summoner.name}}</h1>
-  <button md-raised-button class="renew-button">
-    <md-icon md-list-avatar>autorenew</md-icon>
-    Renew
-  </button>
-  <div class="divider"></div>
 </div>

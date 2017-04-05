@@ -1,7 +1,9 @@
-.sidenav {
+.sidenav-container {
   background: #122c5e;
-  height: 100%; width: 20%;
-  position: fixed;
+  height: 100%;
+}
+
+.sidenav {
   text-align: center;
 }
 
