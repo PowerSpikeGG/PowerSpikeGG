@@ -68,6 +68,7 @@ def psgg_proto_library(name, srcs=[], deps=[], has_services=0, visibility=[], te
     native.filegroup(
         name=name + "_protos",
         srcs=srcs,
+        visibility = visibility,
     )
 
     _psgg_proto_library_py(
