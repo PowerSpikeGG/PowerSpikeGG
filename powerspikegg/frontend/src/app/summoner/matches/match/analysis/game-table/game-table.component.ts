@@ -1,11 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MdSnackBar } from '@angular/material';
+
 import { GatewayService } from '../../../../../services/gateway.service';
 import { game, serving } from '../../../../../models/protos/bundle';
+import { ComputationQuery } from '../../../../../models/gateway-queries';
 import Participant = game.leagueoflegends.Participant;
 import MatchReference = game.leagueoflegends.MatchReference;
-import { MdSnackBar } from '@angular/material';
 import Statistics = serving.Statistics;
-import { ComputationQuery } from '../../../../../models/gateway-queries';
+import MatchComputationFeature = serving.MatchComputationFeature;
 
 @Component({
   selector: 'app-game-table',
@@ -17,10 +19,10 @@ export class GameTableComponent implements OnInit {
   @Input() participant: Participant;
   @Input() match: MatchReference;
 
-  private computedStatistics: Statistics;
+  private computedStatistics: MatchComputationFeature;
 
   constructor(private gatewayService: GatewayService,
-  private snackBar: MdSnackBar) {
+              private snackBar: MdSnackBar) {
   }
 
   ngOnInit() {
@@ -33,7 +35,6 @@ export class GameTableComponent implements OnInit {
       (computedStatistics) => this.computedStatistics = computedStatistics,
       (error) => this.snackBar.open('[ERROR] Cannot retrieve aggregated stats of ' + this.participant.summoner.name + '.', 'Ok'),
     );
-
   }
 
 }

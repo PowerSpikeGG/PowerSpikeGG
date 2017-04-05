@@ -6,64 +6,63 @@
   <div class="game-table"
        fxLayout="row">
 
-    <table class="table table-striped">
+    <table class="table table-striped" *ngIf="computedStatistics">
       <tbody>
       <tr>
         <td></td>
         <td><img src="//ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/{{participant.champion.key}}.png"></td>
         <td><div class="icon-wrap"><i class="material-icons">thumb_up</i></div></td>
-        <td><div class="icon-wrap">Coefficient</div></td>
+        <td>Coefficient</td> <!-- TODO: display coef in another way, colors, etc. -->
       </tr>
       <tr>
         <td>Kills</td>
         <td>{{participant.statistics.kills}}</td>
-        <td>{{computedStatistics.kills.value}}</td>
-        <td>{{computedStatistics.kills.coefficient}}</td>
+        <td>{{computedStatistics.expectedStatistics.kills.value}}</td>
+        <td>{{computedStatistics.expectedStatistics.kills.coefficient}}</td>
       </tr>
       <tr>
         <td>Deaths</td>
         <td>{{participant.statistics.deaths}}</td>
-        <td>{{computedStatistics.deaths.value}}</td>
-        <td>{{computedStatistics.deaths.coefficient}}</td>
+        <td>{{computedStatistics.expectedStatistics.deaths ? computedStatistics.expectedStatistics.deaths.value : "ND"}}</td>
+        <td>{{computedStatistics.expectedStatistics.deaths ? computedStatistics.expectedStatistics.deaths.coefficient : "ND"}}</td>
       </tr>
       <tr>
         <td>Assists</td>
         <td>{{participant.statistics.assists}}</td>
-        <td>{{computedStatistics.assists.value}}</td>
-        <td>{{computedStatistics.assists.coefficient}}</td>
+        <td>{{computedStatistics.expectedStatistics.assists ? computedStatistics.expectedStatistics.assists.value : "ND"}}</td>
+        <td>{{computedStatistics.expectedStatistics.assists ? computedStatistics.expectedStatistics.assists.coefficient : "ND"}}</td>
       </tr>
       <tr>
         <td>CS</td>
         <td>{{participant.statistics.minionsKilled}}</td>
-        <td>{{computedStatistics.minionKilled.value}}</td>
-        <td>{{computedStatistics.minionKilled.coefficient}}</td>
+        <td>{{computedStatistics.expectedStatistics.minionKilled ? computedStatistics.expectedStatistics.minionsKilled.value : "ND"}}</td>
+        <td>{{computedStatistics.expectedStatistics.minionsKilled ? computedStatistics.expectedStatistics.minionsKilled.coefficient : "ND"}}</td>
       </tr>
       <tr>
         <td>Jungle CS</td>
         <td>{{participant.statistics.neutralMinionsKilled}}</td>
         <!-- FIXME: proto not defining this -->
-        <td>ND</td>
-        <td>ND</td>
+        <td>{{computedStatistics.expectedStatistics.neutralMinionsKilled ? computedStatistics.expectedStatistics.neutralMinionsKilled.value : "ND"}}</td>
+        <td>{{computedStatistics.expectedStatistics.neutralMinionsKilled ? computedStatistics.expectedStatistics.neutralMinionsKilled.coefficient : "ND"}}</td>
       </tr>
       <tr>
         <td>Damage</td>
-        <!-- TODO: pipe for reducing to K 10K 25K for example -->
         <!-- FIXME: VERIFY IF THIS IS CORRECT DAMAGE -->
         <td>{{participant.statistics.totalDamages.toChampions}}</td>
-        <td>{{computedStatistics.totalDamages.value}}</td>
-        <td>{{computedStatistics.totalDamages.coefficient}}</td>
+        <td>{{computedStatistics.expectedStatistics.totalDamages ? (computedStatistics.expectedStatistics.totalDamages.value | thousandPipe) : "ND"}}</td>
+        <td>{{computedStatistics.expectedStatistics.totalDamages ? computedStatistics.expectedStatistics.totalDamages.coefficient : "ND"}}</td>
       </tr>
       <tr>
         <td>Healing</td>
         <td>{{participant.statistics.totalHeal}}</td>
-        <td>{{computedStatistics.totalHeal.value}}</td>
-        <td>{{computedStatistics.totalHeal.coefficient}}</td>
+        <td>{{computedStatistics.expectedStatistics.totalHeal ? (computedStatistics.expectedStatistics.totalHeal.value | thousandPipe) : "ND"}}</td>
+        <td>{{computedStatistics.expectedStatistics.totalHeal ? computedStatistics.expectedStatistics.totalHeal.coefficient : "ND"}}</td>
       </tr>
       <tr>
         <td>Vision</td>
         <td>{{participant.statistics.wardsPlaced}}</td>
-        <td>{{computedStatistics.wardsPlaced.value}}</td>
-        <td>{{computedStatistics.wardsPlaced.coefficient}}</td>
+        <td>{{computedStatistics.expectedStatistics.wardsPlaced ? computedStatistics.expectedStatistics.wardsPlaced.value : "ND"}}</td>
+        <td>{{computedStatistics.expectedStatistics.wardsPlaced ? computedStatistics.expectedStatistics.wardsPlaced.coefficient : "ND"}}</td>
       </tr>
       <tr>
         <td>First Tower</td>
