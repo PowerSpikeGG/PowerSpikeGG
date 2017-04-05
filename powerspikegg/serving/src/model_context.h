@@ -13,7 +13,7 @@ namespace serving {
 class ModelContext {
    public:
     ModelContext(std::string model_path);
-    int compute(std::vector<float> input);
+    int compute(std::vector<double> input);
 
    private:
     tensorflow::Scope scope_;
