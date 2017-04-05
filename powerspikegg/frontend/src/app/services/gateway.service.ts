@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { isUndefined } from 'util';
 
 import { AGGREGATION_API_URL, COMPUTATION_API_URL, MATCH_API_URL, SUMMONER_API_URL } from '../config/gateway';
@@ -10,6 +10,7 @@ import AggregatedStatistics = fetcher.rds.AggregatedStatistics;
 import Statistics = serving.Statistics;
 import MatchReference = game.leagueoflegends.MatchReference;
 import Summoner = game.leagueoflegends.Summoner;
+import MatchComputationFeature = serving.MatchComputationFeature;
 
 @Injectable()
 export class GatewayService {
@@ -75,7 +76,7 @@ export class GatewayService {
       .catch(error => Observable.throw(error));
   }
 
-  getComputedStatistics(query: ComputationQuery): Observable<Statistics> {
+  getComputedStatistics(query: ComputationQuery): Observable<MatchComputationFeature> {
     const url = COMPUTATION_API_URL + '/' + query.summonerID + '/' + query.matchID + '/' + query.region;
     console.log('Calling: ' + url);
     return this.http.get(url)
