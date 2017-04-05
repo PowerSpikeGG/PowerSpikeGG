@@ -10,7 +10,7 @@ import { ComputationQuery } from '../../../../../models/gateway-queries';
 @Component({
   selector: 'app-game-table',
   templateUrl: './game-table.component.html',
-  styleUrls: ['./game-table.component.css']
+  styleUrls: ['./game-table.component.css'],
 })
 export class GameTableComponent implements OnInit {
 
@@ -26,13 +26,13 @@ export class GameTableComponent implements OnInit {
   ngOnInit() {
     const query: ComputationQuery = {
       matchID: this.match.id,
-      summonerID: this.participant.summoner.id,
       region: this.participant.summoner.region.toString(),
+      summonerID: this.participant.summoner.id,
     };
     this.gatewayService.getComputedStatistics(query).subscribe(
       (computedStatistics) => this.computedStatistics = computedStatistics,
       (error) => this.snackBar.open('[ERROR] Cannot retrieve aggregated stats of ' + this.participant.summoner.name + '.', 'Ok'),
-    )
+    );
 
   }
 

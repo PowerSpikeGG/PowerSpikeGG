@@ -8,7 +8,7 @@ describe('GameTableComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GameTableComponent ]
+      declarations: [ GameTableComponent ],
     })
     .compileComponents();
   }));
