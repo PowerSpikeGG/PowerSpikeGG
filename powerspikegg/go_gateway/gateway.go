@@ -14,12 +14,10 @@ import (
 )
 
 var (
-	grpcFetcherAddress     = flag.String("grpc_fetcher_address", "127.0.0.1", "Address of the GRPC server of the fetcher service")
-	grpcFetcherPort        = flag.String("grpc_fetcher_port", "50001", "Port of the GRPC server of the fetcher service")
-	grpcComputationAddress = flag.String("grpc_computation_address", "127.0.0.1", "Address of the GRPC server of the computation service")
-	grpcComputationPort    = flag.String("grpc_computation_port", "50051", "Port of the GRPC server of the computation service")
-	httpAddress            = flag.String("http_address", "127.0.0.1", "Address of the HTTP gateway")
-	httpPort               = flag.String("http_port", "8080", "Port of the HTTP gateway")
+	grpcFetcherURL     = flag.String("grpc_fetcher_url", "127.0.0.1:50001", "URL of the GRPC server of the fetcher service")
+	grpcComputationURL = flag.String("grpc_computation_url", "127.0.0.1:50051", "Address of the GRPC server of the computation service")
+	httpAddress        = flag.String("http_address", "127.0.0.1", "Address of the HTTP gateway")
+	httpPort           = flag.String("http_port", "8080", "Port of the HTTP gateway")
 )
 
 type gatewayServer struct {
@@ -54,12 +52,12 @@ func createServer(matchFetcherClient fetcherpb.MatchFetcherClient, computationCl
 func main() {
 	flag.Parse()
 
-	connFetcher, err := grpc.Dial(*grpcFetcherAddress+":"+*grpcFetcherPort, grpc.WithInsecure())
+	connFetcher, err := grpc.Dial(*grpcFetcherURL, grpc.WithInsecure())
 	if err != nil {
 		fmt.Fprintln(os.Stderr, fmt.Sprintf("unable to reach fetcher gRPC server: %v", err))
 	}
 	defer connFetcher.Close()
-	connComputation, err := grpc.Dial(*grpcComputationAddress+":"+*grpcComputationPort, grpc.WithInsecure())
+	connComputation, err := grpc.Dial(*grpcComputationURL, grpc.WithInsecure())
 	if err != nil {
 		fmt.Fprintln(os.Stderr, fmt.Sprintf("unable to reach computation gRPC server: %v", err))
 	}
