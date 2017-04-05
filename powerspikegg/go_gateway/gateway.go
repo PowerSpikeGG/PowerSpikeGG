@@ -14,9 +14,12 @@ import (
 )
 
 var (
-	grpcServerAddress = flag.String("grpc-server-address", "127.0.0.1:50001", "Address of the GRPC server")
-	httpAddress       = flag.String("http-address", "127.0.0.1", "Address of the HTTP gateway")
-	httpPort          = flag.String("http-port", "8080", "Port of the HTTP gateway")
+	grpcFetcherAddress     = flag.String("grpc_fetcher_address", "127.0.0.1", "Address of the GRPC server of the fetcher service")
+	grpcFetcherPort        = flag.String("grpc_fetcher_port", "50001", "Port of the GRPC server of the fetcher service")
+	grpcComputationAddress = flag.String("grpc_computation_address", "127.0.0.1", "Address of the GRPC server of the computation service")
+	grpcComputationPort    = flag.String("grpc_computation_port", "50051", "Port of the GRPC server of the computation service")
+	httpAddress            = flag.String("http_address", "127.0.0.1", "Address of the HTTP gateway")
+	httpPort               = flag.String("http_port", "8080", "Port of the HTTP gateway")
 )
 
 type gatewayServer struct {
@@ -51,14 +54,19 @@ func createServer(matchFetcherClient fetcherpb.MatchFetcherClient, computationCl
 func main() {
 	flag.Parse()
 
-	conn, err := grpc.Dial(*grpcServerAddress, grpc.WithInsecure())
+	connFetcher, err := grpc.Dial(*grpcFetcherAddress+":"+*grpcFetcherPort, grpc.WithInsecure())
 	if err != nil {
-		fmt.Fprintln(os.Stderr, fmt.Sprintf("unable to reach fetcher server: %v", err))
+		fmt.Fprintln(os.Stderr, fmt.Sprintf("unable to reach fetcher gRPC server: %v", err))
 	}
-	defer conn.Close()
+	defer connFetcher.Close()
+	connComputation, err := grpc.Dial(*grpcComputationAddress+":"+*grpcComputationPort, grpc.WithInsecure())
+	if err != nil {
+		fmt.Fprintln(os.Stderr, fmt.Sprintf("unable to reach fetcher gRPC server: %v", err))
+	}
+	defer connFetcher.Close()
 
-	matchFetcherClient := fetcherpb.NewMatchFetcherClient(conn)
-	computationClient := computationpb.NewMatchComputationClient(conn)
+	matchFetcherClient := fetcherpb.NewMatchFetcherClient(connFetcher)
+	computationClient := computationpb.NewMatchComputationClient(connComputation)
 
 	lis, err := net.Listen("tcp", *httpAddress+":"+*httpPort)
 	if err != nil {
