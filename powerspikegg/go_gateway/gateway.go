@@ -61,9 +61,9 @@ func main() {
 	defer connFetcher.Close()
 	connComputation, err := grpc.Dial(*grpcComputationAddress+":"+*grpcComputationPort, grpc.WithInsecure())
 	if err != nil {
-		fmt.Fprintln(os.Stderr, fmt.Sprintf("unable to reach fetcher gRPC server: %v", err))
+		fmt.Fprintln(os.Stderr, fmt.Sprintf("unable to reach computation gRPC server: %v", err))
 	}
-	defer connFetcher.Close()
+	defer connComputation.Close()
 
 	matchFetcherClient := fetcherpb.NewMatchFetcherClient(connFetcher)
 	computationClient := computationpb.NewMatchComputationClient(connComputation)
