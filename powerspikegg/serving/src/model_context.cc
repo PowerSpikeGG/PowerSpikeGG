@@ -23,7 +23,7 @@ ModelContext::ModelContext(std::string model_path)
     this->logits = computation::utils::GenerateOutputFromNode(this->scope_.graph(), "placeholder");
 }
 
-int ModelContext::compute(std::vector<float> input) { 
+int ModelContext::compute(std::vector<double> input) { 
     std::vector<tensorflow::Tensor> outputs;
     this->session_.Run({
                 {this->inputs, {{input.at(0), input.at(1),input.at(2), input.at(3), input.at(4), input.at(5), input.at(6), input.at(7) }}}
