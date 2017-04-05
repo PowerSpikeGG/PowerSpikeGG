@@ -26,7 +26,6 @@
 
 .match-data {
   border-bottom: 2px solid #dadada;
-  box-shadow: 0 4px 7px #c3c3c3;
   cursor: pointer;
   font-size: 15px;
   height:80px;
@@ -100,15 +99,40 @@
 
 .match-data .kda .score {
   display: inline-block;
-  padding-right: 5px;
+  padding-right: 10px;
+  text-align: right;
 }
 
-.match-data .kda .ratio {
-  background: #e74c3c;
+.match-data .ratio {
+  text-align: left;
+}
+
+.match-data .kda .ratio span {
+  border: 2px solid rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   color: #fff;
   font-size: 12px;
   padding: 3px 10px;
+}
+
+.kda .ratio .ratio-bad {
+  background: #c0392b;
+}
+
+.kda .ratio .ratio-low {
+  background: #e74c3c;
+}
+
+.kda .ratio .ratio-ok {
+  background: #e67e22;
+}
+
+.kda .ratio .ratio-good {
+  background: #2ecc71;
+}
+
+.kda .ratio .ratio-great {
+  background: #27ae60;
 }
 
 /*----------------------------------------------*/
@@ -133,7 +157,6 @@
 }
 
 .match-data .role img {
-  padding-right: 5px;
   vertical-align: middle;
   width: 25px;
 }
