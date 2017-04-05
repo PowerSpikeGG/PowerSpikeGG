@@ -7,6 +7,9 @@
 # dependencies
 /node_modules
 
+# proto generation directory
+src/app/models/protos
+
 # IDEs and editors
 /.idea
 .project
