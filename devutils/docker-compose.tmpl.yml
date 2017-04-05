@@ -12,9 +12,13 @@ services:
             "--enable_prometheus",
             "--riot_api_token=$RIOT_API_TOKEN",
             "--rawdata_cache_server_address=mongod:27017",
+            "--prometheus_server_port=8002",
         ]
         depends_on:
             - mongod
+
+    tensorflow_serving:
+        image: "bazel/powerspikegg:model_serving"
 
     server:
         image: "bazel/powerspikegg:server"
@@ -27,6 +31,7 @@ services:
         ]
         depends_on:
             - fetcher
+            - tensorflow_serving
 
     frontend:
         image: "bazel/powerspikegg:webserver"
@@ -34,6 +39,15 @@ services:
             - "8000:80"
         depends_on:
             - server
+
+    prometheus:
+        image: "bazel/powerspikegg:prometheus"
+        ports:
+            - "9090:9090"
+        depends_on:
+            - fetcher
+        volumes:
+            - ./prometheus.yml:/etc/prometheus/prometheus.yml
 
 volumes:
     mongod-dbpath:

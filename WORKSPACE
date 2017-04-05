@@ -127,6 +127,11 @@ docker_pull(
 )
 
 docker_pull(
+    name = "docker_debian_pkg",
+    tag = "olbat/debian-pkg",
+)
+
+docker_pull(
     name = "docker_python3",
     tag = "funkysayu/py3grpcio:1.1.3",
 )
@@ -139,6 +144,11 @@ docker_pull(
 docker_pull(
     name = "docker_openjdk",
     tag = "openjdk:8",
+)
+
+docker_pull(
+    name = "docker_prometheus",
+    tag = "prom/prometheus",
 )
 
 #

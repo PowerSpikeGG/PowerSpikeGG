@@ -22,8 +22,18 @@ docker_build(
 )
 
 docker_build(
+    name = "prometheus",
+    base = "@docker_prometheus//:image",
+)
+
+docker_build(
     name = "server",
     base = "//powerspikegg/go_gateway:docker",
+)
+
+docker_build(
+    name = "model_serving",
+    base = "//powerspikegg/serving:docker",
 )
 
 docker_build(
