@@ -6,7 +6,7 @@ load("//powerspikegg:powerspikegg.bzl", "psgg_proto_library")
 
 docker_build(
     name = "docker",
-    base = "@docker_debian//:image",
+    base = "@docker_debian_pkg//:image",
     directory = "/bin",
     entrypoint = ["/bin/main"],
     files = [":main"],

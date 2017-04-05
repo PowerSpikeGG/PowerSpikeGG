@@ -25,8 +25,11 @@ bazel run //powerspikegg:fetcher
 bazel run //powerspikegg:mongod
 bazel run //powerspikegg:webserver
 bazel run //powerspikegg:server
+bazel run //powerspikegg:prometheus
+bazel run //powerspikegg:model_serving
 
 # Generate the docker-compose from the template
+envsubst < devutils/prometheus.tmpl.yml > prometheus.yml
 envsubst < devutils/docker-compose.tmpl.yml > docker-compose.yml
 
 echo "Docker compose file generated at $(pwd)/docker-compose.yml"

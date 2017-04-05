@@ -1,0 +1,27 @@
+global:
+  scrape_interval: 5s
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+    monitor: 'devstack'
+
+# List of endpoint to monitor
+scrape_configs:
+  # Prometheus monitor itself
+  - job_name: 'prometheus'
+
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Rawdata fetcher monitoring
+  - job_name: 'rawdata-fetcher'
+
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 1s
+
+    static_configs:
+      - targets: ['fetcher:8002']
+        labels:
+          group: 'devstack'
+
