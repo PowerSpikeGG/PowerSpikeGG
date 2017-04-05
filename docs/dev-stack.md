@@ -13,7 +13,8 @@ stack in development mode. This is a 3 steps process:
 To build the stack, we expect you to have the following tools on your system:
  - [Docker][docker] (latest stable version)
  - [Docker compose][docker-compose]
- - [npm][npm] >= 6.0.0
+ - [npm][npm] >= 4.4.4
+ - [node.js][node] >= 6.0.0
  - [python-pip][pip] for python2 (and optionally python3)
  - [Bazel][bazel] >= 4.2.0
 
@@ -43,7 +44,7 @@ development stack.
 # Bringing the development stack alive
 
 To use the development stack, you now just have to move to the root workspace
-and bring the docker composed stack.
+and bring the docker composed stack up.
 
     cd $(bazel info workspace)
     docker-compose up
@@ -52,5 +53,6 @@ and bring the docker composed stack.
 [docker]: https://www.docker.com/
 [docker-compose]: https://docs.docker.com/compose/
 [npm]: https://www.npmjs.com/
+[node]: https://nodejs.org/en/
 [pip]: https://pip.pypa.io/en/stable/
 
