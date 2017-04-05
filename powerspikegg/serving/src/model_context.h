@@ -18,6 +18,8 @@ class ModelContext {
    private:
     tensorflow::Scope scope_;
     tensorflow::ClientSession session_;
+    tensorflow::Output logits;
+    tensorflow::Output inputs;
 };
 }
 

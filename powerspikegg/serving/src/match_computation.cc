@@ -21,6 +21,8 @@ grpc::Status MatchComputationImpl::GetFeature(
     serving::MatchComputationFeature* feature) {
     serving::Statistics* stats = feature->mutable_expected_statistics();
 
+    //auto inputs = serving::GetFormattedSummonerStats(*match);
+
     auto kills = this->contexts.find("kills");
     if (kills != this->contexts.end()) {
         std::vector<float> input;
