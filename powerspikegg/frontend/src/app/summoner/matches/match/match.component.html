@@ -1,4 +1,6 @@
-<div class="match victory" fxLayout="column"> <!-- TODO: victory or defeat class -->
+<div class="match"
+     [ngClass]="victory ? 'victory' : 'defeat'"
+     fxLayout="column">
 
   <div class="match-data"
        (click)="toggleMatchDisplay()"
@@ -10,15 +12,17 @@
       <div class="date">{{match.timestamp | date: "dd/MM"}}</div>
       <div class="duration"> {{match.detail.duration | matchDuration}} <span>m</span></div>
     </div>
-    <div class="kda" fxFlex>
-      <div class="score">{{participant.statistics.kills}} / {{participant.statistics.assists}} / {{participant.statistics.deaths}}</div>
-      <span class="ratio">NOPE KDA</span> <!-- TODO: KDA compute and color changing -->
+    <div class="kda" fxFlex="35">
+      <div class="score" fxFlex>{{participant.statistics.kills}} / {{participant.statistics.deaths}} / {{participant.statistics.assists}}</div>
+      <div class="ratio" fxFlex>
+        <span [ngClass]="getKdaRatioColor()">{{kdaRatio | kda}}</span>
+      </div>
     </div>
     <div class="farm" fxFlex>{{participant.statistics.minionsKilled + participant.statistics.neutralMinionsKilled}} <span>CS</span></div>
-    <div class="role" fxFlex><img src="../../../assets/img/{{participant.role}}.png">{{participant.role}}</div>
+    <div class="role" fxFlex="10"><img src="../../../assets/img/{{participant.role}}.png"></div>
     <div class="lvl" fxFlex><span>LVL</span> {{participant.statistics.championLevel}}</div>
   </div>
 
-  <app-analysis *ngIf="displayMatchAnalysis" [match]="match" [participant]="participant"></app-analysis>
+  <app-analysis *ngIf="displayMatchAnalysis" [victory]="victory" [match]="match" [participant]="participant"></app-analysis>
 
 </div>
