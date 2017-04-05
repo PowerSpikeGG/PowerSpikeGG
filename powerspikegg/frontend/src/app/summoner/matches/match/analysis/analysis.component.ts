@@ -15,6 +15,7 @@ import MatchReference = game.leagueoflegends.MatchReference;
 export class AnalysisComponent implements OnInit {
 
   @Input() match: MatchReference;
+  @Input() victory: boolean;
   @Input() participant: Participant;
 
   constructor() {

@@ -1,4 +1,6 @@
-<div *ngIf="chartReady" class="radar-chart"
+<div *ngIf="chartReady"
+     class="radar-chart"
+     [ngClass]="victory ? 'victory' : 'defeat'"
      fxFlexOffset="20"
      fxFlex="60">
   <h1>League Comparison</h1>
