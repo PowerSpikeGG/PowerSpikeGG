@@ -2,6 +2,7 @@ package(default_visibility = ["//visibility:public"])
 
 load("@bazel_tools//tools/build_defs/docker:docker.bzl", "docker_build")
 load("@protobuf//:protobuf.bzl", "cc_proto_library")
+load("@bazel_tools//tools/build_defs/docker:docker.bzl", "docker_build")
 load("//powerspikegg:powerspikegg.bzl", "psgg_proto_library")
 
 docker_build(
