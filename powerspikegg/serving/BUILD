@@ -38,6 +38,18 @@ cc_library(
 )
 
 cc_library(
+    name = "model_context",
+    srcs = ["src/model_context.cc"],
+    hdrs = ["src/model_context.h"],
+    deps = [
+        "@org_tensorflow//tensorflow/cc:cc_ops",
+        "@org_tensorflow//tensorflow/cc:client_session",
+         "@org_tensorflow//tensorflow/core:tensorflow",
+        "//powerspikegg/computation_models/utils",
+            ]
+)
+
+cc_library(
     name = "computation_service",
     srcs = ["src/match_computation.cc"],
     hdrs = ["src/match_computation.h"],
@@ -46,6 +58,7 @@ cc_library(
         ":match_computation_cc",
         "//external:gflags",
         "//powerspikegg/computation_models/utils",
+        ":model_context",
         "@grpc//:grpc++",
         "@org_tensorflow//tensorflow/cc:cc_ops",
     ],

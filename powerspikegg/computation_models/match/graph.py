@@ -31,7 +31,7 @@ class GraphBuilder:
             weights = tf.Variable(
                 tf.truncated_normal([input_size, output_size],
                                     stddev=0.1), name="weights")
-            tf.summary.histogram('weights', weights)
+            #tf.summary.histogram('weights', weights)
             biases = tf.Variable(tf.zeros([output_size]), name="biases")
             mult = tf.matmul(data, weights) + biases
 
@@ -46,14 +46,15 @@ class GraphBuilder:
             # Droupout
             dropped = tf.nn.dropout(norm, keep_probability)
 
-            return norm
+            return hidden1
 
     def createNetwork(self, data, layers, keep_probability=1,
                       is_training=True):
         current = 1
-        hidden = tf.contrib.layers.batch_norm(data, 0.9,
-                                              is_training=is_training,
-                                              updates_collections=None)
+        #hidden = tf.contrib.layers.batch_norm(data, 0.9,
+        #                                      is_training=is_training,
+        #                                      updates_collections=None)
+        hidden = data
         last_size = self.input_size
         for layer_size in layers:
             hidden = self.add_hidden_layer(hidden, last_size, layer_size,
@@ -74,7 +75,40 @@ class GraphBuilder:
         Returns:
             softmax_linear: Output tensor with the computed logits.
         """
-        logits = self.createNetwork(data, [50, 50, 50, 50, 50, 1])
+        logits = self.createNetwork(data, [1])
+        hidden1_units = 50
+        hidden2_units = 50
+
+       	# Hidden 1
+        with tf.name_scope('hidden1'):
+            weights = tf.Variable(
+                tf.truncated_normal([self.input_size, hidden1_units],
+                                    stddev=1.0 / math.sqrt(
+                                        float(self.input_size))),
+                name='weights')
+            biases = tf.Variable(tf.zeros([hidden1_units]),
+                                name='biases')
+            hidden1 = tf.nn.relu(tf.matmul(data, weights) + biases)
+        # Hidden 2
+        with tf.name_scope('hidden2'):
+            weights = tf.Variable(
+                tf.truncated_normal([hidden1_units, hidden2_units],
+                                    stddev=1.0 / math.sqrt(
+                                        float(hidden1_units))),
+                name='weights')
+            biases = tf.Variable(tf.zeros([hidden2_units]),
+                                name='biases')
+            hidden2 = tf.nn.relu(tf.matmul(hidden1, weights) + biases)
+        # Linear
+        with tf.name_scope('softmax_linear'):
+            weights = tf.Variable(
+                tf.truncated_normal([hidden2_units, 1],
+                                    stddev=1.0 / math.sqrt(
+                                        float(hidden2_units))),
+                name='weights')
+            biases = tf.Variable(tf.zeros([1]),
+                                name='biases')
+            logits = tf.matmul(hidden2, weights) + biases
         return tf.identity(logits, name="logits")
 
     def loss(self, logits, labels):

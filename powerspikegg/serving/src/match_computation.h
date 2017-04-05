@@ -3,10 +3,14 @@
 
 #include <grpc++/grpc++.h>
 
+#include <unordered_map>
 #include <memory>
+#include <string>
 
 #include "tensorflow/cc/ops/standard_ops.h"
 #include "powerspikegg/serving/public/match_computation.grpc.pb.h"
+
+#include "model_context.h"
 
 class MatchComputationImpl final : public serving::MatchComputation::Service {
  public:
@@ -25,7 +29,7 @@ class MatchComputationImpl final : public serving::MatchComputation::Service {
                             serving::MatchComputationFeature* feature);
 
  private:
-    tensorflow::Scope scope;
+    std::unordered_map<std::string, serving::ModelContext> contexts;
 };
 
 #endif  // POWERSPIKEGG_SERVING_SRC_MATCH_COMPUTATION_H_
