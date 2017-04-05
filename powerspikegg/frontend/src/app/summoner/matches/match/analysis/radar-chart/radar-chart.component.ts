@@ -72,7 +72,7 @@ export class RadarChartComponent implements OnInit {
     };
     this.gatewayService.getAverageStatistics(query).subscribe(
       (aggregatedStatistics) => this.setRadarChartData(aggregatedStatistics),
-      (error) =>  this.snackBar.open('[ERROR] Cannot retrieve aggregated stats of ' + this.participant.summoner.name + '.', 'Ok'),
+      (error) => this.snackBar.open('[ERROR] Cannot retrieve aggregated stats of ' + this.participant.summoner.name + '.', 'Ok'),
     );
   }
 

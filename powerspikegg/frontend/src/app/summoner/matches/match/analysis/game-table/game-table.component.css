@@ -1,0 +1,74 @@
+
+.game-table h1 {
+    background: #2980b9;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 16px;
+    padding: 12px;
+    text-align: center;
+}
+
+.game-table-wrapper h1 {
+    background: #2980b9;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 16px;
+    padding: 12px;
+    text-align: center;
+}
+
+.game-table {
+    margin-top: 30px;
+}
+
+.game-table table {
+    border: 2px solid #d4d4d4;
+    border-collapse: collapse;
+    text-align: center;
+    width: 100%;
+}
+
+.game-table .table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: rgb(232, 232, 232);
+}
+
+.game-table .table-striped > tbody > tr:first-child {
+    border-bottom: 2px solid #2980b9;
+    border-top: 2px solid #d4d4d4;
+}
+
+.game-table table tbody tr td {
+    border-top: 1px solid #fff;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 15px;
+    padding: 8px;
+}
+
+.game-table table tbody tr:not(:first-child) td:first-child {
+    font-weight: 600;
+}
+
+.game-table table tbody tr:not(:first-child) td:not(:last-child) {
+    border-right: 1px solid #d4d4d4;
+}
+
+
+.game-table table tbody tr td img {
+    border-radius: 5px;
+    vertical-align: middle;
+    width: 45px;
+}
+
+.game-table table tbody tr td .icon-wrap {
+    background: #2980b9;
+    border-radius: 5px;
+    height: 45px; width: 45px;
+    margin: 0 auto;
+    vertical-align: middle;
+}
+
+.game-table table tbody tr td .icon-wrap i {
+    color: #fff;
+    font-size: 20px;
+    padding-top: 13px;
+}
