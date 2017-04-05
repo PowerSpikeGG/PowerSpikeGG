@@ -1,5 +1,3 @@
-package(default_visibility = ["//visibility:public"])
-
 py_library(
     name = "fetcher",
     srcs = [
@@ -7,6 +5,7 @@ py_library(
         "//powerspikegg/rawdata/fetcher:service_py",
         "//powerspikegg/rawdata/public:leagueoflegends_py",
     ],
+    visibility = ["//visibility:public"],
     deps = [
         "@org_tensorflow//third_party/py/numpy",
         "@pydep_gflags//:library",

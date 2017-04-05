@@ -1,14 +1,12 @@
 #!/bin/bash
 
-stats=(kills deaths assists minions_killed neutral_minions_killed total_damages total_heal wards_placed tower_kills) 
+declare -a stats=("kills" "deaths" "assists" "minions_killed" "neutral_minions_killed" "total_damages" "total_heal" "wards_placed" "tower_kills") 
 
-models="/tmp/powerspikegg/models"
+MODELS="/tmp/powerspikegg/models"
 
-rm -rf $models
-mkdir $models
+rm -rf $MODELS
+mkdir $MODELS
 
-for stat in ${stats[*]}; do
-    echo $stat
-    echo "$models/$stat"
-    bazel run //powerspikegg/computation_models/match:generate_graph -- --model_dir "$models/$stat"
+for stat in ${stats[@]}; do
+    bazel run //powerspikegg/computation_models/match:generate_graph -- --model_dir "$MODELS/$stat"
 done
