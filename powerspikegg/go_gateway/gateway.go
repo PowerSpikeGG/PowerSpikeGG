@@ -15,7 +15,7 @@ import (
 
 var (
 	grpcFetcherURL     = flag.String("grpc_fetcher_url", "127.0.0.1:50001", "URL of the GRPC server of the fetcher service")
-	grpcComputationURL = flag.String("grpc_computation_url", "127.0.0.1:50051", "Address of the GRPC server of the computation service")
+	grpcComputationURL = flag.String("grpc_computation_url", "127.0.0.1:50051", "URL of the GRPC server of the computation service")
 	httpAddress        = flag.String("http_address", "127.0.0.1", "Address of the HTTP gateway")
 	httpPort           = flag.String("http_port", "8080", "Port of the HTTP gateway")
 )
