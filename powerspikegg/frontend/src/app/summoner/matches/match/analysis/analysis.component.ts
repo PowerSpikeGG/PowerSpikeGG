@@ -5,6 +5,7 @@ import { fetcher, game } from '../../../../models/protos/bundle';
 import Participant = game.leagueoflegends.Participant;
 import PlayerStatistics = game.leagueoflegends.PlayerStatistics;
 import AggregatedStatistics = fetcher.rds.AggregatedStatistics;
+import MatchReference = game.leagueoflegends.MatchReference;
 
 @Component({
   selector: 'app-analysis',
@@ -13,6 +14,7 @@ import AggregatedStatistics = fetcher.rds.AggregatedStatistics;
 })
 export class AnalysisComponent implements OnInit {
 
+  @Input() match: MatchReference;
   @Input() participant: Participant;
 
   constructor() {

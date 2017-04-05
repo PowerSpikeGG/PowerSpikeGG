@@ -1,0 +1,79 @@
+<div class="game-table-wrapper"
+     fxFlexOffset="10"
+     fxFlex="80">
+
+  <h1>Expected Performance</h1>
+  <div class="game-table"
+       fxLayout="row">
+
+    <table class="table table-striped">
+      <tbody>
+      <tr>
+        <td></td>
+        <td><img src="//ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/Velkoz.png"></td>
+        <td><div class="icon-wrap"><i class="material-icons">thumb_up</i></div></td>
+        <td><div class="icon-wrap">Coefficient</div></td>
+      </tr>
+      <tr>
+        <td>Kills</td>
+        <td>{{participant.statistics.kills}}</td>
+        <td>{{computedStatistics.kills.value}}</td>
+        <td>{{computedStatistics.kills.coefficient}}</td>
+      </tr>
+      <tr>
+        <td>Deaths</td>
+        <td>{{participant.statistics.deaths}}</td>
+        <td>{{computedStatistics.deaths.value}}</td>
+        <td>{{computedStatistics.deaths.coefficient}}</td>
+      </tr>
+      <tr>
+        <td>Assists</td>
+        <td>{{participant.statistics.assists}}</td>
+        <td>{{computedStatistics.assists.value}}</td>
+        <td>{{computedStatistics.assists.coefficient}}</td>
+      </tr>
+      <tr>
+        <td>CS</td>
+        <td>{{participant.statistics.minionsKilled}}</td>
+        <td>{{computedStatistics.minionKilled.value}}</td>
+        <td>{{computedStatistics.minionKilled.coefficient}}</td>
+      </tr>
+      <tr>
+        <td>Jungle CS</td>
+        <td>{{participant.statistics.neutralMinionsKilled}}</td>
+        <!-- FIXME: proto not defining this -->
+        <td>ND IN PROTO</td>
+        <td>ND IN PROTO</td>
+      </tr>
+      <tr>
+        <td>Damage</td>
+        <!-- TODO: pipe for reducing to K 10K 25K for example -->
+        <!-- FIXME: VERIFY IF THIS IS CORRECT DAMAGE -->
+        <td>{{participant.statistics.totalDamages.toChampions}}</td>
+        <td>{{computedStatistics.totalDamages.value}}</td>
+        <td>{{computedStatistics.totalDamages.coefficient}}</td>
+      </tr>
+      <tr>
+        <td>Healing</td>
+        <td>{{participant.statistics.totalHeal}}</td>
+        <td>{{computedStatistics.totalHeal.value}}</td>
+        <td>{{computedStatistics.totalHeal.coefficient}}</td>
+      </tr>
+      <tr>
+        <td>Vision</td>
+        <td>{{participant.statistics.wardsPlaced}}</td>
+        <td>{{computedStatistics.wardsPlaced.value}}</td>
+        <td>{{computedStatistics.wardsPlaced.coefficient}}</td>
+      </tr>
+      <tr>
+        <td>First Tower</td>
+        <td>ND</td>
+        <td>ND</td>
+        <td>ND</td>
+      </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+</div>

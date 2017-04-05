@@ -19,6 +19,6 @@
     <div class="lvl" fxFlex><span>LVL</span> {{participant.statistics.championLevel}}</div>
   </div>
 
-  <app-analysis *ngIf="displayMatchAnalysis" [participant]="participant"></app-analysis>
+  <app-analysis *ngIf="displayMatchAnalysis" [match]="match" [participant]="participant"></app-analysis>
 
 </div>
