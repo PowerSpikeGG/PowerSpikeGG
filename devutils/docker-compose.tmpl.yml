@@ -25,9 +25,10 @@ services:
         ports:
             - "8080:8080"
         command: [
-            "--grpc-server-address=fetcher:50001",
-            "--http-address=0.0.0.0",
-            "--http-port=8080",
+            "--grpc_fetcher_url=fetcher:50001",
+            "--grpc_computation_url=tensorflow_serving:50051",
+            "--http_address=0.0.0.0",
+            "--http_port=8080",
         ]
         depends_on:
             - fetcher
@@ -36,9 +37,11 @@ services:
     frontend:
         image: "bazel/powerspikegg:webserver"
         ports:
-            - "8000:80"
+            - "4200:80"
         depends_on:
             - server
+        volumes:
+            - ./devutils/docker_nginx.conf:/etc/nginx/nginx.conf
 
     prometheus:
         image: "bazel/powerspikegg:prometheus"
