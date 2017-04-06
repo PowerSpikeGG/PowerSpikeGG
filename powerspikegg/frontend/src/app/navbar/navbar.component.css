@@ -4,7 +4,6 @@ nav {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 1000;
-
 }
 
 .navbar-wrap {
@@ -37,4 +36,10 @@ nav {
   font-size: 15px;
   line-height: 55px;
   text-decoration: none;
+}
+
+.navbar-items > li > a > img {
+  width: 25px;
+  vertical-align: middle;
+  margin-right: 10px;
 }
