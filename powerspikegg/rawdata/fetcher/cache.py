@@ -97,6 +97,17 @@ class CacheManager:
         client = pymongo.MongoClient(
             address, serverSelectionTimeoutMS=FLAGS.mongodb_connection_timeout)
 
+        client[self.database_name].matches.create_index(
+            ("matchId", pymongo.ASCENDING),
+            background=True,
+            unique=True
+        )
+        client[self.database_name].summoners.create_index(
+            ("id", pymongo.ASCENDING),
+            background=True,
+            unique=True
+        )
+
         # Send a query to the server to see if the connection is working.
         try:
             client.server_info()
