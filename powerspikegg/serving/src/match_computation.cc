@@ -19,7 +19,7 @@ MatchComputationImpl::MatchComputationImpl() {
 grpc::Status MatchComputationImpl::GetFeature(
     grpc::ServerContext* context, const serving::MatchComputationRequest* match,
     serving::MatchComputationFeature* feature) {
-    serving::Statistics* stats = feature->mutable_expected_statistics();
+    /*serving::Statistics* stats = feature->mutable_expected_statistics();
 
     auto inputs = serving::GetFormattedSummonerStats(match);
 
@@ -28,7 +28,8 @@ grpc::Status MatchComputationImpl::GetFeature(
         auto kills_input = inputs.find("kills");
         stats->mutable_kills()->set_value(
             kills->second.compute(kills_input->second));
-    }
+    }*/
 
+    std::cout << "message received" << std::endl;
     return grpc::Status::OK;
 }

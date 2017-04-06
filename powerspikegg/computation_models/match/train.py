@@ -76,6 +76,14 @@ class GraphTrainer:
             })
         return res
 
+    def predict(self, inputs):
+        """ Predict the expected statistique using the model"""
+        resultat = self.sess.run([self.logits, self.placeholder],
+                                 feed_dict={
+                                    self.placeholder: inputs
+                                 })
+        return resultat
+
     def close(self):
         """ Close the Tensorflow session
             (note that the object become unusable afterward)
