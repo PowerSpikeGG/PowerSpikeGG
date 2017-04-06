@@ -33,7 +33,7 @@ export class GameTableComponent implements OnInit {
     };
     this.gatewayService.getComputedStatistics(query).subscribe(
       (computedStatistics) => this.computedStatistics = computedStatistics,
-      (error) => this.snackBar.open('[ERROR] Cannot retrieve aggregated stats of ' + this.participant.summoner.name + '.', 'Ok'),
+      (error) => this.snackBar.open('[ERROR] Cannot retrieve computed stats of ' + this.participant.summoner.name + '.', 'Ok'),
     );
   }
 
