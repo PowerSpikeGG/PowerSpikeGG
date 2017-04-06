@@ -6,6 +6,7 @@ import { isUndefined } from 'util';
 import { AGGREGATION_API_URL, COMPUTATION_API_URL, MATCH_API_URL, SUMMONER_API_URL } from '../config/gateway';
 import { AggregationQuery, ComputationQuery, MatchQuery, SummonerQuery } from '../models/gateway-queries';
 import { fetcher, game, serving } from '../models/protos/bundle';
+import { SummonerWithMatches } from "app/models/summoner-with-matches";
 import AggregatedStatistics = fetcher.rds.AggregatedStatistics;
 import Statistics = serving.Statistics;
 import MatchReference = game.leagueoflegends.MatchReference;
@@ -40,7 +41,7 @@ export class GatewayService {
       .catch(error => Observable.throw(error));
   }
 
-  getSummonerByName(query: SummonerQuery): Observable<Summoner> {
+  getSummonerByName(query: SummonerQuery): Observable<SummonerWithMatches> {
     const summonerName: string = GatewayService.sanitizeSummonerName(query.name);
     const url = SUMMONER_API_URL + '/' + summonerName + '/' + query.region;
     console.log('Calling: ' + url);
@@ -48,9 +49,9 @@ export class GatewayService {
       .flatMap(response => {
         const results = response.json().results;
         if (results.length > 0) {
-          return this.getSummonerFromMatchReference(summonerName, results[0]);
+          return this.getSummonerFromMatchReference(summonerName, results);
         } else {
-          Observable.throw('No matches for this summoner');
+          Observable.throw('No matches for summoner ' + query.name + '.');
         }
       })
       .catch(error => {
@@ -58,17 +59,22 @@ export class GatewayService {
       });
   }
 
-  private getSummonerFromMatchReference(summonerName: string, m: MatchReference): Observable<Summoner> {
+  private getSummonerFromMatchReference(summonerName: string, matches: MatchReference[]): Observable<SummonerWithMatches> {
     // Finding the summoner asked Participant object
+    const m = matches[0];
     const matchingParticipants = m.detail.teams.map(team => team.participants.find(p => {
       return GatewayService.sanitizeSummonerName(p.summoner.name.toLocaleLowerCase()) === GatewayService.sanitizeSummonerName(summonerName.toLocaleLowerCase());
     })).filter(sum => !isUndefined(sum));
     // TODO(ArchangelX360): better pipeline to directly return the correct participant
     if (matchingParticipants.length > 0) {
       const summoner = new Summoner(matchingParticipants[0].summoner);
-      return Observable.of(summoner);
+      const summonerWithMatches = {
+        summoner: summoner,
+        matches: matches,
+      };
+      return Observable.of(summonerWithMatches);
     }
-    return Observable.throw('Summoner not found');
+    return Observable.throw('Summoner ' + summonerName + 'not found.');
   }
 
   getAverageStatistics(query: AggregationQuery): Observable<AggregatedStatistics> {
