@@ -54,7 +54,7 @@ func parseAggregationRequestParameters(r *http.Request) (*fetcherpb.Query, error
 		Champion: &lolpb.Champion{
 			Id: int32(championID),
 		},
-		SampleSize: 100000, // FIXME: REMOVE THIS, HOTFIX FOR RIOT API OUTAGE
+		SampleSize: 50000, // FIXME: REMOVE THIS, HOTFIX FOR RIOT API OUTAGE
 		Summoner: &lolpb.Summoner{
 			Id:     int32(summonerID),
 			Region: region,
