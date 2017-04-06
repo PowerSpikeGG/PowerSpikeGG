@@ -32,7 +32,10 @@ export class GameTableComponent implements OnInit {
       summonerID: this.participant.summoner.id,
     };
     this.gatewayService.getComputedStatistics(query).subscribe(
-      (computedStatistics) => this.computedStatistics = computedStatistics,
+      (computedStatistics) => {
+        console.log(computedStatistics);
+        this.computedStatistics = computedStatistics
+      },
       (error) => this.snackBar.open('[ERROR] Cannot retrieve computed stats of ' + this.participant.summoner.name + '.', 'Ok'),
     );
   }

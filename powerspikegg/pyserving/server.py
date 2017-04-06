@@ -1,5 +1,6 @@
 import gflags
 import grpc
+import math
 import os
 import sys
 import time
@@ -37,7 +38,7 @@ class MatchComputation(mc_pb2.MatchComputationServicer):
         else:
             raise ValueError("Summoner not found in the proto!")
 
-        stats = fetcher._prepare_data(fetcher._map_stats(p.statistics))
+        stats = fetcher._prepare_data(fetcher._map_stats(p))
         return mc_pb2.MatchComputationFeature(
             expected_statistics=mc_pb2.Statistics(
                 kills=self.compute_stats("kills", stats),
