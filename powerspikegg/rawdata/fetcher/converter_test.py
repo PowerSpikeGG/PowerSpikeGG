@@ -1,4 +1,5 @@
 import json
+import mock
 import os
 import unittest
 
@@ -17,6 +18,10 @@ class ConverterEndToEndTest(unittest.TestCase):
 
     def setUp(self):
         # TODO(funkysayu) for future work, this should use a MagicMock.
+        m = converter.JSONConverter.game_constant = mock.Mock()
+        m.get_summoner_spell_by_id.return_value = constants_pb2.SummonerSpell(
+            id=1)
+        m.get_champion_by_id.return_value = constants_pb2.Champion(id=4242)
         self.converter = converter.JSONConverter(None)
 
     def _check_damage_data(self, damage, json_stats, prefix):
@@ -137,8 +142,6 @@ class ConverterEndToEndTest(unittest.TestCase):
             participant.summoner.league,
             constants_pb2.League.Value(
                 json_participant["highestAchievedSeasonTier"]))
-        self.assertEqual(
-            participant.champion.id, json_participant["championId"])
 
         if json_participant["timeline"]["lane"] == "BOTTOM":
             if json_participant["timeline"]["role"] == "DUO_CARRY":

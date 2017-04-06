@@ -183,6 +183,7 @@ py_library(
         ":service_py",
         "//powerspikegg/rawdata/public:leagueoflegends_py",
     ],
+    visibility = ["//visibility:public"],
     deps = [
         "//powerspikegg/rawdata/lib/python:static",
     ],
@@ -199,5 +200,6 @@ py_test(
         ":converter",
         "//powerspikegg/rawdata/lib/python:static",
         "//third_party/python/riotwatcher:rwmock",
+        "@pydep_mock//:library",
     ],
 )

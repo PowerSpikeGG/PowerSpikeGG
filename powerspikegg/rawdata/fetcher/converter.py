@@ -72,6 +72,8 @@ class JSONConverter():
     entity).
     """
 
+    game_constant = None
+
     def __init__(self, api_handler):
         """Constructor. Creates a game constant solver.
 
@@ -79,7 +81,8 @@ class JSONConverter():
             api_handler: the Riot API handler, managing connection to the Riot
                 API. It is used to solve some game constants.
         """
-        self.game_constant = ConstantSolver(api_handler)
+        if self.game_constant is None:
+            self.game_constant = ConstantSolver(api_handler)
 
     def convert_player_statistics(self, json_statistics):
         """Convert the JSON player statistics to a protocol buffer.
