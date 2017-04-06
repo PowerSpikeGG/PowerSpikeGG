@@ -31,6 +31,8 @@ gflags.DEFINE_string("riot_api_token", None,
 gflags.DEFINE_integer("port", 50001, "port on which the server will listen")
 gflags.DEFINE_integer("max_workers", 10,
                       "number of threads handling the requests")
+gflags.DEFINE_boolean("riot_api_down", False,
+                      "use this if you really need it...")
 
 gflags.mark_flag_as_required('riot_api_token')
 
@@ -84,10 +86,15 @@ class MatchFetcher(service_pb2.MatchFetcherServicer):
             request = self._GetSummonerFromName(request)
 
         # Fetch match references from the summoner ID
-        raw_match_references = self.riot_api_handler.get_match_list(
-            request.id, constants_pb2.Region.Name(request.region),
-            ranked_queues=constants_pb2.QueueType.keys(),
-            season=constants_pb2.Season.keys())
+        if not FLAGS.riot_api_down:  # TODO(funkysayu): handle this properly
+            raw_match_references = self.riot_api_handler.get_match_list(
+                request.id, constants_pb2.Region.Name(request.region),
+                ranked_queues=constants_pb2.QueueType.keys(),
+                season=constants_pb2.Season.keys())
+        else:
+            query = service_pb2.Query(summoner=request.summoner)
+            raw_match_references = [
+                m.match_id for m in self.CacheQuery(query, context)]
 
         # Fetch match details from the summoner ID
         for raw_match_reference in raw_match_references.get("matches", []):

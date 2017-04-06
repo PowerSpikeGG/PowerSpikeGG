@@ -6,6 +6,7 @@ import requests
 import unittest
 
 from powerspikegg.rawdata.fetcher import aggregator_test
+from powerspikegg.rawdata.fetcher import converter
 from powerspikegg.rawdata.fetcher import service_pb2
 from powerspikegg.rawdata.fetcher.converter import JSONConverter
 from powerspikegg.rawdata.fetcher.server import MatchFetcher
@@ -26,6 +27,12 @@ class MatchFetcherTest(unittest.TestCase):
         # Avoid setting up a Riot API handler and a cache system
         MatchFetcher.riot_api_handler = RiotWatcherMock()
         MatchFetcher.cache_manager = mock.MagicMock()
+
+        m = converter.JSONConverter.game_constant = mock.Mock()
+        m.get_summoner_spell_by_id.return_value = constants_pb2.SummonerSpell(
+            id=1)
+        m.get_champion_by_id.return_value = constants_pb2.Champion(id=4242)
+        cls.converter = converter.JSONConverter(None)
 
         cls.server, cls.service = start_server("123", 50002, 10)
 
@@ -52,8 +59,7 @@ class MatchFetcherTest(unittest.TestCase):
             id=4242, region=constants_pb2.EUW))
 
         # Check the conversion of the sample is matching the response
-        converter = JSONConverter(None)
-        expected = converter.json_match_to_match_pb(SAMPLES["match"])
+        expected = self.converter.json_match_to_match_pb(SAMPLES["match"])
         self.assertEqual(response, expected)
         self.assertTrue(self.service.cache_manager.save_match.called)
 
@@ -107,8 +113,7 @@ class MatchFetcherTest(unittest.TestCase):
         responses = self.stub.UpdateSummoner(constants_pb2.Summoner(
             id=4242, region=constants_pb2.EUW))
 
-        converter = JSONConverter(None)
-        expected = converter.json_match_to_match_pb(SAMPLES["match"])
+        expected = self.converter.json_match_to_match_pb(SAMPLES["match"])
         for response in responses:
             self.assertEqual(response, expected)
         self.assertTrue(self.service.cache_manager.save_match.called)
@@ -121,8 +126,7 @@ class MatchFetcherTest(unittest.TestCase):
         responses = self.stub.UpdateSummoner(constants_pb2.Summoner(
             name="Foo Bar", region=constants_pb2.EUW))
 
-        converter = JSONConverter(None)
-        expected = converter.json_match_to_match_pb(SAMPLES["match"])
+        expected = self.converter.json_match_to_match_pb(SAMPLES["match"])
         for response in responses:
             self.assertEqual(response, expected)
         self.assertTrue(self.service.cache_manager.save_match.called)
@@ -139,8 +143,7 @@ class MatchFetcherTest(unittest.TestCase):
         responses = self.stub.UpdateSummoner(constants_pb2.Summoner(
             name="Foo Bar", region=region))
 
-        converter = JSONConverter(None)
-        expected = converter.json_match_to_match_pb(SAMPLES["match"])
+        expected = self.converter.json_match_to_match_pb(SAMPLES["match"])
         for response in responses:
             self.assertEqual(response, expected)
         self.assertTrue(self.service.cache_manager.save_match.called)
@@ -149,21 +152,19 @@ class MatchFetcherTest(unittest.TestCase):
 
     def test_query_cache_correctly_forwarded(self):
         """Ensure query is correctly forwarded."""
-        converter = JSONConverter(None)
         expected = [SAMPLES["match"]]
         self.service.cache_manager.query_matches_cache.return_value = expected
 
         query = service_pb2.Query(summoner=constants_pb2.Summoner(name="foo"))
         responses = self.stub.CacheQuery(query)
         for response, expected_response in zip(responses, expected):
-            self.assertEqual(response, converter.json_match_to_match_pb(
+            self.assertEqual(response, self.converter.json_match_to_match_pb(
                 expected_response))
 
         self.assertTrue(self.service.cache_manager.query_matches_cache.called)
 
     def test_aggregation_endpoint(self):
         """Tests data returned by the aggregator are converted and sent."""
-        converter = JSONConverter(None)
         expected = aggregator_test.SAMPLE_AGGREGATED_DATA
         self.service.cache_manager.average_stats.return_value = expected.copy()
 
@@ -172,7 +173,7 @@ class MatchFetcherTest(unittest.TestCase):
 
         self.assertEqual(
             response,
-            converter.json_aggregation_to_aggregation_pb(expected))
+            self.converter.json_aggregation_to_aggregation_pb(expected))
 
 
 if __name__ == "__main__":
