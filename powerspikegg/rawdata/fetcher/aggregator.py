@@ -204,13 +204,14 @@ def AverageStatisticsOnQuery(collection, query_pb):
             raise ValueError("Required champion id is unspecified.")
         matcher["participants.championId"] = query_pb.champion.id
 
-    query = [
+    query = []
+    if query_pb.sample_size:
+        query.append(_create_sampling_request(query_pb))
+    query = query + [
         {"$match": {"region": "EUW"}},  # TODO(funkysayu)
         {"$unwind": "$participants"},
         {"$match": matcher},
     ]
-    if query_pb.sample_size:
-        query.append(_create_sampling_request(query_pb))
     query.append(_create_average_query())
 
     result = next(collection.aggregate(query))
