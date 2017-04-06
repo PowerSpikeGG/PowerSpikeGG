@@ -10,11 +10,12 @@ import (
 	"github.com/golang/protobuf/jsonpb"
 	"golang.org/x/net/context"
 
+	fetcherpb "powerspike.gg/powerspikegg/rawdata/fetcher/service_gopb"
 	lolpb "powerspike.gg/powerspikegg/rawdata/public/leagueoflegends_gopb"
 	computationpb "powerspike.gg/powerspikegg/serving/match_computation_gopb"
 )
 
-func parseComputationRequestParameters(r *http.Request) (*computationpb.MatchComputationRequest, error) {
+func parseComputationRequestParameters(ctx context.Context, r *http.Request, matchFetcherClient fetcherpb.MatchFetcherClient) (*computationpb.MatchComputationRequest, error) {
 	params := strings.Split(r.URL.Path[len("/api/computation/"):], "/")
 	if len(params) != 3 {
 		return nil, errors.New("not enough parameters")
@@ -41,12 +42,20 @@ func parseComputationRequestParameters(r *http.Request) (*computationpb.MatchCom
 		return nil, fmt.Errorf("Invalid summoner ID: %s, %v", summonerIDStr, err)
 	}
 
+	matchRequest := &fetcherpb.MatchRequest{
+		Id:     matchID, // TODO(archangel): this cast shouldn't be there as a match shouldn't have a floating ID
+		Region: region,
+	}
+
+	match, err := matchFetcherClient.Match(ctx, matchRequest)
+	fmt.Println(match)
+	if err != nil {
+		return nil, fmt.Errorf("Cannot fetch match ID: %d, %v", matchID, err)
+	}
+
 	return &computationpb.MatchComputationRequest{
-		ModelName: "Not implemented yet",
-		Match: &lolpb.MatchReference{
-			Id:     float64(matchID), // TODO(archangel): this cast shouldn't be there as a match shouldn't have a floating ID
-			Region: region,
-		},
+		ModelName:  "Not implemented yet",
+		Match:      match,
 		SummonerId: int32(summonerID),
 	}, nil
 }
@@ -54,7 +63,7 @@ func parseComputationRequestParameters(r *http.Request) (*computationpb.MatchCom
 func (gws *gatewayServer) computationHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
-	mcr, err := parseComputationRequestParameters(r)
+	mcr, err := parseComputationRequestParameters(ctx, r, gws.matchFetcherClient)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
