@@ -98,12 +98,7 @@ class CacheManager:
             address, serverSelectionTimeoutMS=FLAGS.mongodb_connection_timeout)
 
         client[self.database_name].matches.create_index(
-            ("matchId", pymongo.ASCENDING),
-            background=True,
-            unique=True
-        )
-        client[self.database_name].summoners.create_index(
-            ("id", pymongo.ASCENDING),
+            [("matchId", pymongo.ASCENDING)],
             background=True,
             unique=True
         )
