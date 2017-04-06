@@ -1,4 +1,5 @@
 <div class="game-table-wrapper"
+     [ngClass]="victory ? 'victory' : 'defeat'"
      fxFlexOffset="10"
      fxFlex="80">
 
@@ -72,6 +73,7 @@
       </tr>
       </tbody>
     </table>
+    <div *ngIf="!computedStatistics"> Loading...</div> <!-- TODO: spinner -->
 
   </div>
 
