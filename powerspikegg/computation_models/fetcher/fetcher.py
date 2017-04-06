@@ -64,7 +64,7 @@ def _map_stats(stats_pb):
         {"label": "minions_killed", "value": stats_pb.minions_killed},
         {"label": "neutral_minions_killed",
             "value": stats_pb.neutral_minions_killed},
-        {"label": "total_damages.total",
+        {"label": "total_damages",
             "value": stats_pb.total_damages.total},
         {"label": "total_heal", "value": stats_pb.total_heal},
         {"label": "wards_placed", "value": stats_pb.wards_placed},

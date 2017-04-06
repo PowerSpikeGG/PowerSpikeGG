@@ -35,6 +35,7 @@ py_library(
 py_library(
     name = "train",
     srcs = ["train.py"],
+    visibility = ["//visibility:public"],
     deps = [
         "@org_tensorflow//tensorflow:tensorflow_py",
     ],
