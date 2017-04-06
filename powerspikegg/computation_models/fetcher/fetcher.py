@@ -55,8 +55,9 @@ class ComputationFetcher:
         return self.stub.CacheQuery(query)
 
 
-def _map_stats(stats_pb):
+def _map_stats(participant_pb):
     """Map the statistics to a dictionnary"""
+    stats_pb = participant_pb.statistics
     return [
         {"label": "kills", "value": stats_pb.kills},
         {"label": "deaths", "value": stats_pb.deaths},
@@ -69,6 +70,9 @@ def _map_stats(stats_pb):
         {"label": "total_heal", "value": stats_pb.total_heal},
         {"label": "wards_placed", "value": stats_pb.wards_placed},
         {"label": "tower_kills", "value": stats_pb.tower_kills},
+        {"label": "champion_level", "value": stats_pb.champion_level},
+        {"label": "champion_id", "value": participant_pb.champion.id},
+        {"label": "role", "value": participant_pb.role},
     ]
 
 
@@ -115,7 +119,7 @@ def _sanitize_match(match_pb):
 
     for participant_pb in winners.participants:
         if _is_valid_participant(participant_pb):
-            yield _prepare_data(_map_stats(participant_pb.statistics))
+            yield _prepare_data(_map_stats(participant_pb))
 
 
 def fetch_and_sanitize(sample_size):

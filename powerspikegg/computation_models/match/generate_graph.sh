@@ -8,5 +8,5 @@ rm -rf $MODELS
 mkdir $MODELS
 
 for stat in ${stats[@]}; do
-    bazel run //powerspikegg/computation_models/match:generate_graph -- --model_dir "$MODELS/$stat"
+    bazel run //powerspikegg/computation_models/match:generate_graph -- --model_dir "$MODELS/$stat" --input_size 11
 done
