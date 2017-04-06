@@ -4,6 +4,6 @@
      fxLayout.gt-sm="row"
      fxLayout.lt-md="column">
   <app-sidenav *ngIf="summoner" [summoner]="summoner" fxFlex.gt-sm="20"></app-sidenav>
-  <app-matches *ngIf="summoner" [summoner]="summoner" fxFlex.gt-sm="80"></app-matches>
+  <app-matches *ngIf="summoner" [summoner]="summoner" [matches]="matches" fxFlex.gt-sm="80"></app-matches>
 </div>
 

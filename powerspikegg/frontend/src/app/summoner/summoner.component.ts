@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { MdSnackBar } from "@angular/material";
+
 import { game } from '../models/protos/bundle';
-import Summoner = game.leagueoflegends.Summoner;
 import { GatewayService } from '../services/gateway.service';
 import { SummonerQuery } from '../models/gateway-queries';
+import { SummonerWithMatches } from '../models/summoner-with-matches';
+import Summoner = game.leagueoflegends.Summoner;
+import MatchReference = game.leagueoflegends.MatchReference;
 
 @Component({
   selector: 'app-summoner',
@@ -14,9 +18,11 @@ export class SummonerComponent implements OnInit {
 
   private showSpinner: boolean;
   private summoner: Summoner;
+  private matches: MatchReference[];
 
   constructor(private gatewayService: GatewayService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private snackBar: MdSnackBar,) {
   }
 
   ngOnInit() {
@@ -39,14 +45,14 @@ export class SummonerComponent implements OnInit {
     )
   }
 
-  getSummonerDataByNameSuccess(response: Summoner) {
-    this.summoner = response;
+  getSummonerDataByNameSuccess(response: SummonerWithMatches) {
+    this.summoner = response.summoner;
+    this.matches = response.matches;
     this.showSpinner = false;
   }
 
   errorHandler(error: any) {
-    let logStr = '[ERROR] [RESULTS SERVICE] ' + error;
-    console.log(logStr);
+    this.snackBar.open('[ERROR] ' + error + '.', 'Ok');
     this.showSpinner = false;
   }
 
