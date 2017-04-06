@@ -103,10 +103,10 @@ def SearchMatchesMatchingQuery(collection, query_pb):
     mongo_query = []
 
     filters = _create_mongo_filters(query_pb)
-    if filters:
-        mongo_query.append({"$match": filters})
     if query_pb.sample_size:
         mongo_query.append(_create_sampling_request(query_pb))
+    if filters:
+        mongo_query.append({"$match": filters})
     cursor = collection.aggregate(mongo_query)
 
     # We must post process the data if and only if summoner is specified with
