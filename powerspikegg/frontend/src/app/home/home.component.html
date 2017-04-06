@@ -6,8 +6,15 @@
   </video>
 
   <div class="video-header">
+    <div class="logo" [class.logo-active]="logoState" (click)="toggleLogoState()">
+      <img src="../../assets/img/logo/Logo-Circle.png">
+      <img class="logo-arc" src="../../assets/img/logo/Logo-Arc.png">
+      <img class="logo-triangle" src="../../assets/img/logo/Logo-Triangle.png">
+      <img class="logo-left" src="../../assets/img/logo/Logo-Left.png">
+      <img class="logo-right" src="../../assets/img/logo/Logo-Right.png">
+    </div>
     <h1>Powerspike.gg</h1>
-    <app-search-bar></app-search-bar>
+    <app-search-bar (onFocusSearch)="onFocusSearch($event)"></app-search-bar>
   </div>
 
 </div>
