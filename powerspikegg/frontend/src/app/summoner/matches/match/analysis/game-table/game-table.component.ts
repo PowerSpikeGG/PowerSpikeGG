@@ -18,6 +18,7 @@ export class GameTableComponent implements OnInit {
 
   @Input() participant: Participant;
   @Input() match: MatchReference;
+  @Input() victory: boolean;
 
   private computedStatistics: MatchComputationFeature;
 

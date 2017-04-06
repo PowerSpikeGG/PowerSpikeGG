@@ -72,3 +72,11 @@
     font-size: 20px;
     padding-top: 13px;
 }
+
+.victory h1 {
+    background: #2980b9;
+}
+
+.defeat h1 {
+    background: #e74c3c;
+}
