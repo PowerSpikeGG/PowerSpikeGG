@@ -1,6 +1,11 @@
 <div class="summoner-search-input">
   <form (keyup.enter)="sendSummonerRequest()">
-    <input type="text" placeholder="Summoner name" [(ngModel)]="summonerName" name="summonerName">
+    <input type="text"
+           placeholder="Summoner name"
+           [(ngModel)]="summonerName"
+           name="summonerName"
+           (focus)="toggleSearchFocus()"
+           (focusout)="toggleSearchFocus()">
     <app-location-picker [region]="region"></app-location-picker>
     <md-icon md-list-avatar (click)="sendSummonerRequest()">search</md-icon>
   </form>

@@ -1,6 +1,5 @@
 .video-background {
-  height: 750px;
-  margin-top: 55px;
+  height: 100%;
   overflow: hidden;
   position: relative;
 }
@@ -14,13 +13,14 @@
 .video-background:before {
   background: #132f63;
   content: "";
-  opacity: .96;
+  opacity: .98;
   position: absolute;
   top: 0; bottom: 0; left: 0; right: 0;
   z-index: 1;
 }
 
 .video-header {
+  height: 500px;
   margin: auto;
   position: absolute;
   text-align: center;
@@ -29,8 +29,54 @@
 }
 
 .video-header h1 {
-  color: #fff;
-  font-size: 55px;
+  color: #4c6fb1;
+  font-size: 35px;
+  letter-spacing: 5px;
   font-family: VikingSquad,serif;
-  margin-top: 150px;
+  margin-top: 40px;
+}
+
+.video-header .logo {
+  height:150px; width:135px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.video-header .logo img {
+  height:100%; width:100%;
+  left: 0; top: 0;
+  min-height: auto;
+  min-width: auto;
+  position: absolute;
+  -webkit-transition: all 200ms;
+  -moz-transition: all 200ms;
+  -ms-transition: all 200ms;
+  -o-transition: all 200ms;
+  transition: all 200ms;
+}
+
+.video-header .logo-active img {
+  -webkit-transition: all 60ms ease-in-out;
+  -moz-transition: all 60ms ease-in-out;
+  -ms-transition: all 60ms ease-in-out;
+  -o-transition: all 60ms ease-in-out;
+  transition: all 60ms ease-in-out;
+}
+
+.video-header .logo-active .logo-left {
+  left: -8px;
+  top: -8px;
+}
+
+.video-header .logo-active .logo-right {
+  left: 8px;
+  top: -8px;
+}
+
+.video-header .logo-active .logo-arc {
+  top: -5px;
+}
+
+.video-header .logo-active .logo-triangle {
+  top: 5px;
 }

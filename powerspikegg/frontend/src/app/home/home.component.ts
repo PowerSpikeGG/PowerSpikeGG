@@ -7,10 +7,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
+  private logoState: boolean;
+
   constructor() {
   }
 
   ngOnInit() {
+    this.logoState = false;
+  }
+
+  onFocusSearch(focusSearch: boolean) {
+    this.logoState = focusSearch;
+  }
+
+  toggleLogoState() {
+    this.logoState = !this.logoState;
   }
 
 }
