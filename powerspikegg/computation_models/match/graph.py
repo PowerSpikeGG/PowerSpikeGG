@@ -25,45 +25,25 @@ class GraphBuilder:
     def __init__(self, input_size):
         self.input_size = input_size
 
-    def add_hidden_layer(self, data, input_size, output_size, name,
-                         keep_probability, is_training):
+    def add_hidden_layer(self, data, units, name, is_training):
         with tf.name_scope(name):
-            weights = tf.Variable(
-                tf.truncated_normal([input_size, output_size],
-                                    stddev=0.1), name="weights")
-            tf.summary.histogram('weights', weights)
-            biases = tf.Variable(tf.zeros([output_size]), name="biases")
-            mult = tf.matmul(data, weights) + biases
+	    norm = tf.layers.batch_normalization(data, training=is_training)
+	    hidden = tf.layers.dense(inputs=norm, units=layer_size, activation=tf.nn.relu)
+            return hidden
 
-            # Activation
-            hidden1 = tf.nn.relu(mult)
+    def createNetwork(self, data, layers, is_training):
+	"""
+	"""
+        hidden = data
+	for layer_size in layers:
+	    norm = tf.layers.batch_normalization(hidden, training=is_training)
+	    hidden = tf.layers.dense(inputs=norm, units=layer_size, activation=tf.nn.relu)
 
-            # Batch normalization
-            norm = tf.contrib.layers.batch_norm(hidden1, 0.9,
-                                                is_training=is_training,
-                                                updates_collections=None)
+	logits = tf.layers.dense(inputs=hidden, units=1)
 
-            # Droupout
-            dropped = tf.nn.dropout(norm, keep_probability)
+	return logits
 
-            return norm
-
-    def createNetwork(self, data, layers, keep_probability=1,
-                      is_training=True):
-        current = 1
-        hidden = tf.contrib.layers.batch_norm(data, 0.9,
-                                              is_training=is_training,
-                                              updates_collections=None)
-        last_size = self.input_size
-        for layer_size in layers:
-            hidden = self.add_hidden_layer(hidden, last_size, layer_size,
-                                           "hidden" + str(current),
-                                           keep_probability, is_training)
-            last_size = layer_size
-            current = current + 1
-        return hidden
-
-    def inference(self, data):
+    def inference(self, data, is_training):
         """Build the model up to where it may be used for inference.
 
         Args:
@@ -74,7 +54,8 @@ class GraphBuilder:
         Returns:
             softmax_linear: Output tensor with the computed logits.
         """
-        logits = self.createNetwork(data, [50, 50, 50, 50, 50, 1])
+        layers = [100 for _ in range(30)]
+        logits = self.createNetwork(data, layers, is_training=is_training)
         return tf.identity(logits, name="logits")
 
     def loss(self, logits, labels):
@@ -87,7 +68,9 @@ class GraphBuilder:
         Returns:
             loss: Loss tensor of type float.
         """
-        return tf.reduce_sum(tf.pow(logits - labels, 2), name='square_error')
+        #return tf.reduce_sum(tf.pow(logits - labels, 2), name='square_error')
+        loss = tf.losses.mean_squared_error(labels, logits)
+        return loss
 
     def training(self, loss, learning_rate):
         """Sets up the training Ops.
@@ -121,20 +104,15 @@ class GraphBuilder:
         """Evaluate the quality of the logits at predicting the label.
 
         Args:
-            logits: Logits tensor, float - [batch_size, NUM_CLASSES].
-            labels: Labels tensor, int32 - [batch_size], with values in the
-            range [0, NUM_CLASSES).
+            logits: Logits tensor, float - [batch_size].
+            labels: Labels tensor, float - [batch_size].
 
         Returns:
-            A scalar int32 tensor with the number of examples
-            that were predicted correctly.
+            A scalar float tensor with the precision of the prediction.
         """
-        # For a classifier model, we can use the in_top_k Op.
-        # It returns a bool tensor with shape [batch_size] that is true for
-        # the examples where the label is in the top k (here k=1)
-        # of all logits for that example.
+        # Compute the difference between the expected label and the predicted.
         correct = tf.abs(logits - labels)
-        # Return the number of true entries.
+        # Return the sum of the differences.
         return tf.reduce_sum(correct)
 
     def generate_graph(self, model_directory):
@@ -152,11 +130,14 @@ class GraphBuilder:
             learning_rate = tf.placeholder_with_default(0.01, shape=(),
                                                         name="learning_rate")
 
+            is_training = tf.placeholder_with_default(False, shape=(),
+                                                      name="is_learning")
+
             # Tensor containing the correct answer for the input
             answer = tf.placeholder(tf.float32, shape=(None, 1), name="answer")
 
             # Result of the computation of the neural network
-            logits = self.inference(placeholder)
+            logits = self.inference(placeholder, is_training)
 
             # Squared sum of the difference between the predicted value
             # and the answers
@@ -186,6 +167,7 @@ class GraphBuilder:
             tf.add_to_collection('loss_op', loss_op)
             tf.add_to_collection('train_op', train_op)
             tf.add_to_collection('eval_op', eval_op)
+            tf.add_to_collection('is_training', is_training)
 
             # Create a session to execute the graph
             with tf.Session() as sess:
