@@ -30,6 +30,7 @@ class GraphTrainer:
         self.loss_op = tf.get_collection('loss_op')[0]
         self.placeholder = tf.get_collection('placeholder')[0]
         self.eval_op = tf.get_collection('eval_op')[0]
+        self.is_training = tf.get_collection('is_training')[0]
 
     def train(self, data, answer, iteration=1):
         """ Train the variable of a graph using the provided data
@@ -72,7 +73,8 @@ class GraphTrainer:
         res = self.sess.run([self.logits, self.eval_op,
                              self.placeholder, self.answer], feed_dict={
                 self.placeholder: inputs,
-                self.answer: answers
+                self.answer: answers,
+                self.is_training: False
             })
         return res
 
@@ -80,7 +82,8 @@ class GraphTrainer:
         """ Predict the expected statistique using the model"""
         resultat = self.sess.run([self.logits, self.placeholder],
                                  feed_dict={
-                                    self.placeholder: inputs
+                                    self.placeholder: inputs,
+                                    self.is_training: False
                                  })
         return resultat
 
