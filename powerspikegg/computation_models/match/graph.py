@@ -26,34 +26,61 @@ class GraphBuilder:
         self.input_size = input_size
 
     def add_hidden_layer(self, data, units, name, is_training):
+        """ Create a simple layer for a neural network
+            
+            The layer contains:
+                - A normalization layer
+                - A dense layer
+            
+            Args:
+                data: a tensor with the input data
+                units: the number of units in the hidden dense layer
+                name: name of the scope in which the operations take place
+                is_training: tensor containing a boolean to indicate if the model is 
+                             training or in evaluation 
+                             (this is useful for normalization)
+
+            Return:
+                A tensor computed with all the intermediate layers
+        """
         with tf.name_scope(name):
-	    norm = tf.layers.batch_normalization(data, training=is_training)
-	    hidden = tf.layers.dense(inputs=norm, units=layer_size, activation=tf.nn.relu)
-            return hidden
+	        norm = tf.layers.batch_normalization(data, training=is_training)
+	        hidden = tf.layers.dense(inputs=norm, units=layer_size, activation=tf.nn.relu)
+        
+        return hidden
 
     def createNetwork(self, data, layers, is_training):
-	"""
-	"""
+    	""" Create a deep neural network
+
+            Args:
+                data: A tensor with the input data
+                layers: An array with the size of each layer 
+                is_training: A tensor containing a boolean to indicate if the model
+                             is training
+	    """
+        # Build the hidden layers of the network
         hidden = data
-	for layer_size in layers:
-	    norm = tf.layers.batch_normalization(hidden, training=is_training)
-	    hidden = tf.layers.dense(inputs=norm, units=layer_size, activation=tf.nn.relu)
+        for layer_size in layers:
+            norm = tf.layers.batch_normalization(hidden, training=is_training)
+            hidden = tf.layers.dense(inputs=norm, units=layer_size, activation=tf.nn.relu)
 
-	logits = tf.layers.dense(inputs=hidden, units=1)
+        # Final layer with only one cell containing the predicted value
+        logits = tf.layers.dense(inputs=hidden, units=1)
 
-	return logits
+        return logits
 
     def inference(self, data, is_training):
         """Build the model up to where it may be used for inference.
 
         Args:
             data: data placeholder, from inputs().
-            hidden1_units: Size of the first hidden layer.
-            hidden2_units: Size of the second hidden layer.
+            is_training: A tensor containing a boolean to indicate if the model
+                         is training
 
         Returns:
-            softmax_linear: Output tensor with the computed logits.
+            Output tensor with the logits predicted by the neural network.
         """
+        # Create 30 hidden layers with 100 units
         layers = [100 for _ in range(30)]
         logits = self.createNetwork(data, layers, is_training=is_training)
         return tf.identity(logits, name="logits")
@@ -62,13 +89,12 @@ class GraphBuilder:
         """Calculates the loss from the logits and the labels.
 
         Args:
-            logits: Logits tensor, float - [batch_size, 1].
+            logits: Logits tensor, float - [batch_size].
             labels: Labels tensor, float - [batch_size].
 
         Returns:
             loss: Loss tensor of type float.
         """
-        #return tf.reduce_sum(tf.pow(logits - labels, 2), name='square_error')
         loss = tf.losses.mean_squared_error(labels, logits)
         return loss
 
@@ -130,6 +156,7 @@ class GraphBuilder:
             learning_rate = tf.placeholder_with_default(0.01, shape=(),
                                                         name="learning_rate")
 
+            # Indicate wether the models is used for training or evaluation
             is_training = tf.placeholder_with_default(False, shape=(),
                                                       name="is_learning")
 
