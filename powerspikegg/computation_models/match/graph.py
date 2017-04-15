@@ -84,7 +84,7 @@ class GraphBuilder:
         """
         # Create 30 hidden layers with 100 units
         layers = [100 for _ in range(30)]
-        logits = self.createNetwork(data, layers, is_training=is_training)
+        logits = self.create_network(data, layers, is_training=is_training)
         return tf.identity(logits, name="logits")
 
     def loss(self, logits, labels):
