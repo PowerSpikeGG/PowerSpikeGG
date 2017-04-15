@@ -177,6 +177,7 @@ java_proto_repositories()
 
 load("@com_github_gengo_rules_pypi//pypi:def.bzl", "pypi_repositories")
 load("@com_github_gengo_rules_pypi//pypi:def.bzl", "pypi_repository")
+load("@com_github_gengo_rules_pypi//pypi:def.bzl", "pypi_wheel_repository")
 
 pypi_repositories()
 
@@ -218,6 +219,14 @@ pypi_repository(
     pure = 1,
     srcs_version = "PY2AND3",
     version = "3.4.0",
+)
+
+pypi_wheel_repository(
+    name = "pydef_tensorflow",
+    modules = [],
+    pkg = "tensorflow",
+    srcs_version = "PY2ONLY",
+    version = "1.1.0rc2",
 )
 
 # Since requests uses some specific files into its repository but is a pure
