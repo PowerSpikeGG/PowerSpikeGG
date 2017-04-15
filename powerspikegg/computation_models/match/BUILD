@@ -3,8 +3,8 @@ py_binary(
     srcs = ["generate_graph.py"],
     deps = [
         ":graph",
+        ":tensorflow",
         "@pydep_gflags//:library",
-        "@pydep_tensorflow//:library",
     ],
 )
 
@@ -12,10 +12,10 @@ py_binary(
     name = "train_graph",
     srcs = ["train_graph.py"],
     deps = [
+        ":tensorflow",
         ":train",
         "//powerspikegg/computation_models/fetcher",
         "@pydep_gflags//:library",
-        "@pydep_tensorflow//:library",
     ],
 )
 
@@ -23,8 +23,8 @@ py_binary(
     name = "freeze",
     srcs = ["freeze.py"],
     deps = [
+        ":tensorflow",
         "@pydep_gflags//:library",
-        "@pydep_tensorflow//:library",
     ],
 )
 
@@ -32,7 +32,7 @@ py_library(
     name = "graph",
     srcs = ["graph.py"],
     deps = [
-        "@pydep_tensorflow//:library",
+        ":tensorflow",
     ],
 )
 
@@ -41,6 +41,14 @@ py_library(
     srcs = ["train.py"],
     visibility = ["//visibility:public"],
     deps = [
-        "@pydep_tensorflow//:library",
+        ":tensorflow",
     ],
+)
+
+alias(
+    name = "tensorflow",
+    actual = select({
+        "//config:tensorflow_gpu": "@pydep_tensorflow_gpu//:library",
+        "//conditions:default": "@pydep_tensorflow//:library",
+    }),
 )
