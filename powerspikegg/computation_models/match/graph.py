@@ -27,42 +27,44 @@ class GraphBuilder:
 
     def add_hidden_layer(self, data, units, name, is_training):
         """ Create a simple layer for a neural network
-            
+
             The layer contains:
                 - A normalization layer
                 - A dense layer
-            
+
             Args:
                 data: a tensor with the input data
                 units: the number of units in the hidden dense layer
                 name: name of the scope in which the operations take place
-                is_training: tensor containing a boolean to indicate if the model is 
-                             training or in evaluation 
+                is_training: tensor containing a boolean to indicate if the
+                             model is training or in evaluation
                              (this is useful for normalization)
 
             Return:
                 A tensor computed with all the intermediate layers
         """
         with tf.name_scope(name):
-	        norm = tf.layers.batch_normalization(data, training=is_training)
-	        hidden = tf.layers.dense(inputs=norm, units=layer_size, activation=tf.nn.relu)
-        
+            norm = tf.layers.batch_normalization(data, training=is_training)
+            hidden = tf.layers.dense(inputs=norm, units=layer_size,
+                                     activation=tf.nn.relu)
+
         return hidden
 
-    def createNetwork(self, data, layers, is_training):
+    def create_network(self, data, layers, is_training):
     	""" Create a deep neural network
 
             Args:
                 data: A tensor with the input data
-                layers: An array with the size of each layer 
-                is_training: A tensor containing a boolean to indicate if the model
-                             is training
-	    """
+                layers: An array with the size of each layer
+                is_training: A tensor containing a boolean to indicate if the
+                             model is training
+        """
         # Build the hidden layers of the network
         hidden = data
         for layer_size in layers:
             norm = tf.layers.batch_normalization(hidden, training=is_training)
-            hidden = tf.layers.dense(inputs=norm, units=layer_size, activation=tf.nn.relu)
+            hidden = tf.layers.dense(inputs=norm, units=layer_size,
+                                     activation=tf.nn.relu)
 
         # Final layer with only one cell containing the predicted value
         logits = tf.layers.dense(inputs=hidden, units=1)
@@ -95,8 +97,7 @@ class GraphBuilder:
         Returns:
             loss: Loss tensor of type float.
         """
-        loss = tf.losses.mean_squared_error(labels, logits)
-        return loss
+        return tf.losses.mean_squared_error(labels, logits)
 
     def training(self, loss, learning_rate):
         """Sets up the training Ops.
