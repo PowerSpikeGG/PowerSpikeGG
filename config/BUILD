@@ -15,3 +15,9 @@ config_setting(
     values = {"cpu": "darwin_x86_64"},
     visibility = ["//visibility:public"],
 )
+
+config_setting(
+    name = "tensorflow_gpu",
+    values = {"define": "gpu=yes"},
+    visibility = ["//visibility:public"],
+)

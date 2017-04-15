@@ -229,6 +229,14 @@ pypi_wheel_repository(
     version = "1.1.0rc2",
 )
 
+pypi_wheel_repository(
+    name = "pydep_tensorflow_gpu",
+    modules = [],
+    pkg = "tensorflow_gpu",
+    srcs_version = "PY2ONLY",
+    version = "1.1.0rc2",
+)
+
 # Since requests uses some specific files into its repository but is a pure
 # Python package, we manage its dependency through github instead of Pypi
 # with a custom BUILD file.
