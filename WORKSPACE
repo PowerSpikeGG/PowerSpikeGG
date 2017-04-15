@@ -222,7 +222,7 @@ pypi_repository(
 )
 
 pypi_wheel_repository(
-    name = "pydef_tensorflow",
+    name = "pydep_tensorflow",
     modules = [],
     pkg = "tensorflow",
     srcs_version = "PY2ONLY",
