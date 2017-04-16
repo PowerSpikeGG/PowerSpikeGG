@@ -198,7 +198,8 @@ class GraphBuilder:
             tf.add_to_collection('is_training', is_training)
 
             # Create a session to execute the graph
-            with tf.Session() as sess:
+            with tf.Session(config=tf.ConfigProto(log_device_placement=True))
+            as sess:
 
                 # Place a summary in the log directory
                 summary_writer = tf.summary.FileWriter(model_directory,
