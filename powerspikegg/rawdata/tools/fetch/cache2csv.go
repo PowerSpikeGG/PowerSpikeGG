@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
+	"encoding/csv"
 	"errors"
 	"flag"
 	"fmt"
 	"io"
+	"os"
 	"strconv"
 	"strings"
 
@@ -92,6 +94,7 @@ type cacheToCSVCommand struct {
 	championFlag     int    // result filtering utility
 	summonerNameFlag string // result filtetring utility
 	limitFlag        int    // maximum quantity of matches that can be fetch
+	outputFileFlag   string // filepath on which the CSV should be output (else on Stdout)
 }
 
 // regiserCacheToCSVCommand creates a new cache2csv command an registers it into subcommands.
@@ -114,6 +117,7 @@ func (c *cacheToCSVCommand) SetFlags(f *flag.FlagSet) {
 	f.StringVar(&c.leagueFlag, "league", "", "filtering option by league")
 	f.IntVar(&c.championFlag, "champion", 0, "filtering option by champion ID")
 	f.StringVar(&c.summonerNameFlag, "summoner", "", "filtering option by summoner name")
+	f.StringVar(&c.outputFileFlag, "output", "", "eventual output filepath on which the CSV will be stored")
 }
 
 // convertFlagsToQuery converts the flags given as parameter to a query message.
@@ -242,38 +246,40 @@ func (c *cacheToCSVCommand) toStatsArray(participant *lolpb.Participant, team *l
 }
 
 // fetchAndConvertMatches fetch matches from the client and convert them into a list of CSV entries.
-func (c *cacheToCSVCommand) fetchAndConvertMatches(ctx context.Context, query *fetcherpb.Query) ([][]string, error) {
+func (c *cacheToCSVCommand) fetchAndConvertMatches(ctx context.Context, query *fetcherpb.Query, writer io.Writer) error {
 	conn, err := c.Connect() // NOTE: base handle the connection garbage collection.
 	if err != nil {
-		return nil, fmt.Errorf("unable to connect to the fetcher: %v", err)
+		return fmt.Errorf("unable to connect to the fetcher: %v", err)
 	}
 
 	client := fetcherpb.NewMatchFetcherClient(conn)
 	stream, err := client.CacheQuery(ctx, query)
 	if err != nil {
-		return nil, fmt.Errorf("server raised an error while querying the cache: %v", err)
+		return fmt.Errorf("server raised an error while querying the cache: %v", err)
 	}
 
-	var csvEntries [][]string
+	csvWritter := csv.NewWriter(writer)
 	for {
 		match, err := stream.Recv()
 		if err != nil {
 			if err != io.EOF { // not an end of transmission error
-				return nil, fmt.Errorf("server raised an error while receiving matches: %v", err)
+				return fmt.Errorf("server raised an error while receiving matches: %v", err)
 			}
-			return csvEntries, nil
+			return nil
 		}
 
 		if match.Detail == nil {
-			return nil, errors.New("match does not contain any details message")
+			return errors.New("match does not contain any details message")
 		}
 
 		for _, team := range match.Detail.Teams {
 			for _, participant := range team.Participants {
-				if converted, err := c.toStatsArray(participant, team, match); err == nil {
-					csvEntries = append(csvEntries, converted)
-				} else {
-					return nil, fmt.Errorf("error while converting match: %v", err)
+				converted, err := c.toStatsArray(participant, team, match)
+				if err != nil {
+					return fmt.Errorf("error while converting match: %v", err)
+				}
+				if err := csvWritter.Write(converted); err != nil {
+					return fmt.Errorf("unable to write the CSV entry: %v", err)
 				}
 			}
 		}
@@ -282,5 +288,34 @@ func (c *cacheToCSVCommand) fetchAndConvertMatches(ctx context.Context, query *f
 
 // Execute is the subcommand entry point for the cache2csv command.
 func (c *cacheToCSVCommand) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
+	query, err := c.convertFlagsToQuery()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error while converting the query: %q.", err)
+		return subcommands.ExitUsageError
+	}
+
+	// Create the output buffer.
+	var outputBuffer io.Writer
+	if c.outputFileFlag == "" {
+		outputBuffer = os.Stdout
+	} else {
+		// NOTE: file is an os.File interface implementing Close method. Since
+		// io.Writer interface does not implement Close, we need to keep the
+		// initial return for closure deferencement.
+		file, err := os.Create(c.outputFileFlag)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error while trying to open file: %q.", err)
+			return subcommands.ExitFailure
+		}
+		outputBuffer = file
+		defer file.Close()
+	}
+
+	err = c.fetchAndConvertMatches(ctx, query, outputBuffer)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error while getting server data: %q.", err)
+		return subcommands.ExitFailure
+	}
+
 	return subcommands.ExitSuccess
 }
