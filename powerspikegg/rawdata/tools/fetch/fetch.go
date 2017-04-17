@@ -11,6 +11,7 @@ import (
 func main() {
 	registerMatchCommand()
 	registerSummonerCommand()
+	registerCacheToCSVCommand()
 	subcommands.Register(subcommands.HelpCommand(), "")
 
 	flag.Parse()

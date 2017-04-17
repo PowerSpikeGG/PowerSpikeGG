@@ -4,6 +4,7 @@ go_library(
     name = "go_default_library",
     srcs = [
         "base.go",
+        "cache2csv.go",
         "fetch.go",
         "match.go",
         "summoner.go",
@@ -27,6 +28,7 @@ go_binary(
 go_test(
     name = "go_default_test",
     srcs = [
+        "cache2csv_test.go",
         "match_test.go",
         "summoner_test.go",
     ],
