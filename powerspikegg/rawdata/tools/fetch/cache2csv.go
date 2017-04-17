@@ -5,6 +5,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"strconv"
 	"strings"
 
@@ -238,6 +239,45 @@ func (c *cacheToCSVCommand) toStatsArray(participant *lolpb.Participant, team *l
 		}
 	}
 	return result, nil
+}
+
+// fetchAndConvertMatches fetch matches from the client and convert them into a list of CSV entries.
+func (c *cacheToCSVCommand) fetchAndConvertMatches(ctx context.Context, query *fetcherpb.Query) ([][]string, error) {
+	conn, err := c.Connect() // NOTE: base handle the connection garbage collection.
+	if err != nil {
+		return nil, fmt.Errorf("unable to connect to the fetcher: %v", err)
+	}
+
+	client := fetcherpb.NewMatchFetcherClient(conn)
+	stream, err := client.CacheQuery(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("server raised an error while querying the cache: %v", err)
+	}
+
+	var csvEntries [][]string
+	for {
+		match, err := stream.Recv()
+		if err != nil {
+			if err != io.EOF { // not an end of transmission error
+				return nil, fmt.Errorf("server raised an error while receiving matches: %v", err)
+			}
+			return csvEntries, nil
+		}
+
+		if match.Detail == nil {
+			return nil, errors.New("match does not contain any details message")
+		}
+
+		for _, team := range match.Detail.Teams {
+			for _, participant := range team.Participants {
+				if converted, err := c.toStatsArray(participant, team, match); err == nil {
+					csvEntries = append(csvEntries, converted)
+				} else {
+					return nil, fmt.Errorf("error while converting match: %v", err)
+				}
+			}
+		}
+	}
 }
 
 // Execute is the subcommand entry point for the cache2csv command.
