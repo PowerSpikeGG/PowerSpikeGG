@@ -17,7 +17,22 @@ config_setting(
 )
 
 config_setting(
-    name = "tensorflow_gpu",
-    values = {"define": "gpu=yes"},
+    name = "tensorflow_global",
+    values = {"define": "use_global_tensorflow=yes"},
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "tensorflow_python_gpu",
+    values = {
+        "define": "use_tensorflow_python=yes",
+        "define": "use_tensorflow_with_gpu=yes",
+    },
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "tensorflow_python",
+    values = {"define": "use_tensorflow_python=yes"},
     visibility = ["//visibility:public"],
 )
