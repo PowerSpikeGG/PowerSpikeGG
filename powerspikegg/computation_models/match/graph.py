@@ -45,8 +45,13 @@ class GraphBuilder:
         """
         with tf.name_scope(name):
             norm = tf.layers.batch_normalization(data, training=is_training)
-            hidden = tf.layers.dense(inputs=norm, units=layer_size,
-                                     activation=tf.nn.relu)
+            hidden = tf.layers.dense(
+                    inputs=norm,
+                    units=layer_size,
+                    kernel_initializer=tf.contrib.layers.xavier_initializer(
+                            uniform=False
+                        ),
+                    activation=tf.nn.relu)
 
         return hidden
 
@@ -82,8 +87,8 @@ class GraphBuilder:
         Returns:
             Output tensor with the logits predicted by the neural network.
         """
-        # Create 30 hidden layers with 100 units
-        layers = [100 for _ in range(30)]
+        # Create 20 hidden layers with 30 units
+        layers = [30 for _ in range(20)]
         logits = self.create_network(data, layers, is_training=is_training)
         return tf.identity(logits, name="logits")
 
@@ -198,8 +203,8 @@ class GraphBuilder:
             tf.add_to_collection('is_training', is_training)
 
             # Create a session to execute the graph
-            with tf.Session(config=tf.ConfigProto(log_device_placement=True))
-            as sess:
+            with tf.Session(config=tf.ConfigProto(
+                            log_device_placement=True)) as sess:
 
                 # Place a summary in the log directory
                 summary_writer = tf.summary.FileWriter(model_directory,
