@@ -9,14 +9,12 @@ class GraphTrainer:
     """ Load an existing graph and expose methods to train and evaluate it"""
 
     def __init__(self, model_path, learning_rate=None):
-        self.model_path = model_path
-        self.learning_rate = learning_rate
-        self._load()
-
-    def _load(self):
         """ Load a metagraph using Tensorflow loader and inject the graph
             and the variables into a new session
         """
+        self.model_path = model_path
+        self.learning_rate = learning_rate
+
         self.sess = tf.Session()
 
         meta_graph_path = self.model_path + '.meta'
@@ -31,6 +29,15 @@ class GraphTrainer:
         self.placeholder = tf.get_collection('placeholder')[0]
         self.eval_op = tf.get_collection('eval_op')[0]
         self.is_training = tf.get_collection('is_training')[0]
+        self.summary_op = tf.get_collection('summary_op')[0]
+        self.global_step = tf.get_collection('global_step')[0]
+
+        self.summary_writer = tf.summary.FileWriter(
+                        self.model_path + '/summary',
+                        self.sess.graph)
+        self.summary_evaluation_writer = tf.summary.FileWriter(
+                        self.model_path + '/evaluation',
+                        self.sess.graph)
 
     def train(self, data, answer, iteration=1):
         """ Train the variable of a graph using the provided data
@@ -56,7 +63,10 @@ class GraphTrainer:
                 feed_dict.update({
                     self.learning_rate_op: self.learning_rate
                 })
-            self.sess.run(self.train_op, feed_dict=feed_dict)
+            summary, step, _ = self.sess.run(
+                [self.summary_op, self.global_step, self.train_op],
+                feed_dict=feed_dict)
+            self.summary_writer.add_summary(summary, step)
 
     def evaluate(self, inputs, answers):
         """ Evaluate the performance of a model on the provided data
@@ -70,13 +80,16 @@ class GraphTrainer:
             Return: An array of tuple containing the computed value
                     and the difference with the target
         """
-        res = self.sess.run([self.logits, self.eval_op,
-                             self.placeholder, self.answer], feed_dict={
-                self.placeholder: inputs,
-                self.answer: answers,
-                self.is_training: False
-            })
-        return res
+        logits, score, placeholder, answer, summary, step = self.sess.run(
+                [self.logits, self.eval_op, self.placeholder, self.answer,
+                 self.summary_op, self.global_step],
+                feed_dict={
+                    self.placeholder: inputs,
+                    self.answer: answers,
+                    self.is_training: False
+                })
+        self.summary_evaluation_writer.add_summary(summary, step)
+        return logits, score, placeholder, answer
 
     def predict(self, inputs):
         """ Predict the expected statistique using the model"""

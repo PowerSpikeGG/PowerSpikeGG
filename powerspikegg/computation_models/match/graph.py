@@ -46,12 +46,19 @@ class GraphBuilder:
         with tf.name_scope(name):
             norm = tf.layers.batch_normalization(data, training=is_training)
             hidden = tf.layers.dense(
-                    inputs=norm,
-                    units=layer_size,
-                    kernel_initializer=tf.contrib.layers.xavier_initializer(
-                            uniform=False
-                        ),
+                    name=name,
+                    inputs=data,
+                    units=units,
                     activation=tf.nn.relu)
+
+            # Create summary for tensorboard
+            variables = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,
+                                          name)
+            weight = variables[0]
+            bias = variables[1]
+            tf.summary.histogram('weight', weight)
+            tf.summary.histogram('bias', bias)
+            tf.summary.histogram('activation', hidden)
 
         return hidden
 
@@ -66,10 +73,10 @@ class GraphBuilder:
         """
         # Build the hidden layers of the network
         hidden = data
-        for layer_size in layers:
-            norm = tf.layers.batch_normalization(hidden, training=is_training)
-            hidden = tf.layers.dense(inputs=norm, units=layer_size,
-                                     activation=tf.nn.relu)
+        for index, layer_size in enumerate(layers):
+            hidden = self.add_hidden_layer(hidden, layer_size,
+                                           "hidden_layer_" + str(index),
+                                           is_training)
 
         # Final layer with only one cell containing the predicted value
         logits = tf.layers.dense(inputs=hidden, units=1)
@@ -88,7 +95,7 @@ class GraphBuilder:
             Output tensor with the logits predicted by the neural network.
         """
         # Create 20 hidden layers with 30 units
-        layers = [30 for _ in range(20)]
+        layers = [60 for _ in range(30)]
         logits = self.create_network(data, layers, is_training=is_training)
         return tf.identity(logits, name="logits")
 
@@ -102,7 +109,9 @@ class GraphBuilder:
         Returns:
             loss: Loss tensor of type float.
         """
-        return tf.losses.mean_squared_error(labels, logits)
+        loss = tf.losses.mean_squared_error(labels, logits)
+        tf.summary.scalar('loss', loss)
+        return loss
 
     def training(self, loss, learning_rate):
         """Sets up the training Ops.
@@ -121,8 +130,6 @@ class GraphBuilder:
         Returns:
             train_op: The Op for training.
         """
-        # Add a scalar summary for the snapshot loss.
-        tf.summary.scalar('loss', loss)
         # Create the gradient descent optimizer with the given learning rate.
         optimizer = tf.train.AdamOptimizer(learning_rate)
         # Create a variable to track the global step.
@@ -130,7 +137,7 @@ class GraphBuilder:
         # Use the optimizer to apply the gradients that minimize the loss
         # as a single training step.
         train_op = optimizer.minimize(loss, global_step=global_step)
-        return train_op
+        return train_op, global_step
 
     def evaluation(self, logits, labels):
         """Evaluate the quality of the logits at predicting the label.
@@ -144,8 +151,11 @@ class GraphBuilder:
         """
         # Compute the difference between the expected label and the predicted.
         correct = tf.abs(logits - labels)
-        # Return the sum of the differences.
-        return tf.reduce_sum(correct)
+        total_error = tf.reduce_sum(correct)
+        mean_error = tf.reduce_mean(correct)
+        tf.summary.scalar('total_error', total_error)
+        tf.summary.scalar('mean_error', mean_error)
+        return mean_error
 
     def generate_graph(self, model_directory):
         """Create a new graph from inference and training operator and
@@ -177,14 +187,14 @@ class GraphBuilder:
             loss_op = self.loss(logits, answer)
 
             # Operator to train the neural network
-            train_op = self.training(loss_op, learning_rate)
+            train_op, global_step = self.training(loss_op, learning_rate)
 
             # Give an estimation of the difference between the predicted
             # values and the answer
             eval_op = self.evaluation(logits, answer)
 
             # Create a summary for tensorboard
-            summary = tf.summary.merge_all()
+            summary_op = tf.summary.merge_all()
 
             # Create all variables
             init_op = tf.global_variables_initializer()
@@ -201,6 +211,8 @@ class GraphBuilder:
             tf.add_to_collection('train_op', train_op)
             tf.add_to_collection('eval_op', eval_op)
             tf.add_to_collection('is_training', is_training)
+            tf.add_to_collection('summary_op', summary_op)
+            tf.add_to_collection('global_step', global_step)
 
             # Create a session to execute the graph
             with tf.Session(config=tf.ConfigProto(
