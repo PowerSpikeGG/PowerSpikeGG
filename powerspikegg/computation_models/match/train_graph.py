@@ -78,7 +78,7 @@ def train(trainer, iteration, batch_size):
 
 def main():
     trainer = GraphTrainer(FLAGS.model_path, FLAGS.learning_rate)
-    train(trainer, FLAGS.iteration, batch_size=50)
+    train(trainer, FLAGS.iteration, batch_size=5)
     trainer.save()
 
 if __name__ == '__main__':

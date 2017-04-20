@@ -63,8 +63,9 @@ class GraphTrainer:
                 feed_dict.update({
                     self.learning_rate_op: self.learning_rate
                 })
-            summary, step, _ = self.sess.run(
-                [self.summary_op, self.global_step, self.train_op],
+            summary, step, _, loss = self.sess.run(
+                [self.summary_op, self.global_step, self.train_op,
+                 self.loss_op],
                 feed_dict=feed_dict)
             self.summary_writer.add_summary(summary, step)
 

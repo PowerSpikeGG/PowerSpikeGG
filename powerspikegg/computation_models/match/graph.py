@@ -47,9 +47,12 @@ class GraphBuilder:
             norm = tf.layers.batch_normalization(data, training=is_training)
             hidden = tf.layers.dense(
                     name=name,
-                    inputs=data,
+                    inputs=norm,
                     units=units,
-                    activation=tf.nn.relu)
+                    activation=tf.nn.relu,
+                    kernel_initializer=tf.contrib.layers.xavier_initializer(),
+                    bias_initializer=tf.contrib.layers.xavier_initializer())
+            dropout = tf.layers.dropout(hidden, training=is_training)
 
             # Create summary for tensorboard
             variables = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,
@@ -60,7 +63,7 @@ class GraphBuilder:
             tf.summary.histogram('bias', bias)
             tf.summary.histogram('activation', hidden)
 
-        return hidden
+        return dropout
 
     def create_network(self, data, layers, is_training):
     	""" Create a deep neural network
@@ -136,7 +139,9 @@ class GraphBuilder:
         global_step = tf.Variable(0, name='global_step', trainable=False)
         # Use the optimizer to apply the gradients that minimize the loss
         # as a single training step.
-        train_op = optimizer.minimize(loss, global_step=global_step)
+        extra_update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+        with tf.control_dependencies(extra_update_ops):
+            train_op = optimizer.minimize(loss, global_step=global_step)
         return train_op, global_step
 
     def evaluation(self, logits, labels):
